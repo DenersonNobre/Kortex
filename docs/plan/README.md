@@ -1,0 +1,44 @@
+# Plano Mestre de Execução — Kortex (`v0.1.0`)
+
+> **Responsável do Plano**: Denerson Nobre  
+> **Referências**: [PRD.md](../product/PRD.md) · [SPEC.md](../architecture/SPEC.md) · [DESIGN.md](../architecture/DESIGN.md)
+
+---
+
+## 1. Grafo de Dependências (DAG de Precedência)
+
+```mermaid
+flowchart LR
+    E0["EPIC00: Fundacao e Governanca"] --> E1["EPIC01: Nucleo Reativo (Dart Puro)"]
+    E1 --> E2["EPIC02: Assincronia e Comandos"]
+    E1 --> E3["EPIC03: Escopo e Ciclo de Vida"]
+    E2 --> E4["EPIC04: Widgets, Pontes SDK e Exemplo"]
+    E3 --> E4
+```
+
+---
+
+## 2. Matriz de Épicos (Paridade 1:1 com a DAG)
+
+| ID | Épico | Dependências | Prioridade | Status | Arquivo |
+| --- | --- | --- | --- | --- | --- |
+| `EPIC00` | Fundação Técnica & Governança | Nenhuma | Crítica | `Concluído` | [epic-00-fundacao.md](epics/epic-00-fundacao.md) |
+| `EPIC01` | Núcleo Reativo em Dart Puro | `EPIC00` | Crítica | `Em Andamento` | [epic-01-nucleo-reativo.md](epics/epic-01-nucleo-reativo.md) |
+| `EPIC02` | Assincronia, Streams & Comandos | `EPIC01` | Alta | `Pendente` | [epic-02-assincronia.md](epics/epic-02-assincronia.md) |
+| `EPIC03` | Escopo & Ciclo de Vida na Árvore | `EPIC01` | Crítica | `Pendente` | [epic-03-escopo.md](epics/epic-03-escopo.md) |
+| `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Pendente` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
+
+---
+
+## 3. Definition of Ready (DoR) & Definition of Done (DoD)
+
+### DoR (para iniciar qualquer UC)
+- Quarteto canônico do Gate Zero aprovado (`SPEC.md`, `DESIGN.md`, `docs/plan/README.md`, `epic-00-fundacao.md`).
+- Épico predecessor na DAG com status `Concluído`.
+- Fatia/UC possui User Story, critérios Gherkin (`Scenario Outline` + `Examples`) e escopo de arquivos definido.
+
+### DoD (para concluir qualquer UC)
+- Testes escritos sob TDD (Red-Before-Green) passando em `flutter test`.
+- `flutter analyze` encerrando com `No issues found!` (zero warnings).
+- Pureza `INV-05` respeitada em `lib/src/reactive/`.
+- Documentação (`CHANGELOG.md`, `LEARNINGS.md`, `CHECKPOINT.md`, status do épico) atualizada no mesmo commit atômico.
