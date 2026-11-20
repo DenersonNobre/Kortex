@@ -26,7 +26,7 @@ Implementar as primitivas assíncronas em Dart puro (`KortexResource<T>`, `Korte
 
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
-| **UC-02.01** | `IKortexAsyncState` e `KortexResource` (race condition + `previousValue`) | Nenhuma | `Pendente` |
+| **UC-02.01** | `IKortexAsyncState` e `KortexResource` (race condition + `previousValue`) | Nenhuma | `Concluído` |
 | **UC-02.02** | `KortexStreamResource`, `toStream()` e `KortexCommand` | `UC-02.01` | `Pendente` |
 
 ---
@@ -44,7 +44,7 @@ Implementar as primitivas assíncronas em Dart puro (`KortexResource<T>`, `Korte
 ### Caso de Uso UC-02.01 — `IKortexAsyncState` e `KortexResource`
 
 - **Identificador**: `UC-02.01`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 

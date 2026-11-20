@@ -13,4 +13,5 @@ export 'kortex_controller.dart';
 export 'kortex_disposable.dart';
 export 'kortex_effect.dart';
 export 'kortex_observer.dart';
+export 'kortex_resource.dart';
 export 'kortex_signal.dart';
