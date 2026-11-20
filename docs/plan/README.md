@@ -15,6 +15,7 @@ flowchart LR
     E2 --> E4["EPIC04: Widgets, Pontes SDK e Exemplo"]
     E3 --> E4
     E4 --> E5["EPIC05: POC Robusta (Premissas Oraculo)"]
+    E5 --> E6["EPIC06: App de Visitas Tecnicas"]
 ```
 
 ---
@@ -28,7 +29,8 @@ flowchart LR
 | `EPIC02` | Assincronia, Streams & Comandos | `EPIC01` | Alta | `Concluído` | [epic-02-assincronia.md](epics/epic-02-assincronia.md) |
 | `EPIC03` | Escopo & Ciclo de Vida na Árvore | `EPIC01` | Crítica | `Concluído` | [epic-03-escopo.md](epics/epic-03-escopo.md) |
 | `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Concluído` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
-| `EPIC05` | POC Robusta (Premissas Oráculo) | `EPIC04` | Alta | `Em Andamento` | [epic-05-poc-robusta.md](epics/epic-05-poc-robusta.md) |
+| `EPIC05` | POC Robusta (Premissas Oráculo) | `EPIC04` | Alta | `Concluído` | [epic-05-poc-robusta.md](epics/epic-05-poc-robusta.md) |
+| `EPIC06` | App de Visitas Técnicas | `EPIC05` | Alta | `Em Andamento` | [epic-06-app-visitas.md](epics/epic-06-app-visitas.md) |
 
 ---
 
