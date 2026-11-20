@@ -27,7 +27,7 @@ Implementar todo o núcleo reativo em `lib/src/reactive/` em Dart puro (`INV-05`
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-01.01** | Descarte composto (`IKortexDisposable`, `KortexDisposeBag`, `IKortexController`) | Nenhuma | `Concluído` |
-| **UC-01.02** | Grafo de observação, `kortexBatch`, `kortexUntracked` e `KortexSignal` | `UC-01.01` | `Pendente` |
+| **UC-01.02** | Grafo de observação, `kortexBatch`, `kortexUntracked` e `KortexSignal` | `UC-01.01` | `Concluído` |
 | **UC-01.03** | Derivação preguiçosa (`KortexComputed`) e efeitos (`KortexEffect`) | `UC-01.02` | `Pendente` |
 
 ---
@@ -79,7 +79,7 @@ Esquema do Cenário: Descarte determinístico em KortexDisposeBag e IKortexContr
 ### Caso de Uso UC-01.02 — `KortexTracker`, `kortexBatch`, `kortexUntracked` e `KortexSignal`
 
 - **Identificador**: `UC-01.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
