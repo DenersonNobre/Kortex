@@ -29,10 +29,18 @@ jobs:
           flutter --version
 
       - name: Format check (igual ao gate local)
-        run: dart format --output=none --set-exit-if-changed lib test
+        run: dart format --output=none --set-exit-if-changed lib test example/lib example/test
 
       - name: Analyze (zero warnings)
         run: flutter analyze
 
       - name: Test (suite completa)
+        run: flutter test
+
+      - name: Analyze example (zero warnings)
+        working-directory: example
+        run: flutter analyze
+
+      - name: Test example (smoke)
+        working-directory: example
         run: flutter test

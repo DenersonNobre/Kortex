@@ -29,6 +29,7 @@ Evoluir o `poc/` de app mínimo para POC robusta que demonstra, em código execu
 | **UC-05.01** | Domínio, `Result`, Port e Adapter InMemory | Nenhuma | `Concluído` |
 | **UC-05.02** | Commands, segundo agregado (`Category`) e fachada `TaskUseCases` | `UC-05.01` | `Concluído` |
 | **UC-05.03** | Controller, Page e fluxo de widget | `UC-05.02` | `Pendente` |
+| **UC-05.04** | Exemplo mínimo publicável (`example/`, pub.dev) | Nenhuma | `Concluído` |
 
 ---
 
@@ -151,3 +152,37 @@ Esquema do Cenário: Fluxo ponta a ponta na TasksPage
 | UC | NFR | Métrica | Target | Medição |
 | --- | --- | --- | --- | --- |
 | `UC-05.03` | `NFR-04` | `setState` após `!mounted` | `0` | `flutter test` |
+
+---
+
+### Caso de Uso UC-05.04 — Exemplo Mínimo Publicável (`example/`)
+
+- **Identificador**: `UC-05.04`
+- **Status**: `Concluído`
+
+#### Narrativa (User Story)
+
+- **Como** consumidor avaliando o pacote no pub.dev
+- **Eu quero** um `example/` mínimo (contador + salvamento) que rode `flutter run` e apareça na aba Example do pub.dev
+- **Para que** a primeira impressão do pacote seja um exemplo executável, sem o peso da POC de desenvolvimento (`poc/`)
+
+#### Critérios de Aceitação (Gherkin Executável)
+
+```gherkin
+Esquema do Cenário: Exemplo mínimo executável e publicável
+  Dado o pacote com <artefato>
+  Quando rodo <comando>
+  Então <resultado>
+
+  Exemplos:
+    | artefato | comando | resultado |
+    | example/ sem dotfiles | dart pub publish --dry-run | inclui example/ no archive |
+    | example/ | flutter analyze (raiz cobre) | No issues found! |
+    | example/test/smoke_test.dart | flutter test example | contador incrementa e SnackBar de salvo aparece |
+```
+
+#### NFRs Mensuráveis
+
+| UC | NFR | Métrica | Target | Medição |
+| --- | --- | --- | --- | --- |
+| `UC-05.04` | `NFR-01` | Dependências externas em `example/` | `0` (só `flutter` + `kortex` path) | Inspeção `pubspec.yaml` |

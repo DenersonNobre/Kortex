@@ -1,0 +1,21 @@
+name: example
+description: Exemplo mínimo do pacote kortex para o pub.dev (contador + salvamento).
+publish_to: none
+
+environment:
+  sdk: ^3.13.5
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kortex:
+    path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
