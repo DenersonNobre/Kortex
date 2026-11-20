@@ -20,11 +20,21 @@ import 'kortex_provider.dart';
 /// Instâncias sobrevivem a rebuilds do pai enquanto os objetos provider
 /// forem os mesmos; trocá-los descarta tudo e recria do zero.
 class KortexScope extends StatefulWidget {
-  /// Cria o escopo com [providers] e a subárvore [child].
-  const KortexScope({super.key, required this.providers, required this.child});
+  /// Cria o escopo com [providers], [overrides] e a subárvore [child].
+  ///
+  /// [overrides] substitui providers do mesmo `Type` (fakes em testes).
+  const KortexScope({
+    super.key,
+    required this.providers,
+    this.overrides = const [],
+    required this.child,
+  });
 
   /// Definições de criação (ordem preservada; irmãos resolvem entre si).
   final List<KortexProvider<dynamic>> providers;
+
+  /// Substituições por `Type` (prevalecem sobre [providers]).
+  final List<KortexProvider<dynamic>> overrides;
 
   /// Subárvore com acesso às instâncias.
   final Widget child;
@@ -52,6 +62,32 @@ class KortexScope extends StatefulWidget {
       'KortexScope: nenhum KortexScope ancestral para resolver $T. '
       'Envolva a subárvore num KortexScope com KortexProvider<$T>.';
 
+  /// Captura as instâncias visíveis acima de [context] para `Overlay`.
+  ///
+  /// Usado em `showDialog`/`showModalBottomSheet`: monta um `KortexScope`
+  /// com `KortexProvider.value` (sem transferir a posse do `dispose`).
+  /// Apenas instâncias já materializadas são capturadas.
+  static KortexScope capture({
+    required BuildContext context,
+    required Widget child,
+  }) {
+    final collected = <Type, Object?>{};
+    var state = context.findAncestorStateOfType<_KortexScopeState>();
+    while (state != null) {
+      for (final entry in state._instances.entries) {
+        collected.putIfAbsent(entry.key, () => entry.value);
+      }
+      state = state._parentScope;
+    }
+    return KortexScope(
+      providers: [
+        for (final entry in collected.entries)
+          _CapturedProvider(entry.key, entry.value),
+      ],
+      child: child,
+    );
+  }
+
   @override
   State<KortexScope> createState() => _KortexScopeState();
 }
@@ -75,6 +111,21 @@ class _KortexInherited extends InheritedWidget {
   @override
   bool updateShouldNotify(_KortexInherited oldWidget) =>
       version != oldWidget.version;
+}
+
+/// Provider de valor capturado com token de tipo explícito.
+///
+/// `KortexProvider<dynamic>.value` perderia o `Type` (viraria `dynamic`)
+/// e nunca casaria na resolução — aqui o token viaja junto do valor.
+class _CapturedProvider extends KortexProvider<dynamic> {
+  _CapturedProvider(Type type, Object? value)
+    : _type = type,
+      super.value(value: value);
+
+  final Type _type;
+
+  @override
+  Type get type => _type;
 }
 
 class _KortexScopeState extends State<KortexScope> {
@@ -118,7 +169,7 @@ class _KortexScopeState extends State<KortexScope> {
   T _resolve<T>() {
     final provider = _effective[T];
     if (provider != null) {
-      return _materialize<T>(provider as KortexProvider<T>);
+      return _materialize<T>(provider);
     }
     final parent = _parentScope;
     if (parent != null) {
@@ -144,6 +195,9 @@ class _KortexScopeState extends State<KortexScope> {
     for (final provider in widget.providers) {
       effective[provider.type] = provider;
     }
+    for (final override in widget.overrides) {
+      effective[override.type] = override;
+    }
     _effective = effective;
   }
 
@@ -154,8 +208,16 @@ class _KortexScopeState extends State<KortexScope> {
   }
 
   bool _sameProviders(KortexScope oldWidget) {
-    final current = widget.providers;
-    final previous = oldWidget.providers;
+    if (!_sameList(widget.providers, oldWidget.providers)) {
+      return false;
+    }
+    return _sameList(widget.overrides, oldWidget.overrides);
+  }
+
+  bool _sameList(
+    List<KortexProvider<dynamic>> current,
+    List<KortexProvider<dynamic>> previous,
+  ) {
     if (identical(current, previous)) {
       return true;
     }
@@ -186,7 +248,7 @@ class _KortexScopeState extends State<KortexScope> {
     _createDynamic(type, provider);
   }
 
-  T _materialize<T>(KortexProvider<T> provider) {
+  T _materialize<T>(KortexProvider<dynamic> provider) {
     if (_instances.containsKey(T)) {
       return _instances[T] as T;
     }
@@ -211,8 +273,8 @@ class _KortexScopeState extends State<KortexScope> {
     }
   }
 
-  T _storeValue<T>(KortexProvider<T> provider) {
-    final value = provider.value;
+  T _storeValue<T>(KortexProvider<dynamic> provider) {
+    final value = provider.value as T;
     _instances[T] = value;
     _creationOrder.add(T);
     return value;

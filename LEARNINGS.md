@@ -18,6 +18,12 @@
 - **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
 - **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
+## 2026-11-19 — `capture` precisa de token de tipo explícito
+
+- **Sintoma:** `KortexScope.capture` montava providers `KortexProvider<dynamic>.value` cujo `type` resolvia `dynamic` — leitura no dialog lançava `StateError` de provider ausente mesmo com a instância coletada.
+- **Causa:** o mapa do escopo é chaveado pelo `type` do provider; genérico apagado (`dynamic`) nunca casa com `T` na resolução, e o `as KortexProvider<T>` ainda quebraria o cast.
+- **Fix:** `_CapturedProvider` privado carrega o `Type` coletado junto do valor; `_materialize` sem cast de provider (só `as T` no valor, com cheque real em runtime).
+
 ## 2026-11-19 — Um provider por `Type`: duplicata colide, não ordena
 
 - **Sintoma:** teste de LIFO com dois providers do mesmo `Type` descartou só um (`['b']` em vez de `['b','a']`) — o mapa `_effective`/`_instances` usa `Type` como chave e o segundo registro sobrescreveu o primeiro.

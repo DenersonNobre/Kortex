@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC01` |
 | **Prioridade** | Crítica (Injeção Escopada & Anti-GetX) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Pendente` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -27,15 +27,15 @@ Implementar `lib/src/scope/` com provisão explícita na árvore de widgets (`Ko
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-03.01** | `KortexProvider`, `IKortexScopeReader` e `KortexScope` (irmãos, ciclo, `lazy`, `dispose`) | Nenhuma | `Concluído` |
-| **UC-03.02** | `KortexScope.capture`, `overrides` e `BuildContext` extensions | `UC-03.01` | `Pendente` |
+| **UC-03.02** | `KortexScope.capture`, `overrides` e `BuildContext` extensions | `UC-03.01` | `Concluído` |
 
 ---
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] `UC-03.01` e `UC-03.02` cobertos por testes de widget (`flutter_test`).
-- [ ] Preservação de instâncias em rebuilds do widget pai verificada por teste.
-- [ ] `flutter analyze` e `flutter test` verdes.
+- [x] `UC-03.01` e `UC-03.02` cobertos por testes de widget (`flutter_test`).
+- [x] Preservação de instâncias em rebuilds do widget pai verificada por teste.
+- [x] `flutter analyze` e `flutter test` verdes.
 
 ---
 
@@ -78,7 +78,7 @@ Esquema do Cenário: Criação, resolução entre irmãos, ciclo e descarte em K
 ### Caso de Uso UC-03.02 — `KortexScope.capture`, `overrides` e `BuildContext` Extensions
 
 - **Identificador**: `UC-03.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
