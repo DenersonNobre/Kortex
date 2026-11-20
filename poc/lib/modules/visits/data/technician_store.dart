@@ -9,13 +9,26 @@ library;
 
 import 'dart:async';
 
+import '../../../core/result.dart';
 import '../domain/technician.dart';
 import '../domain/visit_repository.dart';
 
 /// Store volatil de tecnicos com latencia simulada.
 class InMemoryTechnicianStore implements TechnicianRepository {
   /// Cria o store com [latency] de espera por operacao.
-  InMemoryTechnicianStore({this.latency = const Duration(milliseconds: 200)});
+  ///
+  /// Com [seedDemo], o "banco" nasce com um tecnico de demonstracao.
+  InMemoryTechnicianStore({
+    this.latency = const Duration(milliseconds: 200),
+    bool seedDemo = false,
+  }) {
+    if (!seedDemo) return;
+    final result = Technician.create(name: 'Tecnico Demo', specialty: 'Rede');
+    if (result is Ok<Technician>) {
+      final created = result.value.withId(++_sequence);
+      _store[created.id] = created;
+    }
+  }
 
   /// Espera aplicada antes de resolver cada operacao.
   final Duration latency;

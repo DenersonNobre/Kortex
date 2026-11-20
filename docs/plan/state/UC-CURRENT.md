@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: `EPIC07` (`UC-07.01` — `ScheduledAt` no domínio, validação e ordenação)
-- **Status**: `Pronto para TDD Red-Before-Green`
-- **Último passo concluído**: `EPIC06` concluída (app de visitas com resource/command/capture; POC 77 testes, raiz 81, analyze limpo).
-- **Próximo passo**: Escrever testes Red para `UC-07.01` (VO `ScheduledAt` com `now` injetado) e implementar no `poc/`.
+- **Épico ativo**: — (`EPIC00`–`EPIC07` concluídos)
+- **Status**: app de visitas com Clientes e Agenda, 3 áreas navegáveis
+- **Último passo concluído**: `EPIC07` concluída (`ScheduledAt` com `now` injetado, tela/controller de Clientes com busca, Agenda por dia e `NavigationBar`; POC 91 testes, analyze limpo).
+- **Próximo passo**: novo ciclo sob demanda.

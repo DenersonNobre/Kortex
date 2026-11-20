@@ -17,6 +17,7 @@ final class VisitRow {
     required this.clientName,
     required this.technicianName,
     required this.progress,
+    required this.scheduledAt,
   });
 
   /// Identificador da visita.
@@ -36,4 +37,7 @@ final class VisitRow {
 
   /// Fracao do checklist concluida.
   final double progress;
+
+  /// Data e hora agendadas.
+  final DateTime scheduledAt;
 }

@@ -19,8 +19,9 @@ class ListVisitsQuery {
   final ClientRepository _clients;
   final TechnicianRepository _technicians;
 
-  /// Lista as visitas resolvendo os nomes; [status] filtra quando informado.
-  Future<List<VisitRow>> call({VisitStatus? status}) async {
+  /// Lista as visitas resolvendo os nomes; [status] e [day] filtram quando
+  /// informados, e o resultado sai ordenado por data agendada.
+  Future<List<VisitRow>> call({VisitStatus? status, DateTime? day}) async {
     final visits = await _visits.listVisits();
     final clients = await _clients.listClients();
     final technicians = await _technicians.listTechnicians();
@@ -28,18 +29,27 @@ class ListVisitsQuery {
     final technicianNames = {
       for (final technician in technicians) technician.id: technician.name,
     };
-    return [
+    final filtered = [
       for (final visit in visits)
         if (status == null || visit.status == status)
-          VisitRow(
-            id: visit.id,
-            title: visit.title.value,
-            status: visit.status.wire,
-            clientName: clientNames[visit.clientId] ?? 'Cliente removido',
-            technicianName:
-                technicianNames[visit.technicianId] ?? 'Tecnico removido',
-            progress: visit.progress,
-          ),
+          if (day == null || _sameDay(visit.scheduledAt.value, day)) visit,
+    ];
+    filtered.sort((a, b) => a.scheduledAt.value.compareTo(b.scheduledAt.value));
+    return [
+      for (final visit in filtered)
+        VisitRow(
+          id: visit.id,
+          title: visit.title.value,
+          status: visit.status.wire,
+          clientName: clientNames[visit.clientId] ?? 'Cliente removido',
+          technicianName:
+              technicianNames[visit.technicianId] ?? 'Tecnico removido',
+          progress: visit.progress,
+          scheduledAt: visit.scheduledAt.value,
+        ),
     ];
   }
+
+  static bool _sameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
 }

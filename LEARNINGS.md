@@ -6,6 +6,20 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — Providers inline em `StatelessWidget` recriam o escopo a cada build
+
+- **Sintoma:** ao cadastrar um cliente e voltar para a lista, o item **sumia**; e trocar de aba zerava as listas. Comprovado por print: o controller consultado tinha `[Empresa Nova]`, mas a tela mostrava 0 tiles.
+- **Causa:** o escopo por area (`ClientsScope`) era `StatelessWidget` e construia `KortexScope(providers: [KortexProvider(...)])` **dentro do `build`** — lista nova a cada rebuild, e o `KortexScope` compara providers por **identidade**: lista diferente ⇒ descarta tudo e recria o controller. O controller que a tela lia nao era o mesmo que recebeu o dado.
+- **Fix:** escopo por area virou `StatefulWidget` com a lista de providers criada **uma vez** em `didChangeDependencies` (`_providers ??= [...]`).
+- **Prevencao:** em `KortexScope`, providers devem ser `const`/estaveis; se dependerem de `context`, crie-os uma vez num `State`. Teste de regressao cobre navegacao entre areas preservando o estado.
+
+## 2026-11-20 — Seed de dados pertence ao store, nao a tela
+
+- **Sintoma:** o cliente de demonstracao nao aparecia na area de Clientes (lista vazia) porque o seed rodava no controller de Visitas e a lista de Clientes ja havia carregado antes.
+- **Causa:** ordem assincrona entre duas areas — sem vinculo reativo entre elas, o dado criado depois nao aparecia.
+- **Fix:** `InMemoryClientStore/InMemoryTechnicianStore(seedDemo: true)` semeiam no construtor (o "open" do banco), de forma sincrona — nenhuma tela depende da ordem de carga da outra.
+- **Prevencao:** dado inicial e responsabilidade da camada de dados/migration, nunca de um controller de tela.
+
 ## 2026-11-20 — Filtro "pula" ao selecionar: duas causas medidas (chip e Column)
 
 - **Sintoma (relatado na UI):** ao clicar numa opção do filtro, ela "centraliza e volta para a esquerda".

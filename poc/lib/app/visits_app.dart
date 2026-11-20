@@ -13,7 +13,7 @@ import 'package:kortex/kortex.dart';
 import '../modules/visits/data/.index.dart';
 import '../modules/visits/features/.index.dart';
 import '../modules/visits/ui/visits_controller.dart';
-import '../modules/visits/ui/visits_page.dart';
+import 'app_shell.dart';
 
 /// Monta o app de visitas com o escopo raiz.
 ///
@@ -25,9 +25,11 @@ Widget createVisitsApp({
 }) => KortexScope(
   overrides: overrides,
   providers: [
-    KortexProvider<InMemoryClientStore>(create: (_) => InMemoryClientStore()),
+    KortexProvider<InMemoryClientStore>(
+      create: (_) => InMemoryClientStore(seedDemo: seedDemo),
+    ),
     KortexProvider<InMemoryTechnicianStore>(
-      create: (_) => InMemoryTechnicianStore(),
+      create: (_) => InMemoryTechnicianStore(seedDemo: seedDemo),
     ),
     KortexProvider<InMemoryVisitStore>(create: (_) => InMemoryVisitStore()),
     KortexProvider<VisitUseCases>(
@@ -39,11 +41,11 @@ Widget createVisitsApp({
     ),
     KortexProvider<VisitsController>(
       create: (scope) => VisitsController(scope.read<VisitUseCases>())
-        ..loadFormData(seedIfEmpty: seedDemo)
+        ..loadFormData()
         ..refresh(),
     ),
   ],
-  child: const MaterialApp(home: VisitsPage()),
+  child: const MaterialApp(home: AppShell()),
 );
 
 /// Entrada do app de visitas.

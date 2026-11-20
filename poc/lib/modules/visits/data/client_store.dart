@@ -9,13 +9,27 @@ library;
 
 import 'dart:async';
 
+import '../../../core/result.dart';
 import '../domain/client.dart';
 import '../domain/visit_repository.dart';
 
 /// Store volatil de clientes com latencia simulada.
 class InMemoryClientStore implements ClientRepository {
   /// Cria o store com [latency] de espera por operacao.
-  InMemoryClientStore({this.latency = const Duration(milliseconds: 200)});
+  ///
+  /// Com [seedDemo], o "banco" nasce com um cliente de demonstracao —
+  /// seeding no open, sem depender da ordem de carga das telas.
+  InMemoryClientStore({
+    this.latency = const Duration(milliseconds: 200),
+    bool seedDemo = false,
+  }) {
+    if (!seedDemo) return;
+    final result = Client.create(name: 'Cliente Demo', phone: '11988887777');
+    if (result is Ok<Client>) {
+      final created = result.value.withId(++_sequence);
+      _store[created.id] = created;
+    }
+  }
 
   /// Espera aplicada antes de resolver cada operacao.
   final Duration latency;

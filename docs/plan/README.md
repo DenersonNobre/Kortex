@@ -32,7 +32,7 @@ flowchart LR
 | `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Concluído` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
 | `EPIC05` | POC Robusta (Premissas Oráculo) | `EPIC04` | Alta | `Concluído` | [epic-05-poc-robusta.md](epics/epic-05-poc-robusta.md) |
 | `EPIC06` | App de Visitas Técnicas | `EPIC05` | Alta | `Concluído` | [epic-06-app-visitas.md](epics/epic-06-app-visitas.md) |
-| `EPIC07` | Clientes & Agenda | `EPIC06` | Alta | `Em Andamento` | [epic-07-clientes-agenda.md](epics/epic-07-clientes-agenda.md) |
+| `EPIC07` | Clientes & Agenda | `EPIC06` | Alta | `Concluído` | [epic-07-clientes-agenda.md](epics/epic-07-clientes-agenda.md) |
 ---
 
 ## 3. Definition of Ready (DoR) & Definition of Done (DoD)

@@ -35,7 +35,7 @@ abstract interface class VisitUseCases {
   Future<Result<Visit>> toggleChecklistItem(int visitId, int index);
 
   /// Lista as visitas com cliente, tecnico e progresso.
-  Future<List<VisitRow>> listVisits({VisitStatus? status});
+  Future<List<VisitRow>> listVisits({VisitStatus? status, DateTime? day});
 
   /// Lista os clientes cadastrados.
   Future<List<Client>> listClients();
@@ -109,8 +109,8 @@ class DefaultVisitUseCases implements VisitUseCases {
       _toggle(visitId, index);
 
   @override
-  Future<List<VisitRow>> listVisits({VisitStatus? status}) =>
-      _listQuery(status: status);
+  Future<List<VisitRow>> listVisits({VisitStatus? status, DateTime? day}) =>
+      _listQuery(status: status, day: day);
 
   @override
   Future<List<Client>> listClients() => _clients.listClients();

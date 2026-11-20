@@ -36,6 +36,7 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 - Technical visits app in `poc/` (EPIC06): `Visit`/`ChecklistItem`/`Client`/`Technician` domain with validated value objects, `VisitStatus`, three ports and three stores with simulated latency and failure (`UC-06.01`).
 - Technical visits app in `poc/` (EPIC06): five commands, the visit listing query with client/technician join and the `VisitUseCases` facade (`UC-06.02`).
 - Technical visits app in `poc/` (EPIC06): `VisitsController` on `KortexResource`/`KortexCommand`, `VisitsPage` with the three async states plus a status filter and `KortexListener`, new-visit dialog through `KortexScope.capture`, and `overrides`-driven retry test (`UC-06.03`, EPIC06 completed).
+- Technical visits app in `poc/` (EPIC07): `ScheduledAt` value object with injected `now`, clients screen with search and create dialog, daily agenda with day selector, and a three-area `NavigationBar` shell; providers created once per area so tab switching keeps state (`UC-07.01..03`, EPIC07 completed).
 
 ## [0.1.0] - 2026-11-20
 

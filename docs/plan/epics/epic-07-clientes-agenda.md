@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC06` |
 | **Prioridade** | Alta (profissionalização do app de campo) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Em Andamento` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) (consumo; sem alteração de API do pacote) |
 
 ---
@@ -38,14 +38,14 @@ Tornar a POC de visitas técnicas utilizável no dia a dia de campo: **data e ho
 | ID | Título | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-07.01** | `ScheduledAt` no domínio, validação e ordenação | Nenhuma | `Concluído` |
-| **UC-07.02** | Tela e controller de Clientes | `UC-07.01` | `Pendente` |
-| **UC-07.03** | Agenda por dia e navegação entre áreas | `UC-07.02` | `Pendente` |
+| **UC-07.02** | Tela e controller de Clientes | `UC-07.01` | `Concluído` |
+| **UC-07.03** | Agenda por dia e navegação entre áreas | `UC-07.02` | `Concluído` |
 
 ## 4. Definição de Pronto (DoD)
 
-- [ ] UCs `UC-07.01..03` sob TDD Red-Before-Green.
-- [ ] `poc/` com `flutter analyze` limpo e suíte verde (inclui os testes de `EPIC06`).
-- [ ] App executável no Windows com as 3 áreas navegáveis.
+- [x] UCs `UC-07.01..03` sob TDD Red-Before-Green.
+- [x] `poc/` com `flutter analyze` limpo e suíte verde (inclui os testes de `EPIC06`).
+- [x] App executável no Windows com as 3 áreas navegáveis.
 
 ## 5. Casos de Uso Atômicos
 
@@ -84,7 +84,7 @@ Esquema do Cenário: Validação da data/hora agendada
 ### Caso de Uso UC-07.02 — Tela e controller de Clientes
 
 - **Identificador**: `UC-07.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
@@ -110,7 +110,7 @@ Esquema do Cenário: Clientes na POC
 ### Caso de Uso UC-07.03 — Agenda por dia e navegação
 
 - **Identificador**: `UC-07.03`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
