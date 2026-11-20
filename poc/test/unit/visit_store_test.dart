@@ -1,4 +1,7 @@
 import 'package:poc/core/result.dart';
+
+import '../support/fixtures.dart';
+
 import 'package:poc/modules/visits/data/client_store.dart';
 import 'package:poc/modules/visits/data/technician_store.dart';
 import 'package:poc/modules/visits/data/visit_store.dart';
@@ -17,10 +20,24 @@ void main() {
       final store = InMemoryVisitStore(latency: Duration.zero);
 
       final first = await store.saveVisit(
-        _ok(Visit.draft(title: 'A', clientId: 1, technicianId: 1)),
+        _ok(
+          Visit.draft(
+            scheduledAt: at(21),
+            title: 'A',
+            clientId: 1,
+            technicianId: 1,
+          ),
+        ),
       );
       final second = await store.saveVisit(
-        _ok(Visit.draft(title: 'B', clientId: 1, technicianId: 1)),
+        _ok(
+          Visit.draft(
+            scheduledAt: at(21),
+            title: 'B',
+            clientId: 1,
+            technicianId: 1,
+          ),
+        ),
       );
 
       expect(first.id, 1);
@@ -52,7 +69,14 @@ void main() {
     test('deleteVisit remove e ausentes sao no-op', () async {
       final store = InMemoryVisitStore(latency: Duration.zero);
       final visit = await store.saveVisit(
-        _ok(Visit.draft(title: 'A', clientId: 1, technicianId: 1)),
+        _ok(
+          Visit.draft(
+            scheduledAt: at(21),
+            title: 'A',
+            clientId: 1,
+            technicianId: 1,
+          ),
+        ),
       );
 
       await store.deleteVisit(visit.id);

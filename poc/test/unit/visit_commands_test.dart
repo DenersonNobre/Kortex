@@ -22,6 +22,7 @@ VisitUseCases _useCases({
   InMemoryClientStore? clients,
   InMemoryTechnicianStore? technicians,
 }) => DefaultVisitUseCases(
+  now: () => DateTime(2026, 11, 20, 9, 0),
   visits: visits ?? InMemoryVisitStore(latency: Duration.zero),
   clients: clients ?? InMemoryClientStore(latency: Duration.zero),
   technicians: technicians ?? InMemoryTechnicianStore(latency: Duration.zero),
@@ -51,6 +52,7 @@ void main() {
 
       final visit = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca do roteador',
           clientId: client.id,
           technicianId: technician.id,
@@ -67,6 +69,7 @@ void main() {
       final useCases = _useCases(visits: visits);
 
       final result = await useCases.scheduleVisit(
+        scheduledAt: DateTime(2026, 11, 21, 10),
         title: 'Troca',
         clientId: 99,
         technicianId: 1,
@@ -83,6 +86,7 @@ void main() {
       final useCases = _useCases(visits: visits, clients: clients);
 
       final result = await useCases.scheduleVisit(
+        scheduledAt: DateTime(2026, 11, 21, 10),
         title: 'Troca',
         clientId: client.id,
         technicianId: 99,
@@ -97,6 +101,7 @@ void main() {
       final useCases = _useCases(visits: visits);
 
       final result = await useCases.scheduleVisit(
+        scheduledAt: DateTime(2026, 11, 21, 10),
         title: '   ',
         clientId: 1,
         technicianId: 1,
@@ -121,6 +126,7 @@ void main() {
       );
       final visit = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
           technicianId: technician.id,
@@ -145,6 +151,7 @@ void main() {
       );
       final visit = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
           technicianId: technician.id,
@@ -172,6 +179,7 @@ void main() {
       );
       final visit = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
           technicianId: technician.id,
@@ -199,6 +207,7 @@ void main() {
       );
       final visit = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
           technicianId: technician.id,
@@ -225,6 +234,7 @@ void main() {
       );
       final visit = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
           technicianId: technician.id,
@@ -271,6 +281,7 @@ void main() {
       );
       _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca do roteador',
           clientId: client.id,
           technicianId: technician.id,
@@ -303,6 +314,7 @@ void main() {
       );
       final scheduled = _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'A',
           clientId: client.id,
           technicianId: technician.id,
@@ -310,6 +322,7 @@ void main() {
       );
       _ok(
         await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'B',
           clientId: client.id,
           technicianId: technician.id,

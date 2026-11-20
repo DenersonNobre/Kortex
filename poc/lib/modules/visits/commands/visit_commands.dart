@@ -13,24 +13,39 @@ import '../domain/.index.dart';
 /// Agenda uma visita para um cliente e um tecnico existentes.
 class ScheduleVisitCommand {
   /// Cria o command sobre [visits], [clients] e [technicians].
-  const ScheduleVisitCommand(this._visits, this._clients, this._technicians);
+  ///
+  /// [now] e' injetavel para manter o dominio deterministico nos testes.
+  ScheduleVisitCommand(
+    this._visits,
+    this._clients,
+    this._technicians, {
+    DateTime Function()? now,
+  }) : _now = now ?? DateTime.now;
 
   final VisitRepository _visits;
   final ClientRepository _clients;
   final TechnicianRepository _technicians;
+  final DateTime Function() _now;
 
-  /// Agenda a visita; falha se cliente/tecnico nao existirem.
+  /// Agenda a visita; falha se cliente/tecnico nao existirem ou a data for
+  /// passada.
   Future<Result<Visit>> call({
     required String title,
     required int clientId,
     required int technicianId,
+    required DateTime scheduledAt,
     List<ChecklistItem> checklist = const [],
     String notes = '',
   }) async {
+    final scheduled = ScheduledAt.create(scheduledAt, now: _now());
+    if (scheduled is Fail<ScheduledAt>) {
+      return Fail<Visit>(scheduled.code, scheduled.message);
+    }
     final draft = Visit.draft(
       title: title,
       clientId: clientId,
       technicianId: technicianId,
+      scheduledAt: (scheduled as Ok<ScheduledAt>).value,
       checklist: checklist,
       notes: notes,
     );

@@ -125,7 +125,7 @@ class VisitsController extends IKortexController {
   }
 
   /// Agenda visita usando o primeiro cliente e o primeiro tecnico.
-  Future<bool> scheduleVisit(String title) async {
+  Future<bool> scheduleVisit(String title, {DateTime? scheduledAt}) async {
     final currentClients = clients.peek();
     final currentTechnicians = technicians.peek();
     if (currentClients.isEmpty || currentTechnicians.isEmpty) {
@@ -136,6 +136,7 @@ class VisitsController extends IKortexController {
       title: title,
       clientId: currentClients.first.id,
       technicianId: currentTechnicians.first.id,
+      scheduledAt: scheduledAt ?? DateTime.now().add(const Duration(days: 1)),
       checklist: _defaultChecklist(),
     );
     if (result is Fail<Visit>) {

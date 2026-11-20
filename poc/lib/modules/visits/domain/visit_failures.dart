@@ -38,4 +38,7 @@ abstract final class VisitFailureCodes {
 
   /// Visita que nao esta em andamento.
   static const visitNotInProgress = 'VISIT_NOT_IN_PROGRESS';
+
+  /// Data/hora agendada no passado (ou ausente).
+  static const scheduledInPast = 'VISIT_IN_PAST';
 }

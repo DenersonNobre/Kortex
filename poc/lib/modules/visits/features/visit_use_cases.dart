@@ -20,6 +20,7 @@ abstract interface class VisitUseCases {
     required String title,
     required int clientId,
     required int technicianId,
+    required DateTime scheduledAt,
     List<ChecklistItem> checklist,
     String notes,
   });
@@ -63,8 +64,9 @@ class DefaultVisitUseCases implements VisitUseCases {
     required VisitRepository visits,
     required ClientRepository clients,
     required TechnicianRepository technicians,
+    DateTime Function()? now,
   }) : _listQuery = ListVisitsQuery(visits, clients, technicians),
-       _schedule = ScheduleVisitCommand(visits, clients, technicians),
+       _schedule = ScheduleVisitCommand(visits, clients, technicians, now: now),
        _start = StartVisitCommand(visits),
        _complete = CompleteVisitCommand(visits),
        _toggle = ToggleChecklistItemCommand(visits),
@@ -84,12 +86,14 @@ class DefaultVisitUseCases implements VisitUseCases {
     required String title,
     required int clientId,
     required int technicianId,
+    required DateTime scheduledAt,
     List<ChecklistItem> checklist = const [],
     String notes = '',
   }) => _schedule(
     title: title,
     clientId: clientId,
     technicianId: technicianId,
+    scheduledAt: scheduledAt,
     checklist: checklist,
     notes: notes,
   );

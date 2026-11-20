@@ -1,4 +1,7 @@
 import 'package:poc/core/result.dart';
+
+import '../support/fixtures.dart';
+
 import 'package:poc/modules/visits/domain/checklist_item.dart';
 import 'package:poc/modules/visits/domain/client.dart';
 import 'package:poc/modules/visits/domain/technician.dart';
@@ -118,6 +121,7 @@ void main() {
   group('Visit (agregado raiz)', () {
     test('draft valida titulo e itens de checklist', () {
       final draft = Visit.draft(
+        scheduledAt: at(21),
         title: 'Troca do roteador',
         clientId: 1,
         technicianId: 2,
@@ -132,7 +136,12 @@ void main() {
     });
 
     test('draft com titulo vazio reprova sem criar visita', () {
-      final draft = Visit.draft(title: '  ', clientId: 1, technicianId: 2);
+      final draft = Visit.draft(
+        scheduledAt: at(21),
+        title: '  ',
+        clientId: 1,
+        technicianId: 2,
+      );
 
       expect(draft, isA<Fail<Visit>>());
       expect((draft as Fail).code, VisitFailureCodes.titleEmpty);
@@ -141,6 +150,7 @@ void main() {
     test('concluir checklist marca todos os itens', () {
       final visit = _ok(
         Visit.draft(
+          scheduledAt: at(21),
           title: 'Troca',
           clientId: 1,
           technicianId: 2,
@@ -160,6 +170,7 @@ void main() {
     test('progresso e a razao de itens concluidos', () {
       final visit = _ok(
         Visit.draft(
+          scheduledAt: at(21),
           title: 'Troca',
           clientId: 1,
           technicianId: 2,
@@ -180,6 +191,7 @@ void main() {
     test('toggle de item inexistente mantem a visita intacta', () {
       final visit = _ok(
         Visit.draft(
+          scheduledAt: at(21),
           title: 'Troca',
           clientId: 1,
           technicianId: 2,
