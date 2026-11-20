@@ -39,7 +39,7 @@ Evoluir a POC do `example/`/`poc/` para um **app de visitas técnicas**: o técn
 | ID | Título | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-06.01** | Domínio de visitas, `Result`, ports e stores assíncronos | Nenhuma | `Concluído` |
-| **UC-06.02** | Commands, queries com join e fachada `VisitUseCases` | `UC-06.01` | `Pendente` |
+| **UC-06.02** | Commands, queries com join e fachada `VisitUseCases` | `UC-06.01` | `Concluído` |
 | **UC-06.03** | Controller, páginas (lista, detalhe) e dialog de nova visita | `UC-06.02` | `Pendente` |
 
 ## 4. Definição de Pronto (DoD) do Épico
@@ -90,7 +90,7 @@ Esquema do Cenário: Invariantes do dominio de visitas
 ### Caso de Uso UC-06.02 — Commands, queries e fachada
 
 - **Identificador**: `UC-06.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
