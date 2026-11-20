@@ -18,6 +18,12 @@
 - **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
 - **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
+## 2026-11-20 — `KortexSelector` compõe `Computed` + `Watch` em vez de observar direto
+
+- **Sintoma:** seletor precisava de coleta de deps, comparação por `equals`, agenda fora de fase e ciclo de vida — tudo já testado em `KortexComputed`/`KortexWatch`.
+- **Causa:** reimplementar duplicaria a máquina de invalidação (e os seus bugs).
+- **Fix:** `_KortexSelectorState` guarda só o `KortexComputed` (com o `equals` do widget) e o `build` retorna um `KortexWatch` interno que lê o derivado; `didUpdateWidget` recria o derivado e o rebuild do pai reassina o `Watch` interno.
+
 ## 2026-11-19 — `capture` precisa de token de tipo explícito
 
 - **Sintoma:** `KortexScope.capture` montava providers `KortexProvider<dynamic>.value` cujo `type` resolvia `dynamic` — leitura no dialog lançava `StateError` de provider ausente mesmo com a instância coletada.
