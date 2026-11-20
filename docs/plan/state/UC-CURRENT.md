@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: `EPIC04` (`UC-04.03` — Barrel `lib/kortex.dart` e app de exemplo)
-- **Status**: `Pronto para TDD Red-Before-Green`
-- **Último passo concluído**: `UC-04.02` concluído (`KortexListener` fora de fase, `KortexResourceBuilder` exaustivo, pontes `Listenable` sem transferência de posse; suíte 79/79 + `flutter analyze` verdes).
-- **Próximo passo**: Escrever testes Red para `UC-04.03` e implementar o barrel `lib/kortex.dart` e o app `example/`.
+- **Épico ativo**: `EPIC04` (`UC-04.04` — Pipeline CI dupla + release `v0.1.0`)
+- **Status**: `Pronto para execução (infra, sem TDD)`
+- **Último passo concluído**: `UC-04.03` concluído (barrel público escondendo `KortexTracker`, `example/` com `CounterPage` + smoke test; raiz 80/80, `example/` 1/1, ambos `No issues found!`).
+- **Próximo passo**: Executar `UC-04.04` — criar `.gitea/workflows/ci.yml` + `.github/workflows/ci.yml` (prova negativa), promover `CHANGELOG`, alinhar `pubspec` e taguear `v0.1.0`.
