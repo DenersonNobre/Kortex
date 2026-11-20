@@ -7,7 +7,7 @@
 /// Dependências: `shared/result.dart` + `task_failures.dart` (puro).
 library;
 
-import '../../../shared/result.dart';
+import '../../../core/result.dart';
 import 'task_failures.dart';
 
 /// Título de task sempre válido (construção só via `create`).

@@ -1,8 +1,6 @@
-import 'package:example/modules/tasks/domain/task.dart';
-import 'package:example/modules/tasks/domain/task_failures.dart';
-import 'package:example/modules/tasks/domain/task_title.dart';
-import 'package:example/modules/tasks/infra/in_memory_task_repository.dart';
-import 'package:example/shared/result.dart';
+import 'package:poc/core/result.dart';
+import 'package:poc/modules/tasks/data/.index.dart';
+import 'package:poc/modules/tasks/domain/.index.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
@@ -58,9 +56,9 @@ void main() {
     });
   });
 
-  group('InMemoryTaskRepository', () {
+  group('TaskStore', () {
     test('save atribui ids sequenciais', () {
-      final repo = InMemoryTaskRepository();
+      final repo = TaskStore();
 
       final first = repo.save(_ok(Task.draft('A')));
       final second = repo.save(_ok(Task.draft('B')));
@@ -70,7 +68,7 @@ void main() {
     });
 
     test('findAll ordena por id e findById ausente é null', () {
-      final repo = InMemoryTaskRepository();
+      final repo = TaskStore();
       repo.save(_ok(Task.draft('B')));
       repo.save(_ok(Task.draft('A')));
 
@@ -79,7 +77,7 @@ void main() {
     });
 
     test('save com id substitui e deleteById remove', () {
-      final repo = InMemoryTaskRepository();
+      final repo = TaskStore();
       final created = repo.save(_ok(Task.draft('A')));
 
       repo.save(created.toggle());

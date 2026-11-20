@@ -12,7 +12,7 @@ import '../domain/task.dart';
 import '../domain/task_repository.dart';
 
 /// Repositório volátil com ids sequenciais a partir de 1.
-class InMemoryTaskRepository implements TaskRepository {
+class TaskStore implements TaskRepository {
   final Map<int, Task> _store = {};
   var _sequence = 0;
 
@@ -41,7 +41,12 @@ class InMemoryTaskRepository implements TaskRepository {
   }
 
   Task _insert(Task task) {
-    final created = Task(id: ++_sequence, title: task.title, done: task.done);
+    final created = Task(
+      id: ++_sequence,
+      title: task.title,
+      done: task.done,
+      categoryId: task.categoryId,
+    );
     _store[created.id] = created;
     return created;
   }

@@ -13,7 +13,8 @@ Versionamento: [SemVer](https://semver.org/lang/pt-BR/). Categorias: `Added`, `C
 
 ### Added
 
-- POC do `example/` (EPIC05): `Result<T>` selado, `Task` imutável + VO `TaskTitle`, port `TaskRepository` e adapter `InMemoryTaskRepository` (`UC-05.01`).
+- POC do `poc/` (EPIC05): `Result<T>` selado, `Task` imutável + VO `TaskTitle`, port `TaskRepository` e adapter (`UC-05.01`).
+- POC do `poc/` (EPIC05): segundo agregado `Category` (VOs validados, invariante cross-aggregate), 9 commands/queries e fachada `TaskUseCases` em layout VSA `.dnolib` (`app`/`core`/`modules`, barrels `.index.dart`) (`UC-05.02`).
 
 ## [0.1.0] - 2026-11-20
 

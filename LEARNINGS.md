@@ -6,6 +6,18 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — `is` com early-return NÃO promove união selada genérica
+
+- **Sintoma:** `if (x is Fail<T>) return ...; x.value` não compilou (`The getter 'value' isn't defined for type 'Result<T>'`) — provado em isolamento com `sealed` mínima + em `Category.draft`/`Task.draft`.
+- **Causa (verificada, não suposição):** a negação do `is` não subtrai o ramo testado quando há parâmetro de tipo envolvido, mesmo com a hierarquia selada completa no mesmo arquivo.
+- **Fix/padrão da casa:** `as Ok<T>` explícito após o guard; alternativa idiomática é `switch` com pattern (`case Ok(value: final v)`), que destrutura com segurança. Candidato a `topics/flutter.md` quando houver fluxo de claim.
+
+## 2026-11-20 — Campo novo em entidade exige grep em todos os pontos de (re)construção
+
+- **Sintoma:** `categoryId` sumiu na persistência: 2 testes falharam (`deleteCategory` liberou categoria em uso; `listByCategory` voltou vazio) — causa única no `_insert` do adapter, que reconstruía `Task` sem o campo novo.
+- **Causa:** o campo foi adicionado à entidade e ao construtor, mas o adapter tem seu próprio ponto de construção (`Task(...)` explícito) que o compilador não acusou (todos os campos têm default).
+- **Prevenção:** ao adicionar campo com default, grepar `Task(` no repo inteiro — construtor nomeado com defaults nunca quebra sozinho, e o teste que cobre o join (`listByCategory` com nome resolvido) é o que denuncia.
+
 ## 2026-11-19 — Barrel com ponto (`.reactive.dart`) não embarca no pub.dev
 
 - **Sintoma:** `dart pub publish --dry-run` listou `kortex_*.dart` mas omitiu `.reactive.dart` do arquivo a publicar — o barrel funcionava local/git/CI e sumiria para consumidores do pacote.

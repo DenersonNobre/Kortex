@@ -1,4 +1,4 @@
-# Épico 05: POC Robusta — Premissas Oráculo no `example/` (`EPIC05`)
+# Épico 05: POC Robusta — Premissas Oráculo no `poc/` (`EPIC05`)
 
 ## Metadados
 
@@ -15,10 +15,10 @@
 
 ## 1. Objetivo de Negócio & Escopo
 
-Evoluir o `example/` de app mínimo para POC robusta que demonstra, em código executável e testado, as premissas de programação do Oráculo (`architecture-guidelines.md`): Vertical Slices por feature, CQRS leve (query × command), `Result` em vez de exceção para falha esperada, Port (`TaskRepository`) + Adapter (`InMemoryTaskRepository`), fachada de casos de uso (`TaskUseCases`, sem over-injection no controller), `IKortexController` sem `onInit` mágico e UI `StatelessWidget`-first.
+Evoluir o `poc/` de app mínimo para POC robusta que demonstra, em código executável e testado, as premissas de programação do Oráculo (`architecture-guidelines.md`): Vertical Slices por feature, CQRS leve (query × command), `Result` em vez de exceção para falha esperada, Port (`TaskRepository`) + Adapter (`InMemoryTaskRepository`), fachada de casos de uso (`TaskUseCases`, sem over-injection no controller), `IKortexController` sem `onInit` mágico e UI `StatelessWidget`-first.
 
 - **Incluso**: `Result<T>` (`Ok`/`Fail`), `Task` + `TaskTitle` (VO validado), `TaskRepository` (port), `InMemoryTaskRepository` (adapter), 4 slices (`list_tasks`, `create_task`, `toggle_task`, `remove_task`), `TaskUseCases` (fachada), `TasksController`, `TasksPage` + widgets, testes unitários (handlers com InMemory) e de widget (fluxo ponta a ponta).
-- **Não Incluso / Fora do Escopo**: qualquer alteração na API de `lib/` (SPEC congelada na `v0.1.0`); persistência real, roteador, backend, dependências externas no `example/` (só `flutter` + `kortex` via path).
+- **Não Incluso / Fora do Escopo**: qualquer alteração na API de `lib/` (SPEC congelada na `v0.1.0`); persistência real, roteador, backend, dependências externas no `poc/` (só `flutter` + `kortex` via path).
 
 ---
 
@@ -27,7 +27,7 @@ Evoluir o `example/` de app mínimo para POC robusta que demonstra, em código e
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-05.01** | Domínio, `Result`, Port e Adapter InMemory | Nenhuma | `Concluído` |
-| **UC-05.02** | Commands e fachada `TaskUseCases` | `UC-05.01` | `Pendente` |
+| **UC-05.02** | Commands, segundo agregado (`Category`) e fachada `TaskUseCases` | `UC-05.01` | `Concluído` |
 | **UC-05.03** | Controller, Page e fluxo de widget | `UC-05.02` | `Pendente` |
 
 ---
@@ -35,9 +35,9 @@ Evoluir o `example/` de app mínimo para POC robusta que demonstra, em código e
 ## 3. Definição de Pronto (DoD) do Épico
 
 - [ ] Todos os Casos de Uso (`UC-05.01..03`) implementados sob TDD Red-Before-Green.
-- [ ] `example/` sem dependências externas (`flutter` + `kortex` path apenas).
-- [ ] `flutter analyze` e `flutter test` verdes na raiz e em `example/`.
-- [ ] `example/README.md` descrevendo o mapa feature→arquivo.
+- [ ] `poc/` sem dependências externas (`flutter` + `kortex` path apenas).
+- [ ] `flutter analyze` e `flutter test` verdes na raiz e em `poc/`.
+- [ ] `poc/README.md` descrevendo o mapa feature→arquivo.
 
 ---
 
@@ -78,16 +78,16 @@ Esquema do Cenário: Validação de domínio e contrato do repositório
 
 ---
 
-### Caso de Uso UC-05.02 — Commands e Fachada `TaskUseCases`
+### Caso de Uso UC-05.02 — Commands, Category e Fachada `TaskUseCases`
 
 - **Identificador**: `UC-05.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
 - **Como** desenvolvedor de feature
-- **Eu quero** commands (`create`/`toggle`/`remove`) devolvendo `Result` e uma fachada `TaskUseCases` agregando os 4 casos de uso
-- **Para que** o controller injete 1 dependência (sem over-injection) e falha esperada nunca vire exceção
+- **Eu quero** um segundo agregado (`Category` com VOs validados), commands (`create`/`toggle`/`remove`/`assign`/`createCategory`/`deleteCategory`) devolvendo `Result` e uma fachada `TaskUseCases` agregando os casos de uso
+- **Para que** o controller injete 1 dependência (sem over-injection), falha esperada nunca vire exceção e o relacionamento entre agregados tenha invariante explícita (categoria em uso não exclui)
 
 #### Critérios de Aceitação (Gherkin Executável)
 
@@ -101,8 +101,14 @@ Esquema do Cenário: Commands via fachada com Result
     | estado | comando | resultado | efeito |
     | vazio | create("Estudar") | Ok(Task) | 1 task persistida |
     | vazio | create("") | Fail TASK_EMPTY_TITLE | 0 tasks persistidas |
+    | vazio | create("X", categoria inexistente) | Fail CATEGORY_NOT_FOUND | 0 tasks persistidas |
+    | vazio | createCategory("", "#ff0000") | Fail CATEGORY_EMPTY_NAME | 0 categorias |
+    | vazio | createCategory("Casa", "vermelho") | Fail CATEGORY_INVALID_COLOR | 0 categorias |
     | 1 task | toggle(id inexistente) | Fail TASK_NOT_FOUND | lista inalterada |
-    | 1 task | remove(id) | Ok | 0 tasks |
+    | 1 task | remove(id) | Ok(task removida) | 0 tasks |
+    | 1 task em 1 categoria | deleteCategory(id) | Fail CATEGORY_IN_USE | ambos preservados |
+    | 1 task sem categoria | assign(task, cat) | Ok(task com categoria) | view com categoryName |
+    | 1 task com categoria | assign(task, null) | Ok(task sem categoria) | categoryId nulo |
 ```
 
 #### NFRs Mensuráveis

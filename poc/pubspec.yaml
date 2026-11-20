@@ -1,5 +1,5 @@
-name: example
-description: App de exemplo do pacote kortex (StatelessWidget-first, zero dependências externas).
+name: poc
+description: POC do pacote kortex (StatelessWidget-first, zero dependências externas).
 publish_to: none
 
 environment:
