@@ -28,7 +28,7 @@ Evoluir o `poc/` de app mínimo para POC robusta que demonstra, em código execu
 | --- | --- | --- | --- |
 | **UC-05.01** | Domínio, `Result`, Port e Adapter InMemory | Nenhuma | `Concluído` |
 | **UC-05.02** | Commands, segundo agregado (`Category`) e fachada `TaskUseCases` | `UC-05.01` | `Concluído` |
-| **UC-05.03** | Controller, Page e fluxo de widget | `UC-05.02` | `Pendente` |
+| **UC-05.03** | Controller, Page e fluxo de widget | `UC-05.02` | `Concluído` |
 | **UC-05.04** | Exemplo mínimo publicável (`example/`, pub.dev) | Nenhuma | `Concluído` |
 | **UC-05.05** | Internacionalização das superfícies públicas (EN) | `UC-05.04` | `Concluído` |
 
@@ -124,7 +124,7 @@ Esquema do Cenário: Commands via fachada com Result
 ### Caso de Uso UC-05.03 — Controller, Page e Fluxo de Widget
 
 - **Identificador**: `UC-05.03`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
