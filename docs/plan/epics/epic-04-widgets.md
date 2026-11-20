@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC02`, `EPIC03` |
 | **Prioridade** | Alta (Camada de UI & Entrega Final v0.1.0) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Pendente` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -29,7 +29,7 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 | **UC-04.01** | `IKortexPage`, `KortexWatch` (`child`) e `KortexSelector<T>` | Nenhuma | `Concluído` |
 | **UC-04.02** | `KortexListener<T>`, `KortexResourceBuilder<T>` e `KortexListenableAdapter` | `UC-04.01` | `Concluído` |
 | **UC-04.03** | Barrel `lib/kortex.dart` e app de exemplo em `example/` | `UC-04.02` | `Concluído` |
-| **UC-04.04** | Pipeline CI remota (Gitea + GitHub) e release `v0.1.0` | `UC-04.03` | `Pendente` |
+| **UC-04.04** | Pipeline CI remota (Gitea + GitHub) e release `v0.1.0` | `UC-04.03` | `Concluído` |
 
 ---
 
@@ -39,8 +39,8 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 - [x] `lib/kortex.dart` ocultando coordenadores internos (`KortexTracker`).
 - [x] `example/` compilando e analisando sem warnings sob `flutter analyze`.
 - [x] Suíte completa (`flutter analyze` + `flutter test`) verde.
-- [ ] Pipeline CI remota verde em runner limpo a cada push/PR em `main`, nas duas plataformas: Gitea Actions (`.gitea/workflows/ci.yml`, runner self-hosted) e GitHub Actions (`.github/workflows/ci.yml`).
-- [ ] Release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado (`0.1.0`).
+- [x] Pipeline CI remota verde em runner limpo a cada push/PR em `main`, nas duas plataformas: Gitea Actions (`.gitea/workflows/ci.yml`, runner self-hosted) e GitHub Actions (`.github/workflows/ci.yml`).
+- [x] Release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado (`0.1.0`).
 
 ---
 
@@ -151,7 +151,7 @@ Esquema do Cenário: Exportação pública e exemplo mínimo
 ### Caso de Uso UC-04.04 — Pipeline CI Remota (Gitea + GitHub) e Release `v0.1.0`
 
 - **Identificador**: `UC-04.04`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 

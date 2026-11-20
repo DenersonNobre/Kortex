@@ -26,7 +26,7 @@ flowchart LR
 | `EPIC01` | Núcleo Reativo em Dart Puro | `EPIC00` | Crítica | `Concluído` | [epic-01-nucleo-reativo.md](epics/epic-01-nucleo-reativo.md) |
 | `EPIC02` | Assincronia, Streams & Comandos | `EPIC01` | Alta | `Concluído` | [epic-02-assincronia.md](epics/epic-02-assincronia.md) |
 | `EPIC03` | Escopo & Ciclo de Vida na Árvore | `EPIC01` | Crítica | `Concluído` | [epic-03-escopo.md](epics/epic-03-escopo.md) |
-| `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Em Andamento` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
+| `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Concluído` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
 
 ---
 

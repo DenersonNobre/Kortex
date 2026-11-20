@@ -8,17 +8,16 @@
 
 ## Contexto
 
-Pacote Flutter/Dart `kortex` (`v0.1.0`; `EPIC00` concluído, iniciando `EPIC01` sob TDD).
+Pacote Flutter/Dart `kortex` (`v0.1.0` tagueada; `EPIC00`–`EPIC04` concluídos).
 
-## Estado real (verificado em 2026-11-19)
+## Estado real (verificado em 2026-11-20)
 
-- Branch `main` com `EPIC00` (`UC-00.01`) concluído: esqueleto do pacote, `.gitattributes`, `AGENTS.md`, `PRD.md`, `SPEC.md`, `DESIGN.md`, `docs/plan/`.
-- Baselines medidos: `flutter analyze` (`No issues found!`) e `flutter test` (`All tests passed!`).
+- Tag `v0.1.0` nos remotos Gitea e GitHub; CI dupla verde + prova negativa vermelha nos gates certos.
+- Baselines medidos: `flutter analyze` (`No issues found!`) e `flutter test` (raiz 80/80, `example/` 1/1).
 
 ## Próximo passo acionável
 
-1. Implementar `UC-01.01` (`IKortexDisposable`, `KortexDisposeBag`, `IKortexController`) sob TDD Red-Before-Green.
-2. Seguir a DAG (`EPIC01` → `EPIC02` / `EPIC03` → `EPIC04`).
+1. Próximo ciclo sob demanda (nova `EPIC05+` ou manutenção via `support/vX.Y`).
 
 ## Travas vivas
 

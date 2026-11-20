@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: `EPIC04` (`UC-04.04` — Pipeline CI dupla + release `v0.1.0`)
-- **Status**: `Pronto para execução (infra, sem TDD)`
-- **Último passo concluído**: `UC-04.03` concluído (barrel público escondendo `KortexTracker`, `example/` com `CounterPage` + smoke test; raiz 80/80, `example/` 1/1, ambos `No issues found!`).
-- **Próximo passo**: Executar `UC-04.04` — criar `.gitea/workflows/ci.yml` + `.github/workflows/ci.yml` (prova negativa), promover `CHANGELOG`, alinhar `pubspec` e taguear `v0.1.0`.
+- **Épico ativo**: — (todos concluídos: `EPIC00`–`EPIC04`)
+- **Status**: `v0.1.0` tagueada e publicada no Gitea e no GitHub
+- **Último passo concluído**: `UC-04.04` concluído (CI dupla verde + prova negativa vermelha nos gates certos, `CHANGELOG` promovido, `pubspec` `0.1.0`, tag `v0.1.0` nos dois remotos).
+- **Próximo passo**: Próximo ciclo sob demanda (nova `EPIC05+` ou manutenção via `support/vX.Y`).
