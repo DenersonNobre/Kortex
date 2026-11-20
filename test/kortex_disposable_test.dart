@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kortex/src/reactive/kortex_controller.dart';
-import 'package:kortex/src/reactive/kortex_disposable.dart';
+import 'package:kortex/src/reactive/reactive.dart';
 
 /// Descartável de teste que registra cada chamada a `dispose()`.
 class _Probe implements IKortexDisposable {

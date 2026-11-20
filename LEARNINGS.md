@@ -1,5 +1,12 @@
 # Aprendizados — kortex
 
+## 2026-11-19 — Barrel com ponto (`.reactive.dart`) não embarca no pub.dev
+
+- **Sintoma:** `dart pub publish --dry-run` listou `kortex_*.dart` mas omitiu `.reactive.dart` do arquivo a publicar — o barrel funcionava local/git/CI e sumiria para consumidores do pacote.
+- **Causa:** o empacotador do pub ignora dotfiles ao montar o archive; nada no `flutter analyze` ou `flutter test` acusa (15/15 verdes com o ponto).
+- **Prevenção:** todo barrel novo passa por `dart pub publish --dry-run | Select-String <arquivo>` antes da release (prova incluída na `UC-04.04`); barrels publicados nunca usam prefixo `.`.
+
+
 > Aprendizados específicos DESTE repositório (arquitetura, decisões, gotchas do projeto).
 > Os transversais (qualquer projeto da mesma stack) sobem para `agents/rules/topics/<stack>.md`
 > ou `agents/rules/global_learnings.md`; procedimento reutilizável vira Skill.

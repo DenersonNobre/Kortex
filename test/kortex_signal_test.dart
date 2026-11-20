@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kortex/src/reactive/kortex_observer.dart';
-import 'package:kortex/src/reactive/kortex_signal.dart';
+import 'package:kortex/src/reactive/reactive.dart';
 
 /// Observador de teste que conta notificações.
 class _Probe implements IKortexObserver {
