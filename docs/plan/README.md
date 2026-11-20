@@ -24,8 +24,8 @@ flowchart LR
 | --- | --- | --- | --- | --- | --- |
 | `EPIC00` | Fundação Técnica & Governança | Nenhuma | Crítica | `Concluído` | [epic-00-fundacao.md](epics/epic-00-fundacao.md) |
 | `EPIC01` | Núcleo Reativo em Dart Puro | `EPIC00` | Crítica | `Concluído` | [epic-01-nucleo-reativo.md](epics/epic-01-nucleo-reativo.md) |
-| `EPIC02` | Assincronia, Streams & Comandos | `EPIC01` | Alta | `Em Andamento` | [epic-02-assincronia.md](epics/epic-02-assincronia.md) |
-| `EPIC03` | Escopo & Ciclo de Vida na Árvore | `EPIC01` | Crítica | `Pendente` | [epic-03-escopo.md](epics/epic-03-escopo.md) |
+| `EPIC02` | Assincronia, Streams & Comandos | `EPIC01` | Alta | `Concluído` | [epic-02-assincronia.md](epics/epic-02-assincronia.md) |
+| `EPIC03` | Escopo & Ciclo de Vida na Árvore | `EPIC01` | Crítica | `Em Andamento` | [epic-03-escopo.md](epics/epic-03-escopo.md) |
 | `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Pendente` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
 
 ---

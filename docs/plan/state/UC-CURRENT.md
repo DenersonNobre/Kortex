@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: `EPIC02` (`UC-02.02` — `KortexStreamResource`, `toStream()` e `KortexCommand`)
+- **Épico ativo**: `EPIC03` (`UC-03.01` — `KortexProvider`, `IKortexScopeReader` e `KortexScope`)
 - **Status**: `Pronto para TDD Red-Before-Green`
-- **Último passo concluído**: `UC-02.01` concluído (`IKortexAsyncState` selada + `KortexResource` com `previousValue` e geração monotônica; suíte 35/35 + `flutter analyze` verdes).
-- **Próximo passo**: Escrever testes Red para `UC-02.02` e implementar `lib/src/reactive/kortex_stream_resource.dart` e `lib/src/reactive/kortex_command.dart`.
+- **Último passo concluído**: `EPIC02` concluída (`UC-02.01..02`: resource, stream, command; suíte 45/45 + `flutter analyze` verdes).
+- **Próximo passo**: Escrever testes Red para `UC-03.01` e implementar `lib/src/scope/kortex_provider.dart` e `lib/src/scope/kortex_scope.dart`.

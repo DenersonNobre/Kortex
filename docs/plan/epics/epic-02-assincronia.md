@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC01` |
 | **Prioridade** | Alta |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Pendente` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -27,15 +27,15 @@ Implementar as primitivas assíncronas em Dart puro (`KortexResource<T>`, `Korte
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-02.01** | `IKortexAsyncState` e `KortexResource` (race condition + `previousValue`) | Nenhuma | `Concluído` |
-| **UC-02.02** | `KortexStreamResource`, `toStream()` e `KortexCommand` | `UC-02.01` | `Pendente` |
+| **UC-02.02** | `KortexStreamResource`, `toStream()` e `KortexCommand` | `UC-02.01` | `Concluído` |
 
 ---
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] `UC-02.01` e `UC-02.02` cobertos por testes de concorrência (`Completer`/`StreamController`) sob TDD.
-- [ ] Zero imports Flutter em `lib/src/reactive/`.
-- [ ] `flutter analyze` e `flutter test` verdes.
+- [x] `UC-02.01` e `UC-02.02` cobertos por testes de concorrência (`Completer`/`StreamController`) sob TDD.
+- [x] Zero imports Flutter em `lib/src/reactive/`.
+- [x] `flutter analyze` e `flutter test` verdes.
 
 ---
 
@@ -78,7 +78,7 @@ Esquema do Cenário: Controle de concorrência e previousValue em KortexResource
 ### Caso de Uso UC-02.02 — `KortexStreamResource`, `toStream()` e `KortexCommand`
 
 - **Identificador**: `UC-02.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 

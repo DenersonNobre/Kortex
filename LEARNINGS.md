@@ -7,11 +7,16 @@
 - **Prevenção:** todo barrel novo passa por `dart pub publish --dry-run | Select-String <arquivo>` antes da release (prova incluída na `UC-04.04`); barrels publicados nunca usam prefixo `.`.
 
 ## 2026-11-19 — `KortexComputed` observado recomputa na hora; sem observador, só dirty
-
 - **Sintoma:** `KortexComputed` avisava a jusante ao invalidar e só recomputava na leitura — derivado igual gerava notificação fantasma (teste `só notifica quando o derivado muda` falhou com 1 aviso onde esperava 0).
 - **Causa:** notificação ansiosa antes da comparação por `equals`; a SPEC pede invalidação em cascata, mas o `equals` do construtor só faz sentido se gatear o aviso.
 - **Fix:** sem observadores, só `_isDirty = true` (lazy); com observadores, `_recompute()` imediato e aviso só se o derivado mudou (`_storeIfChanged`). `KortexSelector` continua como filtro de rebuild na UI.
 
+
+## 2026-11-19 — Ponte `toStream` estourou a pilha por assinar via tracker
+
+- **Sintoma:** `toStream` com `runWithObserver` na anexação entrou em recursão infinita (`Stack Overflow`): `recordRead` chama `onRead` já na coleta, e a ponte lia+emitia de novo a cada aviso.
+- **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
+- **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
 > Aprendizados específicos DESTE repositório (arquitetura, decisões, gotchas do projeto).
 > Os transversais (qualquer projeto da mesma stack) sobem para `agents/rules/topics/<stack>.md`

@@ -18,6 +18,7 @@ Versionamento: [SemVer](https://semver.org/lang/pt-BR/). Categorias: `Added`, `C
 - Barrel `lib/src/reactive/reactive.dart` reexportando a camada reativa em um único import.
 - `KortexComputed` (lazy, cache, invalidação em cascata, `equals` na jusante) e `KortexEffect` (`onCleanup`, `debounce`, guarda anti-reentrância) (`UC-01.03`, `EPIC01` concluída).
 - `IKortexAsyncState` selada e `KortexResource` com `previousValue` e descarte por geração monotônica (`UC-02.01`).
+- `KortexStreamResource` (cancelamento + `restart` com geração), `toStream()` e `KortexCommand` (trava de reentrância) (`UC-02.02`, `EPIC02` concluída).
 
 - Esqueleto inicial do pacote Flutter `kortex` (`pubspec.yaml`, `analysis_options.yaml`, `lib/kortex.dart`, `test/kortex_test.dart`).
 - Documentação de produto e arquitetura da `v0.1.0` em `docs/product/PRD.md` e `docs/architecture/SPEC.md` (reatividade em Dart puro, `KortexScope`, `IKortexPage` `StatelessWidget`-first, pontes `Stream`/`ValueListenable`/`Listenable`, guardrails Anti-GetX e convenção `I-`).
