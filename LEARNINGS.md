@@ -1,5 +1,11 @@
 # Aprendizados — kortex
 
+> Transversais promovidos para os canônicos do Oráculo (regra de ouro):
+> `topics/flutter.md` (Puro sem 7z, Flutter 3.50 × zero-deps, limite do barrel com ponto),
+> `topics/git-multiagent.md` (`assume-unchanged` esconde deleção),
+> `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
+> Detalhe de implementação desta sessão: entradas datadas abaixo.
+
 ## 2026-11-19 — Barrel com ponto (`.reactive.dart`) não embarca no pub.dev
 
 - **Sintoma:** `dart pub publish --dry-run` listou `kortex_*.dart` mas omitiu `.reactive.dart` do arquivo a publicar — o barrel funcionava local/git/CI e sumiria para consumidores do pacote.
