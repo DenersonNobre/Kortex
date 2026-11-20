@@ -132,6 +132,14 @@ Esquema do Cenário: Commands via fachada com Result
 - **Eu quero** adicionar, concluir e remover tasks numa `TasksPage` (`StatelessWidget`) com erros em `SnackBar`
 - **Para que** o exemplo prove o ciclo completo reativo sem `StatefulWidget` para estado de negócio
 
+#### Escopo de Arquivos (VSA)
+
+- `poc/lib/modules/tasks/ui/tasks_controller.dart` — `IKortexController` sobre `TaskUseCases`, com sinais de lista/filtro/erro.
+- `poc/lib/modules/tasks/ui/tasks_page.dart` — `IKortexPage` (`StatelessWidget`) da POC.
+- `poc/lib/modules/tasks/ui/widgets/task_list.dart` — lista com `KortexWatch` (rebuild granular) e `KortexSelector` (filtro por categoria).
+- `poc/lib/modules/tasks/ui/widgets/task_form.dart` — formulário com `TaskDraft` (padrão do `.dnolib`) e `KortexListener` para o `SnackBar` de erro.
+- `poc/lib/app/tasks_app.dart` — composition root: `KortexScope` ligando `datasource → repository → controller → use cases`.
+
 #### Critérios de Aceitação (Gherkin Executável)
 
 ```gherkin
@@ -146,6 +154,8 @@ Esquema do Cenário: Fluxo ponta a ponta na TasksPage
     | 1 task aberta | tocar no checkbox | item marcado como feito |
     | 1 task | excluir | lista vazia |
     | qualquer | salvar título vazio | SnackBar de erro, nada persistido |
+    | 1 task com categoria | filtrar por outra categoria | lista filtra pela categoria |
+    | 1 task em 1 categoria | excluir a categoria | SnackBar de erro (categoria em uso) |
 ```
 
 #### NFRs Mensuráveis
@@ -153,6 +163,7 @@ Esquema do Cenário: Fluxo ponta a ponta na TasksPage
 | UC | NFR | Métrica | Target | Medição |
 | --- | --- | --- | --- | --- |
 | `UC-05.03` | `NFR-04` | `setState` após `!mounted` | `0` | `flutter test` |
+| `UC-05.03` | `INV-05` | Imports Flutter em `domain/` e `commands/` da POC | `0` | `flutter analyze` |
 
 ---
 
