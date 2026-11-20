@@ -1,6 +1,6 @@
 name: kortex
-description: "A new Flutter package project."
-version: 0.0.1
+description: Reatividade granular por sinais e escopo explícito na árvore de widgets (zero dependências externas).
+version: 0.1.0
 homepage:
 
 environment:

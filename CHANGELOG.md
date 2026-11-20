@@ -11,6 +11,8 @@ Versionamento: [SemVer](https://semver.org/lang/pt-BR/). Categorias: `Added`, `C
 
 ## [Não publicado]
 
+## [0.1.0] - 2026-11-20
+
 ### Added
 
 - `IKortexDisposable`, `KortexDisposeBag` e `IKortexController` em `lib/src/reactive/` com descarte LIFO idempotente e `onDispose` antes do bag (`UC-01.01`).

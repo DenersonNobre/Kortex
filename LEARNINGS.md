@@ -18,6 +18,13 @@
 - **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
 - **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
+## 2026-11-20 — CI dupla provada: verde 2× e vermelha no teste sabotado
+
+- **Sintoma:** `flutter analyze` local verde, CI vermelha — e runner Gitea matando jobs em 2s (`network gateway_net not found`).
+- **Causa (3×):** (1) rede do runner apontava para `gateway_net` inexistente (fix: `gitlan_net` + restart, com flag de assar na imagem); (2) Flutter 3.50.0 deprecia `material.dart` e `analyze` sai != 0 até para `info` — migração quebraria o RNF-01, então pin 3.47.6; (3) prova negativa 2 falhou no *format* (arquivo não formatado), não no *test*.
+- **Prova final:** GitHub — main verde 2× (`44670837671`, `44671303872`), prova 3 vermelha no step Test (`80 passed, 1 failed`, run `44671612004`); Gitea — pipeline completa no runner corrigido, `No issues found!`, vermelha no sabotado (run 66). Prova 2 (`44670894144`) valeu pelo gate de formato.
+- **Prevenção:** pin de toolchain documentado nos workflows; prova negativa futura deve passar no format local antes do push.
+
 ## 2026-11-20 — CI pinada na 3.47.6: 3.50.0 deprecia `material.dart`
 
 - **Sintoma:** CI verde local (env padrão 3.47.6) e vermelha no GitHub com 7 infos `deprecated_member_use` pedindo `package:material_ui` — que não existe no SDK (só como pacote externo).
