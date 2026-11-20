@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC00` |
 | **Prioridade** | Crítica (Core Domain — Dart Puro) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Pendente` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -28,15 +28,15 @@ Implementar todo o núcleo reativo em `lib/src/reactive/` em Dart puro (`INV-05`
 | --- | --- | --- | --- |
 | **UC-01.01** | Descarte composto (`IKortexDisposable`, `KortexDisposeBag`, `IKortexController`) | Nenhuma | `Concluído` |
 | **UC-01.02** | Grafo de observação, `kortexBatch`, `kortexUntracked` e `KortexSignal` | `UC-01.01` | `Concluído` |
-| **UC-01.03** | Derivação preguiçosa (`KortexComputed`) e efeitos (`KortexEffect`) | `UC-01.02` | `Pendente` |
+| **UC-01.03** | Derivação preguiçosa (`KortexComputed`) e efeitos (`KortexEffect`) | `UC-01.02` | `Concluído` |
 
 ---
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] Todos os Casos de Uso (`UC-01.01..03`) implementados sob TDD Red-Before-Green.
-- [ ] Zero imports de `package:flutter/` em `lib/src/reactive/` (`INV-05`).
-- [ ] `flutter analyze` e `flutter test` verdes (exit code 0).
+- [x] Todos os Casos de Uso (`UC-01.01..03`) implementados sob TDD Red-Before-Green.
+- [x] Zero imports de `package:flutter/` em `lib/src/reactive/` (`INV-05`).
+- [x] `flutter analyze` e `flutter test` verdes (exit code 0).
 
 ---
 
@@ -113,7 +113,7 @@ Esquema do Cenário: Mutação, igualdade, batch e bloqueio pós-dispose em Kort
 ### Caso de Uso UC-01.03 — `KortexComputed` e `KortexEffect`
 
 - **Identificador**: `UC-01.03`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
