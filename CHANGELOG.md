@@ -11,9 +11,13 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ## [Unpublished]
 
+## [0.1.1] - 2026-11-20
+
 ### Changed
 
 - Public surfaces translated to English for global reach on pub.dev: `README.md`, `CHANGELOG.md`, every public doc comment in `lib/`, the `example/` app and the pubspec descriptions (`UC-05.05`). Internal governance (`docs/`, `AGENTS.md`, `LEARNINGS.md`, `CHECKPOINT.md`, `docs/plan/`) stays in Brazilian Portuguese.
+- The declared Flutter floor is now the measured one — `flutter: ">=3.47.6"`, the first release shipping Dart 3.13.5 — in all three pubspecs. The previous `>=1.17.0` came from the `flutter create` template and advertised a compatibility the code cannot honor.
+- The `poc/` proof of concept is excluded from the published archive via `.pubignore`; it keeps `package:poc/...` imports that do not resolve for consumers, and it is not part of the public API.
 
 ### Added
 
