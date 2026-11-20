@@ -29,6 +29,7 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 | **UC-04.01** | `IKortexPage`, `KortexWatch` (`child`) e `KortexSelector<T>` | Nenhuma | `Pendente` |
 | **UC-04.02** | `KortexListener<T>`, `KortexResourceBuilder<T>` e `KortexListenableAdapter` | `UC-04.01` | `Pendente` |
 | **UC-04.03** | Barrel `lib/kortex.dart` e app de exemplo em `example/` | `UC-04.02` | `Pendente` |
+| **UC-04.04** | Pipeline CI remota e release `v0.1.0` | `UC-04.03` | `Pendente` |
 
 ---
 
@@ -38,6 +39,8 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 - [ ] `lib/kortex.dart` ocultando coordenadores internos (`KortexTracker`).
 - [ ] `example/` compilando e analisando sem warnings sob `flutter analyze`.
 - [ ] Suíte completa (`flutter analyze` + `flutter test`) verde.
+- [ ] Pipeline CI remota (GitHub Actions) verde em runner limpo a cada push/PR em `main`.
+- [ ] Release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado (`0.1.0`).
 
 ---
 
@@ -142,3 +145,38 @@ Esquema do Cenário: Exportação pública e exemplo mínimo
 | UC | NFR | Métrica | Target | Medição |
 | --- | --- | --- | --- | --- |
 | `UC-04.03` | `NFR-01` | Dependências externas no pacote e `example/` | `0` | Inspeção `pubspec.yaml` |
+
+---
+
+### Caso de Uso UC-04.04 — Pipeline CI Remota e Release `v0.1.0`
+
+- **Identificador**: `UC-04.04`
+- **Status**: `Pendente`
+
+#### Narrativa (User Story)
+
+- **Como** mantenedor do pacote `kortex`
+- **Eu quero** uma pipeline remota (GitHub Actions) que rode `flutter analyze` + `flutter test` a cada push/PR em `main`, e uma release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado
+- **Para que** o "verde" tenha testemunha independente do ambiente local e o versionamento seja rastreável por tag
+
+#### Critérios de Aceitação (Gherkin Executável)
+
+```gherkin
+Esquema do Cenário: CI remota e promoção da release v0.1.0
+  Dado o repositório com <artefato> versionado
+  Quando ocorre <evento>
+  Então o resultado é <status>
+
+  Exemplos:
+    | artefato | evento | status |
+    | .github/workflows/ci.yml | push/PR em main | analyze + test executados em runner limpo com exit 0 |
+    | .github/workflows/ci.yml (prova negativa) | teste quebrado em branch de PR | pipeline reprova (exit != 0), sem merge |
+    | pubspec.yaml + CHANGELOG.md | tag v0.1.0 | version: 0.1.0 e [Não publicado] promovido para seção datada |
+```
+
+#### NFRs Mensuráveis
+
+| UC | NFR | Métrica | Target | Medição |
+| --- | --- | --- | --- | --- |
+| `UC-04.04` | `NFR-02` | `flutter analyze` no runner limpo | `0 warnings / 0 erros` | Log do workflow |
+| `UC-04.04` | — | Prova negativa da pipeline versionada | PR com teste quebrado reprova | Execução do workflow |
