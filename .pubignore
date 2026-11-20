@@ -22,3 +22,7 @@ example/test/
 # mantém imports `package:poc/...` que não resolvem para quem instala o
 # pacote — por isso não pode embarcar no archive do pub.dev)
 poc/
+
+# Runner nativo do Windows (gerado pelo `flutter create`, boilerplate C++/CMake;
+# fica no Git para permitir `flutter run -d windows`, mas não no archive)
+example/windows/
