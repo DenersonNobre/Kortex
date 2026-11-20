@@ -30,8 +30,7 @@ flowchart LR
 | `EPIC03` | Escopo & Ciclo de Vida na Árvore | `EPIC01` | Crítica | `Concluído` | [epic-03-escopo.md](epics/epic-03-escopo.md) |
 | `EPIC04` | Widgets, Pontes SDK & Exemplo | `EPIC02`, `EPIC03` | Alta | `Concluído` | [epic-04-widgets.md](epics/epic-04-widgets.md) |
 | `EPIC05` | POC Robusta (Premissas Oráculo) | `EPIC04` | Alta | `Concluído` | [epic-05-poc-robusta.md](epics/epic-05-poc-robusta.md) |
-| `EPIC06` | App de Visitas Técnicas | `EPIC05` | Alta | `Em Andamento` | [epic-06-app-visitas.md](epics/epic-06-app-visitas.md) |
-
+| `EPIC06` | App de Visitas Técnicas | `EPIC05` | Alta | `Concluído` | [epic-06-app-visitas.md](epics/epic-06-app-visitas.md) |
 ---
 
 ## 3. Definition of Ready (DoR) & Definition of Done (DoD)

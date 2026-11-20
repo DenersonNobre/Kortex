@@ -6,6 +6,18 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — `Navigator.pop` assíncrono: a rota só some no frame seguinte
+
+- **Sintoma:** o dialog de nova visita não fechava no teste mesmo com `pop()` comprovadamente chamado (`print` mostrou `canPop=true` e a chamada executada) — e o dado tinha sido salvo.
+- **Causa:** o `pop()` acontecia **depois** do último frame (a ação é `async` e resolve em microtask); a remoção da rota só se materializa no frame seguinte, e o teste assertava logo após um `pump` único.
+- **Fix:** fechar com `await tester.pumpAndSettle()` (ou um `pump` extra) após a ação assíncrona — nunca `expect` imediatamente após o `pump` que consumiu o `await`.
+
+## 2026-11-20 — Latência simulada encadeada: medir antes de fixar o `pump`
+
+- **Sintoma:** teste de widget falhava com a lista ainda em `KortexAsyncLoading` após `pump(400ms)`, embora cada store tivesse 200ms.
+- **Causa:** a carga encadeia **dois** acessos sequenciais (`listClients` então `listTechnicians`) = ~400ms, e o `pump` de 400ms caiu exatamente na borda (microtask após o último frame).
+- **Prevenção:** com latência simulada, medir a cadeia (n × latência) e usar folga (`pump(2s)` ou `pumpAndSettle`); o teste unitário correspondente usa `Duration.zero` para não pagar o custo.
+
 ## 2026-11-20 — `flutter test` ignora vazamentos por padrão: `LeakTesting.enable()` e o contrato do config
 
 - **Sintoma:** um `ValueNotifier` deliberadamente não descartado **passou** no `flutter test` — o gate de leak não reprovava nada. Ligando o tracking, apareceram 3 vazamentos: 1 real do pacote (`_KortexScopeState` + `StatefulElement` vivos quando `create` lança `StateError` em `initState`), 1 do teste (`ChangeNotifier` sem dispose) e 1 do probe.

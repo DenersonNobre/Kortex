@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC05` |
 | **Prioridade** | Alta (POC evoluída para domínio real de campo) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Em Andamento` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) (consumo; sem alteração de API do pacote) |
 
 ---
@@ -40,14 +40,14 @@ Evoluir a POC do `example/`/`poc/` para um **app de visitas técnicas**: o técn
 | --- | --- | --- | --- |
 | **UC-06.01** | Domínio de visitas, `Result`, ports e stores assíncronos | Nenhuma | `Concluído` |
 | **UC-06.02** | Commands, queries com join e fachada `VisitUseCases` | `UC-06.01` | `Concluído` |
-| **UC-06.03** | Controller, páginas (lista, detalhe) e dialog de nova visita | `UC-06.02` | `Pendente` |
+| **UC-06.03** | Controller, páginas (lista, detalhe) e dialog de nova visita | `UC-06.02` | `Concluído` |
 
 ## 4. Definição de Pronto (DoD) do Épico
 
-- [ ] UCs `UC-06.01..03` sob TDD Red-Before-Green.
-- [ ] `poc/` sem dependências externas e com `flutter analyze` limpo.
-- [ ] Suíte do `poc/` verde com o gate de leak tracking ligado.
-- [ ] `example/` (público) intocado e ainda verde.
+- [x] UCs `UC-06.01..03` sob TDD Red-Before-Green.
+- [x] `poc/` sem dependências externas e com `flutter analyze` limpo.
+- [x] Suíte do `poc/` verde com o gate de leak tracking ligado.
+- [x] `example/` (público) intocado e ainda verde.
 
 ## 5. Casos de Uso Atômicos
 
@@ -126,7 +126,7 @@ Esquema do Cenário: Commands de visita com Result e invariantes cross-agregado
 ### Caso de Uso UC-06.03 — Controller, páginas e dialog
 
 - **Identificador**: `UC-06.03`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
