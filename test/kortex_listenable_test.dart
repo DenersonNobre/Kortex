@@ -77,6 +77,7 @@ void main() {
       expect(probe.reads, 1);
       expect(signal.value, 1);
       signal.dispose();
+      counter.dispose();
     });
   });
 

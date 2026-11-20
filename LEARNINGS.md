@@ -6,6 +6,14 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — `flutter test` ignora vazamentos por padrão: `LeakTesting.enable()` e o contrato do config
+
+- **Sintoma:** um `ValueNotifier` deliberadamente não descartado **passou** no `flutter test` — o gate de leak não reprovava nada. Ligando o tracking, apareceram 3 vazamentos: 1 real do pacote (`_KortexScopeState` + `StatefulElement` vivos quando `create` lança `StateError` em `initState`), 1 do teste (`ChangeNotifier` sem dispose) e 1 do probe.
+- **Causa (medida no SDK):** `leak_tracker_flutter_testing` sobe com `LeakTracking.phase = const PhaseSettings.ignored()` — **vazamentos são ignorados por padrão**; o reporter padrão (`expect(leaks, isLeakFree)`) só reprova com o tracking ligado.
+- **Contrato do `flutter_test_config.dart` (erro próprio, medido):** o `flutter_tools` chama `test_config.testExecutable(<main do teste>)` — a assinatura correta é `Future<void> testExecutable(FutureOr<void> Function())` **assíncrona e awaiting** o main. Sem o `await`, o runner encerra antes dos testes se registrarem ("No tests were found"); com assinatura síncrona, o runner nem compila (`Method not found: 'testExecutable'`).
+- **Fix do pacote:** criação eager do `KortexScope` saiu do `initState` para o primeiro `build` — assim o element monta e o framework descarta o `State` normalmente (o `StateError` continua reportado e capturado por `takeException`).
+- **Prevenção:** `test/flutter_test_config.dart` versionado liga o gate para toda a suíte, e `kortex_leak_gate_test.dart` é a prova negativa (cria objeto rastreado e não descartado, afirma que o tracker acha e que `isLeakFree` reprovaria).
+
 ## 2026-11-20 — `is` com early-return NÃO promove união selada genérica
 
 - **Sintoma:** `if (x is Fail<T>) return ...; x.value` não compilou (`The getter 'value' isn't defined for type 'Result<T>'`) — provado em isolamento com `sealed` mínima + em `Category.draft`/`Task.draft`.

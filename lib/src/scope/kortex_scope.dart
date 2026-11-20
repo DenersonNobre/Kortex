@@ -142,7 +142,6 @@ class _KortexScopeState extends State<KortexScope> {
     super.initState();
     _reader = _ScopeReader(this);
     _rebuildEffective();
-    _initEager();
   }
 
   @override
@@ -164,8 +163,10 @@ class _KortexScopeState extends State<KortexScope> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      _KortexInherited(version: _version, child: widget.child);
+  Widget build(BuildContext context) {
+    _initEager();
+    return _KortexInherited(version: _version, child: widget.child);
+  }
 
   T _resolve<T>() {
     final provider = _effective[T];

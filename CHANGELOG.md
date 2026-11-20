@@ -11,6 +11,15 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ## [Unpublished]
 
+### Fixed
+
+- `KortexScope` no longer leaks its state when a provider's `create` throws during eager creation. The eager creation moved from `initState` to the first `build`, so the scope element mounts normally and is disposed by the framework instead of being left alive.
+
+### Added
+
+- Memory-leak gate for the whole test suite: `test/flutter_test_config.dart` enables `LeakTesting` (off by default in `flutter_test`), and `test/kortex_leak_gate_test.dart` proves the gate detects an undisposed object.
+- Windows desktop runner for the example app (`example/windows/`), so it can be launched with `flutter run -d windows`.
+
 ## [0.1.1] - 2026-11-20
 
 ### Changed
