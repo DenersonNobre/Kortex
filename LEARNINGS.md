@@ -6,6 +6,14 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — `LeakTesting` do `flutter_test` NÃO enxerga controller que não é `ChangeNotifier`
+
+- **Sintoma:** a suíte da POC rodava 103 testes verdes e nenhum deles verificava vazamento. O pacote tinha gate (`test/flutter_test_config.dart` + prova negativa), a POC não.
+- **Causa (a parte que engana):** ligar `LeakTesting.enable()` **não** cobre o risco real deste projeto. `IKortexController` implementa `IKortexDisposable`, **não** estende `ChangeNotifier` — e o leak tracker do Flutter só conhece objetos que despacham `dispatchObjectCreated/Disposed` (framework). Controller nosso esquecido é invisível para ele; o gate ficaria verde com a capacidade morta.
+- **Fix (duas camadas):** (1) `LeakTesting.enable()` na config para objetos do framework; (2) gate de ciclo de vida próprio — `track(controller)` + `tearDown` chamando `assertAllDisposed` sobre `isDisposed`, que é estado real do controller (não inventário).
+- **Prova negativa dos dois lados:** teste sintético (controller vivo reprova / descartado aprova) **e** mutação em teste real (`controller.dispose()` removido) reprovando o próprio teste que vazou. Sem a mutação, o gate seria só declaração.
+- **Corolário:** em qualquer biblioteca que ofereça ciclo de vida próprio (`dispose`), "ativar leak tracking" não é suficiente — a classe precisa expor estado de descarte (`isDisposed`) para o gate conseguir julgar. Se não expõe, o primeiro passo é expor.
+
 ## 2026-11-20 — Agregado de apoio que é o próprio usuário não deve virar entidade
 
 - **Sintoma de projeto:** a POC modelava `Technician` como agregado (cadastro + dropdown no formulário). O dono do produto apontou que, num app de campo, **o técnico é quem está usando o app** — o cadastro era um modelo de despacho/back-office que ninguém pediu.

@@ -18,6 +18,7 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 ### Added
 
 - Memory-leak gate for the whole test suite: `test/flutter_test_config.dart` enables `LeakTesting` (off by default in `flutter_test`), and `test/kortex_leak_gate_test.dart` proves the gate detects an undisposed object.
+- Controller-lifecycle gate (`test/support/controller_lifecycle.dart`): `LeakTesting` cannot see `IKortexController` (it is not a `ChangeNotifier`), so tests `track` every controller and a global `tearDown` fails the leaking test via `isDisposed`. Applied to the package and to `poc/`.
 - Windows desktop runner for the example app (`example/windows/`), so it can be launched with `flutter run -d windows`.
 - Technical visits app in `poc/` (EPIC08): `clients` and `session` became first-class modules, the technician is the session user (`InMemorySessionProvider`) and `Visit.technicianName` carries the responsible technician as a snapshot.
 

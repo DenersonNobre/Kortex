@@ -8,6 +8,8 @@ import 'package:poc/modules/visits/data/.index.dart';
 import 'package:poc/modules/visits/features/visit_use_cases.dart';
 import 'package:poc/modules/visits/ui/visits_controller.dart';
 
+import '../support/controller_lifecycle.dart';
+
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
 T _ok<T>(Result<T> result) {
   expect(result, isA<Ok<T>>());
@@ -25,16 +27,18 @@ VisitUseCases _useCases({
 );
 
 /// Controller com o cliente de demonstracao ja' cadastrado.
-VisitsController _controllerWithClient() => VisitsController(
-  _useCases(
-    clients: InMemoryClientStore(latency: Duration.zero, seedDemo: true),
+VisitsController _controllerWithClient() => track(
+  VisitsController(
+    _useCases(
+      clients: InMemoryClientStore(latency: Duration.zero, seedDemo: true),
+    ),
   ),
 );
 
 void main() {
   group('VisitsController', () {
     test('carrega a lista no refresh e expõe isLoading', () async {
-      final controller = VisitsController(_useCases());
+      final controller = track(VisitsController(_useCases()));
 
       expect(controller.visits.state.value.isLoading, isTrue);
 
@@ -88,7 +92,7 @@ void main() {
     });
 
     test('sem cliente cadastrado publica erro e nao agenda', () async {
-      final controller = VisitsController(_useCases());
+      final controller = track(VisitsController(_useCases()));
       await controller.loadClients();
 
       final scheduled = await controller.scheduleVisit('Troca');
@@ -126,7 +130,7 @@ void main() {
     });
 
     test('filtro por status recarrega a lista', () async {
-      final controller = VisitsController(_useCases());
+      final controller = track(VisitsController(_useCases()));
       await controller.refresh();
 
       await controller.applyStatusFilter('in_progress');
@@ -139,7 +143,7 @@ void main() {
     test('erro de infraestrutura vira KortexAsyncError na lista', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero)
         ..failNext = true;
-      final controller = VisitsController(_useCases(visits: visits));
+      final controller = track(VisitsController(_useCases(visits: visits)));
 
       await controller.refresh();
 

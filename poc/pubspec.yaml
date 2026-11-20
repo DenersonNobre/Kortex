@@ -1,5 +1,5 @@
 name: poc
-description: POC do pacote kortex (StatelessWidget-first, zero dependências externas).
+description: POC do pacote kortex (StatelessWidget-first, zero dependências de runtime; leak tracking só em dev).
 publish_to: none
 
 environment:
@@ -16,6 +16,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  # Apenas teste: gate de vazamento de memoria (nao entra no app).
+  leak_tracker: ^11.0.2
+  leak_tracker_testing: ^3.0.2
 
 flutter:
   uses-material-design: true

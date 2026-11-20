@@ -5,6 +5,8 @@ import 'package:poc/modules/clients/ui/clients_controller.dart';
 import 'package:poc/modules/clients/data/.index.dart';
 import 'package:poc/modules/clients/features/.index.dart';
 
+import '../support/controller_lifecycle.dart';
+
 /// Fachada sobre store em memoria (sem latencia).
 ClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
   clients: store ?? InMemoryClientStore(latency: Duration.zero),
@@ -13,7 +15,7 @@ ClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
 void main() {
   group('ClientsController', () {
     test('carrega a lista e cadastra cliente', () async {
-      final controller = ClientsController(_useCases());
+      final controller = track(ClientsController(_useCases()));
 
       await controller.refresh();
       expect(controller.clients.state.value.valueOrNull, isEmpty);
@@ -30,7 +32,7 @@ void main() {
     });
 
     test('telefone invalido publica erro e nao cadastra', () async {
-      final controller = ClientsController(_useCases());
+      final controller = track(ClientsController(_useCases()));
       await controller.refresh();
 
       final created = await controller.createClient('Empresa X', '1');
@@ -42,7 +44,7 @@ void main() {
     });
 
     test('busca por nome filtra a lista', () async {
-      final controller = ClientsController(_useCases());
+      final controller = track(ClientsController(_useCases()));
       await controller.refresh();
       await controller.createClient('Empresa Alfa', '11988887777');
       await controller.createClient('Beta Ltda', '11977776666');

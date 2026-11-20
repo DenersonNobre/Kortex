@@ -1,6 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kortex/src/reactive/reactive.dart';
 
+import 'support/controller_lifecycle.dart';
+
 /// Descartável de teste que registra cada chamada a `dispose()`.
 class _Probe implements IKortexDisposable {
   _Probe(this.name, this.log);
@@ -85,7 +87,7 @@ void main() {
   group('IKortexController', () {
     test('dispose chama onDispose antes do bag e descarta em LIFO', () {
       final log = <String>[];
-      final controller = _RecordingController(log);
+      final controller = track(_RecordingController(log));
       controller
         ..track(_Probe('a', log))
         ..track(_Probe('b', log));
@@ -99,7 +101,7 @@ void main() {
 
     test('dispose repetido não reexecuta onDispose', () {
       final log = <String>[];
-      final controller = _RecordingController(log)..dispose();
+      final controller = track(_RecordingController(log))..dispose();
 
       controller.dispose();
 

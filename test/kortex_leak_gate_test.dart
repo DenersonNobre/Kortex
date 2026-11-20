@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kortex/src/reactive/reactive.dart';
 import 'package:leak_tracker/leak_tracker.dart';
 import 'package:leak_tracker_testing/leak_tracker_testing.dart';
+
+import 'support/controller_lifecycle.dart';
 
 /// Objeto que o tracker conhece: despacha criacao e descarte.
 class _Tracked {
@@ -17,16 +20,43 @@ class _Tracked {
   }
 }
 
-/// Prova negativa do gate de leak tracking.
+/// Controller concreto para provar o gate de ciclo de vida.
+class _PlainController extends IKortexController {}
+
+/// Prova negativa dos DOIS gates da suite.
 ///
-/// O gate so vale se ele DETECTA vazamento. Este teste cria um objeto
-/// rastreado e deliberadamente NAO descartado, e afirma que o tracker o
-/// encontra e que o matcher `isLeakFree` reprovaria.
-///
-/// O tracking e' parado ao fim para que a coleta por arquivo (que roda no
-/// tearDown do arquivo) nao reporte o vazamento proposital desta prova.
+/// O gate so vale se ele DETECTA vazamento. Este arquivo cobre:
+/// 1. `LeakTesting` esta' realmente ligado (e nao apenas importado);
+/// 2. `assertAllDisposed` reprova controller vivo e aprova o descartado —
+///    camada necessaria porque `IKortexController` nao e' `ChangeNotifier`.
 void main() {
   tearDown(LeakTracking.stop);
+
+  test('LeakTesting esta ligado pela config da suite', () {
+    expect(LeakTesting.enabled, isTrue);
+  });
+
+  test(
+    'gate de ciclo de vida reprova controller vivo e aprova o descartado',
+    () {
+      final leaked = _PlainController();
+      final disposed = _PlainController()..dispose();
+
+      // Presenca: controller vivo e' detectado e reprova.
+      expect(leakedControllers([leaked]), hasLength(1));
+      expect(() => assertAllDisposed([leaked]), throwsA(isA<TestFailure>()));
+
+      // Ausencia com par de presenca: o descartado passa, sozinho e junto.
+      expect(leakedControllers([disposed]), isEmpty);
+      assertAllDisposed([disposed]);
+      expect(
+        () => assertAllDisposed([leaked, disposed]),
+        throwsA(isA<TestFailure>()),
+      );
+
+      leaked.dispose();
+    },
+  );
 
   test('gate de leak tracking detecta objeto nao descartado', () async {
     LeakTracking.start(
