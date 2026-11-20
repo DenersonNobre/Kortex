@@ -20,18 +20,24 @@ jobs:
           flutter-version: '3.47.6'
 
       - name: Format check (igual ao gate local)
-        run: dart format --output=none --set-exit-if-changed lib test example/lib example/test
+        run: dart format --output=none --set-exit-if-changed lib test example/lib example/test poc/lib poc/test
 
-      - name: Analyze (zero warnings)
+      - name: Analyze raiz (zero warnings)
         run: flutter analyze
 
-      - name: Test (suite completa)
+      - name: Test raiz (suite completa)
         run: flutter test
 
-      - name: Analyze example (zero warnings)
+      - name: Example (pub get + analyze + test)
         working-directory: example
-        run: flutter analyze
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test
 
-      - name: Test example (smoke)
-        working-directory: example
-        run: flutter test
+      - name: POC (pub get + analyze + test)
+        working-directory: poc
+        run: |
+          flutter pub get
+          flutter analyze
+          flutter test

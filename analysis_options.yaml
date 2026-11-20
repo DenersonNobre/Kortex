@@ -9,6 +9,11 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+    # Pacotes aninhados (têm pubspec e package_config proprios): analise-os
+    # na raiz deles, senao os imports `package:example/...` e `package:poc/...`
+    # nao resolvem e o `analyze` da raiz acusa erros inexistentes.
+    - example/**
+    - poc/**
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
