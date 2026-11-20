@@ -18,7 +18,13 @@
 - **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
 - **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
-> Aprendizados específicos DESTE repositório (arquitetura, decisões, gotchas do projeto).
+## 2026-11-19 — Um provider por `Type`: duplicata colide, não ordena
+
+- **Sintoma:** teste de LIFO com dois providers do mesmo `Type` descartou só um (`['b']` em vez de `['b','a']`) — o mapa `_effective`/`_instances` usa `Type` como chave e o segundo registro sobrescreveu o primeiro.
+- **Causa:** escopo resolve por tipo; dois providers do mesmo tipo na mesma lista é erro de configuração, não fila.
+- **Fix:** teste usa tipos distintos (`TaggedDisposable<ServiceA>` vs `<ServiceB>`); semântica documentada — um `Type`, um provider por escopo (o `overrides` da `UC-03.02` substitui, nunca duplica).
+
+> Aprendizados específicos DESTE repositório (arquitetura, decisões, gotchas do projeto). (arquitetura, decisões, gotchas do projeto).
 > Os transversais (qualquer projeto da mesma stack) sobem para `agents/rules/topics/<stack>.md`
 > ou `agents/rules/global_learnings.md`; procedimento reutilizável vira Skill.
 > Antes de deixar algo só aqui, teste: **"valeria se eu clonasse outro projeto de tecnologia

@@ -26,7 +26,7 @@ Implementar `lib/src/scope/` com provisão explícita na árvore de widgets (`Ko
 
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
-| **UC-03.01** | `KortexProvider`, `IKortexScopeReader` e `KortexScope` (irmãos, ciclo, `lazy`, `dispose`) | Nenhuma | `Pendente` |
+| **UC-03.01** | `KortexProvider`, `IKortexScopeReader` e `KortexScope` (irmãos, ciclo, `lazy`, `dispose`) | Nenhuma | `Concluído` |
 | **UC-03.02** | `KortexScope.capture`, `overrides` e `BuildContext` extensions | `UC-03.01` | `Pendente` |
 
 ---
@@ -44,7 +44,7 @@ Implementar `lib/src/scope/` com provisão explícita na árvore de widgets (`Ko
 ### Caso de Uso UC-03.01 — `KortexProvider`, Irmãos, Detecção de Ciclo & `lazy`
 
 - **Identificador**: `UC-03.01`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
