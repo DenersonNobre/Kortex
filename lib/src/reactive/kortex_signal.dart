@@ -35,8 +35,8 @@ abstract interface class IKortexReadonlySignal<T>
 class KortexSignal<T> implements IKortexReadonlySignal<T> {
   /// Cria o sinal com [initialValue] e [equals] opcional (padrão `==`).
   KortexSignal(T initialValue, {KortexEquals<T>? equals})
-      : _value = initialValue,
-        _equals = equals ?? _defaultEquals;
+    : _value = initialValue,
+      _equals = equals ?? _defaultEquals;
 
   static const _disposedMessage = 'KortexSignal usado após dispose()';
 

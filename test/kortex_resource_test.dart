@@ -138,10 +138,7 @@ void main() {
 
       final state = resource.state.value;
       expect(state, isA<KortexAsyncError<String>>());
-      expect(
-        (state as KortexAsyncError<String>).error,
-        isStateError,
-      );
+      expect((state as KortexAsyncError<String>).error, isStateError);
       resource.dispose();
     });
 

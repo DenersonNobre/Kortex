@@ -23,8 +23,7 @@ abstract class IKortexController implements IKortexDisposable {
   bool get isDisposed => disposeBag.isDisposed;
 
   /// Registra [item] no [disposeBag] e o devolve (uso no construtor).
-  T autoDispose<T extends IKortexDisposable>(T item) =>
-      disposeBag.add(item);
+  T autoDispose<T extends IKortexDisposable>(T item) => disposeBag.add(item);
 
   /// Gancho opcional executado em [dispose], antes do [disposeBag].
   void onDispose() {}

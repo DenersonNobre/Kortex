@@ -21,7 +21,8 @@ typedef KortexEffectCleanupRegistrar = void Function(KortexCleanup cleanup);
 
 /// Corpo do efeito; recebe o registrador de limpeza.
 typedef KortexEffectCallback = void Function(
-    KortexEffectCleanupRegistrar onCleanup);
+  KortexEffectCleanupRegistrar onCleanup,
+);
 
 /// Efeito colateral reativo com `onCleanup`, `debounce` e `dispose`.
 ///
@@ -119,8 +120,5 @@ class KortexEffect implements IKortexObserver, IKortexDisposable {
 }
 
 /// Atalho ergonômico para `KortexEffect(...)`.
-KortexEffect kortexEffect(
-  KortexEffectCallback effect, {
-  Duration? debounce,
-}) =>
+KortexEffect kortexEffect(KortexEffectCallback effect, {Duration? debounce}) =>
     KortexEffect(effect, debounce: debounce);

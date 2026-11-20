@@ -27,10 +27,8 @@ class KortexStreamResource<T> implements IKortexDisposable {
   KortexStreamResource(
     KortexStreamFactory<T> streamFactory, {
     bool immediate = true,
-  })  : _factory = streamFactory,
-        _state = KortexSignal<IKortexAsyncState<T>>(
-          KortexAsyncLoading<T>(),
-        ) {
+  }) : _factory = streamFactory,
+       _state = KortexSignal<IKortexAsyncState<T>>(KortexAsyncLoading<T>()) {
     if (immediate) {
       restart();
     }
@@ -77,8 +75,7 @@ class KortexStreamResource<T> implements IKortexDisposable {
     try {
       _subscription = _factory().listen(
         (value) => _onData(id, value),
-        onError: (Object error, StackTrace stack) =>
-            _onError(id, error, stack),
+        onError: (Object error, StackTrace stack) => _onError(id, error, stack),
         cancelOnError: false,
       );
     } catch (error, stackTrace) {
@@ -133,10 +130,7 @@ class _SignalStream<T> {
   _SignalBridge<T>? _bridge;
 
   Stream<T> open() {
-    _controller = StreamController<T>(
-      onListen: _attach,
-      onCancel: _detach,
-    );
+    _controller = StreamController<T>(onListen: _attach, onCancel: _detach);
     return _controller!.stream;
   }
 
@@ -170,5 +164,4 @@ extension KortexSignalToStream<T> on IKortexReadonlySignal<T> {
 KortexStreamResource<T> kortexStreamResource<T>(
   KortexStreamFactory<T> streamFactory, {
   bool immediate = true,
-}) =>
-    KortexStreamResource(streamFactory, immediate: immediate);
+}) => KortexStreamResource(streamFactory, immediate: immediate);

@@ -47,20 +47,22 @@ void main() {
       expect(signal.value, 'Adeus');
     });
 
-    test('kortexBatch consolida 2 escritas em 1 notificação com valor final',
-        () {
-      final signal = KortexSignal(10);
-      final probe = _Probe();
-      _subscribe(probe, signal);
+    test(
+      'kortexBatch consolida 2 escritas em 1 notificação com valor final',
+      () {
+        final signal = KortexSignal(10);
+        final probe = _Probe();
+        _subscribe(probe, signal);
 
-      kortexBatch(() {
-        signal.value = 20;
-        signal.value = 30;
-      });
+        kortexBatch(() {
+          signal.value = 20;
+          signal.value = 30;
+        });
 
-      expect(probe.reads, 1);
-      expect(signal.value, 30);
-    });
+        expect(probe.reads, 1);
+        expect(signal.value, 30);
+      },
+    );
 
     test('exceção no batch descarrega fila e restaura profundidade', () {
       final signal = KortexSignal(10);

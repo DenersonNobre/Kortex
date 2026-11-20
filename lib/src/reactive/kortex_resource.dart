@@ -33,10 +33,10 @@ sealed class IKortexAsyncState<T> {
 
   /// Valor disponível (`Data` ou `previousValue`), ou `null`.
   T? get valueOrNull => switch (this) {
-        KortexAsyncData(value: final value) => value,
-        KortexAsyncLoading(previousValue: final previous) => previous,
-        KortexAsyncError() => null,
-      };
+    KortexAsyncData(value: final value) => value,
+    KortexAsyncLoading(previousValue: final previous) => previous,
+    KortexAsyncError() => null,
+  };
 }
 
 /// Carga em andamento, com o último valor conhecido (se houver).
@@ -74,10 +74,8 @@ final class KortexAsyncError<T> extends IKortexAsyncState<T> {
 class KortexResource<T> implements IKortexDisposable {
   /// Cria o recurso; com [immediate] dispara a 1a carga no construtor.
   KortexResource(KortexAsyncLoader<T> loader, {bool immediate = true})
-      : _loader = loader,
-        _state = KortexSignal<IKortexAsyncState<T>>(
-          KortexAsyncLoading<T>(),
-        ) {
+    : _loader = loader,
+      _state = KortexSignal<IKortexAsyncState<T>>(KortexAsyncLoading<T>()) {
     if (immediate) {
       unawaited(refresh());
     }
@@ -142,5 +140,4 @@ class KortexResource<T> implements IKortexDisposable {
 KortexResource<T> kortexResource<T>(
   KortexAsyncLoader<T> loader, {
   bool immediate = true,
-}) =>
-    KortexResource(loader, immediate: immediate);
+}) => KortexResource(loader, immediate: immediate);

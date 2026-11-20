@@ -142,10 +142,7 @@ class KortexTracker {
     _notifyTrack(frame, node);
   }
 
-  static void _notifyTrack(
-    _TrackingFrame frame,
-    IKortexReactiveNode node,
-  ) {
+  static void _notifyTrack(_TrackingFrame frame, IKortexReactiveNode node) {
     final onTrack = frame.onTrack;
     if (onTrack == null) return;
     onTrack(node);
@@ -190,5 +187,4 @@ class KortexTracker {
 void kortexBatch(void Function() action) => KortexTracker.batch(action);
 
 /// Lê sinais sem registrar dependência (ver [KortexTracker.untracked]).
-T kortexUntracked<T>(T Function() action) =>
-    KortexTracker.untracked(action);
+T kortexUntracked<T>(T Function() action) => KortexTracker.untracked(action);

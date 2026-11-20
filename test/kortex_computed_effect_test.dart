@@ -159,13 +159,10 @@ void main() {
     test('debounce consolida mudanças rápidas em 1 reexecução', () async {
       final source = KortexSignal(1);
       var runs = 0;
-      KortexEffect(
-        (_) {
-          source.value;
-          runs++;
-        },
-        debounce: const Duration(milliseconds: 20),
-      );
+      KortexEffect((_) {
+        source.value;
+        runs++;
+      }, debounce: const Duration(milliseconds: 20));
 
       source.value = 2;
       source.value = 3;
@@ -177,13 +174,10 @@ void main() {
     test('dispose cancela debounce pendente', () async {
       final source = KortexSignal(1);
       var runs = 0;
-      final effect = KortexEffect(
-        (_) {
-          source.value;
-          runs++;
-        },
-        debounce: const Duration(milliseconds: 30),
-      );
+      final effect = KortexEffect((_) {
+        source.value;
+        runs++;
+      }, debounce: const Duration(milliseconds: 30));
 
       source.value = 2;
       effect.dispose();

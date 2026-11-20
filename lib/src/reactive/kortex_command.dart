@@ -16,7 +16,8 @@ import 'kortex_signal.dart';
 
 /// Ação executada pelo comando com o parâmetro recebido.
 typedef KortexCommandAction<TParam, TResult> = Future<TResult> Function(
-    TParam param);
+  TParam param,
+);
 
 /// Encapsulador de mutação assíncrona com trava de duplo disparo.
 ///
@@ -25,9 +26,9 @@ typedef KortexCommandAction<TParam, TResult> = Future<TResult> Function(
 class KortexCommand<TParam, TResult> implements IKortexDisposable {
   /// Cria o comando em repouso (`isExecuting == false`, `state == null`).
   KortexCommand(KortexCommandAction<TParam, TResult> action)
-      : _action = action,
-        _isExecuting = KortexSignal<bool>(false),
-        _state = KortexSignal<IKortexAsyncState<TResult>?>(null);
+    : _action = action,
+      _isExecuting = KortexSignal<bool>(false),
+      _state = KortexSignal<IKortexAsyncState<TResult>?>(null);
 
   static const _disposedMessage = 'KortexCommand usado após dispose()';
 
@@ -93,5 +94,4 @@ class KortexCommand<TParam, TResult> implements IKortexDisposable {
 /// Atalho ergonômico para `KortexCommand(...)`.
 KortexCommand<TParam, TResult> kortexCommand<TParam, TResult>(
   KortexCommandAction<TParam, TResult> action,
-) =>
-    KortexCommand(action);
+) => KortexCommand(action);

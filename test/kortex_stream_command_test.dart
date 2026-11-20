@@ -55,9 +55,7 @@ void main() {
 
     test('dispose cancela a assinatura automaticamente', () async {
       final controller = StreamController<String>();
-      final resource = KortexStreamResource<String>(
-        () => controller.stream,
-      );
+      final resource = KortexStreamResource<String>(() => controller.stream);
 
       resource.dispose();
 
@@ -116,9 +114,7 @@ void main() {
 
   group('KortexCommand', () {
     test('executa, publica Data e alterna isExecuting', () async {
-      final command = KortexCommand<String, int>(
-        (_) => Future.value(42),
-      );
+      final command = KortexCommand<String, int>((_) => Future.value(42));
 
       expect(command.isExecuting.value, isFalse);
       expect(command.state.value, isNull);
@@ -163,19 +159,21 @@ void main() {
       command.dispose();
     });
 
-    test('dispose em voo descarta conclusão; execute lança StateError',
-        () async {
-      final gate = Completer<int>();
-      final command = KortexCommand<String, int>((_) => gate.future);
+    test(
+      'dispose em voo descarta conclusão; execute lança StateError',
+      () async {
+        final gate = Completer<int>();
+        final command = KortexCommand<String, int>((_) => gate.future);
 
-      final inFlight = command.execute('a');
-      command.dispose();
-      gate.complete(7);
-      await inFlight;
+        final inFlight = command.execute('a');
+        command.dispose();
+        gate.complete(7);
+        await inFlight;
 
-      expect(command.isDisposed, isTrue);
-      expect(() => command.execute('b'), throwsStateError);
-      expect(() => command.state.value, throwsStateError);
-    });
+        expect(command.isDisposed, isTrue);
+        expect(() => command.execute('b'), throwsStateError);
+        expect(() => command.state.value, throwsStateError);
+      },
+    );
   });
 }

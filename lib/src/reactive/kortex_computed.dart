@@ -12,12 +12,11 @@ import 'kortex_observer.dart';
 import 'kortex_signal.dart';
 
 /// Valor computado a partir de [compute], com cache e invalidação lazy.
-class KortexComputed<T>
-    implements IKortexReadonlySignal<T>, IKortexObserver {
+class KortexComputed<T> implements IKortexReadonlySignal<T>, IKortexObserver {
   /// Cria o derivado com [compute] e [equals] opcional (padrão `==`).
   KortexComputed(T Function() compute, {KortexEquals<T>? equals})
-      : _compute = compute,
-        _equals = equals ?? _plainEquals;
+    : _compute = compute,
+      _equals = equals ?? _plainEquals;
 
   static const _disposedMessage = 'KortexComputed usado após dispose()';
 
@@ -142,5 +141,4 @@ bool _plainEquals<T>(T previous, T next) => previous == next;
 KortexComputed<T> kortexComputed<T>(
   T Function() compute, {
   KortexEquals<T>? equals,
-}) =>
-    KortexComputed(compute, equals: equals);
+}) => KortexComputed(compute, equals: equals);
