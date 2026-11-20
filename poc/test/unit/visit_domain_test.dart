@@ -3,8 +3,6 @@ import 'package:poc/core/result.dart';
 import '../support/fixtures.dart';
 
 import 'package:poc/modules/visits/domain/checklist_item.dart';
-import 'package:poc/modules/visits/domain/client.dart';
-import 'package:poc/modules/visits/domain/technician.dart';
 import 'package:poc/modules/visits/domain/visit.dart';
 import 'package:poc/modules/visits/domain/visit_failures.dart';
 import 'package:poc/modules/visits/domain/visit_status.dart';
@@ -81,50 +79,13 @@ void main() {
     });
   });
 
-  group('Client', () {
-    test('telefone invalido reprova com CLIENT_PHONE_INVALID', () {
-      final client = Client.create(name: 'Cliente', phone: '123');
-
-      expect(client, isA<Fail<Client>>());
-      expect((client as Fail).code, VisitFailureCodes.clientPhoneInvalid);
-    });
-
-    test('valido aprova com id transiente', () {
-      final client = _ok(
-        Client.create(name: 'Cliente', phone: '(11) 98888-7777'),
-      );
-
-      expect(client.id, 0);
-      expect(client.name, 'Cliente');
-    });
-  });
-
-  group('Technician', () {
-    test('especialidade vazia reprova com TECHNICIAN_SPECIALTY_EMPTY', () {
-      final technician = Technician.create(name: 'Ana', specialty: '  ');
-
-      expect(technician, isA<Fail<Technician>>());
-      expect(
-        (technician as Fail).code,
-        VisitFailureCodes.technicianSpecialtyEmpty,
-      );
-    });
-
-    test('valido aprova', () {
-      final technician = _ok(Technician.create(name: 'Ana', specialty: 'Rede'));
-
-      expect(technician.name, 'Ana');
-      expect(technician.specialty, 'Rede');
-    });
-  });
-
   group('Visit (agregado raiz)', () {
     test('draft valida titulo e itens de checklist', () {
       final draft = Visit.draft(
         scheduledAt: at(21),
         title: 'Troca do roteador',
         clientId: 1,
-        technicianId: 2,
+        technicianName: 'Ana',
         checklist: [_ok(ChecklistItem.create(description: 'Testar sinal'))],
       );
 
@@ -140,7 +101,7 @@ void main() {
         scheduledAt: at(21),
         title: '  ',
         clientId: 1,
-        technicianId: 2,
+        technicianName: 'Ana',
       );
 
       expect(draft, isA<Fail<Visit>>());
@@ -153,7 +114,7 @@ void main() {
           scheduledAt: at(21),
           title: 'Troca',
           clientId: 1,
-          technicianId: 2,
+          technicianName: 'Ana',
           checklist: [
             _ok(ChecklistItem.create(description: 'A')),
             _ok(ChecklistItem.create(description: 'B')),
@@ -173,7 +134,7 @@ void main() {
           scheduledAt: at(21),
           title: 'Troca',
           clientId: 1,
-          technicianId: 2,
+          technicianName: 'Ana',
           checklist: [
             _ok(ChecklistItem.create(description: 'A')),
             _ok(ChecklistItem.create(description: 'B')),
@@ -194,7 +155,7 @@ void main() {
           scheduledAt: at(21),
           title: 'Troca',
           clientId: 1,
-          technicianId: 2,
+          technicianName: 'Ana',
           checklist: [_ok(ChecklistItem.create(description: 'A'))],
         ),
       );

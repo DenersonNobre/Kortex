@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
+import '../modules/clients/features/.index.dart';
 import '../modules/clients/ui/clients_controller.dart';
 import '../modules/clients/ui/clients_page.dart';
 import '../modules/visits/features/.index.dart';
@@ -120,7 +121,7 @@ class _ClientsScopeState extends State<ClientsScope> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final useCases = context.readKortex<VisitUseCases>();
+    final useCases = context.readKortex<ClientUseCases>();
     _providers ??= [
       KortexProvider<ClientsController>(
         create: (_) => ClientsController(useCases)..refresh(),

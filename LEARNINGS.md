@@ -6,6 +6,20 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — Agregado de apoio que é o próprio usuário não deve virar entidade
+
+- **Sintoma de projeto:** a POC modelava `Technician` como agregado (cadastro + dropdown no formulário). O dono do produto apontou que, num app de campo, **o técnico é quem está usando o app** — o cadastro era um modelo de despacho/back-office que ninguém pediu.
+- **Causa:** confundir "papel no negócio" com "agregado persistido". O técnico é **identidade de sessão**, não um registro a ser escolhido; escolher a si mesmo no formulário não faz sentido.
+- **Fix:** módulo `session` com `SessionUser` (nome + especialidade) e porta `ISessionProvider`; `Visit.technicianName` guarda o nome como **snapshot** (histórico não muda se o usuário mudar de nome); o agregado `Technician` foi removido. Em produção a identidade vem do servidor — o cliente nunca é fonte de autorização de papel.
+- **Prevenção:** antes de criar agregado para uma pessoa do domínio, perguntar "ela escolhe o próprio nome numa lista?". Se a resposta é não, é sessão, não entidade.
+
+## 2026-11-20 — Fronteira de bounded context se mede por onde o dado mora, não pela tela que o mostra
+
+- **Sintoma:** `Client` morava em `modules/visits/domain/` e o cadastro estava na fachada de **visitas** — a tela de Clientes consumia a fachada de outro contexto só porque foi a primeira a existir.
+- **Causa:** o agregado nasceu como dependência de `Visit` e nunca foi promovido quando ganhou tela e commands próprios.
+- **Fix:** `modules/clients/{domain,data,commands,features}` com `ClientUseCases`; `visits` depende só da **porta** (`ClientRepository`) para validar e resolver nome no join; `VisitsController` perdeu `createClient` (virou código morto da tela antiga).
+- **Prevenção:** quando um conceito ganha tela, commands e ciclo de vida próprios, ele deixa de ser detalhe de outro contexto — mover no mesmo commit, não "depois". Código morto de tela antiga (`createClient` no controller de visitas) é o sintoma de que a fronteira ficou para trás.
+
 ## 2026-11-20 — Providers inline em `StatelessWidget` recriam o escopo a cada build
 
 - **Sintoma:** ao cadastrar um cliente e voltar para a lista, o item **sumia**; e trocar de aba zerava as listas. Comprovado por print: o controller consultado tinha `[Empresa Nova]`, mas a tela mostrava 0 tiles.

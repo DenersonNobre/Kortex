@@ -1,7 +1,5 @@
 export 'checklist_item.dart';
-export 'client.dart';
 export 'scheduled_at.dart';
-export 'technician.dart';
 export 'visit.dart';
 export 'visit_failures.dart';
 export 'visit_repository.dart';

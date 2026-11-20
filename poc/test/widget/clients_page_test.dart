@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poc/app/visits_app.dart';
 import 'package:poc/modules/clients/ui/clients_controller.dart';
-import 'package:poc/modules/visits/data/.index.dart';
-import 'package:poc/modules/visits/features/.index.dart';
+import 'package:poc/modules/clients/data/.index.dart';
+import 'package:poc/modules/clients/features/.index.dart';
 
-/// Fachada sobre stores em memoria (sem latencia).
-VisitUseCases _useCases() => DefaultVisitUseCases(
-  visits: InMemoryVisitStore(latency: Duration.zero),
-  clients: InMemoryClientStore(latency: Duration.zero),
-  technicians: InMemoryTechnicianStore(latency: Duration.zero),
-  now: () => DateTime(2026, 11, 20, 9, 0),
+/// Fachada sobre store em memoria (sem latencia).
+ClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
+  clients: store ?? InMemoryClientStore(latency: Duration.zero),
 );
 
 void main() {

@@ -1,8 +1,11 @@
+import 'package:flutter_test/flutter_test.dart';
 import 'package:poc/core/result.dart';
+import 'package:poc/modules/clients/data/.index.dart';
+import 'package:poc/modules/clients/domain/.index.dart';
+import 'package:poc/modules/session/.index.dart';
 import 'package:poc/modules/visits/data/.index.dart';
 import 'package:poc/modules/visits/domain/.index.dart';
 import 'package:poc/modules/visits/features/visit_use_cases.dart';
-import 'package:flutter_test/flutter_test.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
 T _ok<T>(Result<T> result) {
@@ -13,55 +16,87 @@ T _ok<T>(Result<T> result) {
 /// Codigo de um `Fail` (falha o teste se for `Ok`).
 String _code<T>(Result<T> result) {
   expect(result, isA<Fail<T>>());
-  return (result as Fail).code;
+  return (result as Fail<T>).code;
 }
+
+/// Usuario de sessao valido.
+SessionUser _user(String name) =>
+    _ok(SessionUser.create(name: name, specialty: 'Rede'));
 
 /// Monta a fachada sobre stores em memoria (sem latencia).
 VisitUseCases _useCases({
   InMemoryVisitStore? visits,
   InMemoryClientStore? clients,
-  InMemoryTechnicianStore? technicians,
+  SessionUser? user,
 }) => DefaultVisitUseCases(
   now: () => DateTime(2026, 11, 20, 9, 0),
   visits: visits ?? InMemoryVisitStore(latency: Duration.zero),
   clients: clients ?? InMemoryClientStore(latency: Duration.zero),
-  technicians: technicians ?? InMemoryTechnicianStore(latency: Duration.zero),
+  session: InMemorySessionProvider(currentUser: user ?? _user('Ana')),
 );
 
 /// Cria um cliente valido.
 Future<Client> _client(InMemoryClientStore store) async =>
     store.saveClient(_ok(Client.create(name: 'Cliente', phone: '11988887777')));
 
-/// Cria um tecnico valido.
-Future<Technician> _technician(InMemoryTechnicianStore store) async => store
-    .saveTechnician(_ok(Technician.create(name: 'Ana', specialty: 'Rede')));
-
 void main() {
   group('VisitUseCases (agendamento)', () {
-    test('agenda visita com cliente e tecnico existentes', () async {
+    test('agenda visita no nome do usuario da sessao', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
 
       final visit = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca do roteador',
           clientId: client.id,
-          technicianId: technician.id,
         ),
       );
 
       expect(visit.id, isNonZero);
       expect(visit.status, VisitStatus.scheduled);
+      expect(visit.technicianName, 'Ana');
       expect((await visits.listVisits()), hasLength(1));
+    });
+
+    test('cada sessao atribui a visita ao seu proprio tecnico', () async {
+      final visits = InMemoryVisitStore(latency: Duration.zero);
+      final clients = InMemoryClientStore(latency: Duration.zero);
+      final client = await _client(clients);
+      final ana = _useCases(
+        visits: visits,
+        clients: clients,
+        user: _user('Ana'),
+      );
+      final bruno = _useCases(
+        visits: visits,
+        clients: clients,
+        user: _user('Bruno'),
+      );
+
+      final first = _ok(
+        await ana.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
+          title: 'Visita da Ana',
+          clientId: client.id,
+        ),
+      );
+      final second = _ok(
+        await bruno.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 11),
+          title: 'Visita do Bruno',
+          clientId: client.id,
+        ),
+      );
+
+      expect(first.technicianName, 'Ana');
+      expect(second.technicianName, 'Bruno');
+      expect((await ana.listVisits()).map((row) => row.technicianName), [
+        'Ana',
+        'Bruno',
+      ]);
     });
 
     test('agenda com cliente inexistente falha sem criar visita', () async {
@@ -72,27 +107,9 @@ void main() {
         scheduledAt: DateTime(2026, 11, 21, 10),
         title: 'Troca',
         clientId: 99,
-        technicianId: 1,
       );
 
-      expect(_code(result), VisitFailureCodes.clientNotFound);
-      expect(await visits.listVisits(), isEmpty);
-    });
-
-    test('agenda com tecnico inexistente falha sem criar visita', () async {
-      final visits = InMemoryVisitStore(latency: Duration.zero);
-      final clients = InMemoryClientStore(latency: Duration.zero);
-      final client = await _client(clients);
-      final useCases = _useCases(visits: visits, clients: clients);
-
-      final result = await useCases.scheduleVisit(
-        scheduledAt: DateTime(2026, 11, 21, 10),
-        title: 'Troca',
-        clientId: client.id,
-        technicianId: 99,
-      );
-
-      expect(_code(result), VisitFailureCodes.technicianNotFound);
+      expect(_code(result), ClientFailureCodes.notFound);
       expect(await visits.listVisits(), isEmpty);
     });
 
@@ -104,7 +121,6 @@ void main() {
         scheduledAt: DateTime(2026, 11, 21, 10),
         title: '   ',
         clientId: 1,
-        technicianId: 1,
       );
 
       expect(_code(result), VisitFailureCodes.titleEmpty);
@@ -116,20 +132,13 @@ void main() {
     test('inicia visita agendada', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       final visit = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
-          technicianId: technician.id,
         ),
       );
 
@@ -141,20 +150,13 @@ void main() {
     test('iniciar visita ja iniciada falha e mantem o status', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       final visit = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
-          technicianId: technician.id,
         ),
       );
       _ok(await useCases.startVisit(visit.id));
@@ -169,20 +171,13 @@ void main() {
     test('conclui visita em andamento e marca o checklist', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       final visit = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
-          technicianId: technician.id,
           checklist: [_ok(ChecklistItem.create(description: 'Testar sinal'))],
         ),
       );
@@ -197,20 +192,13 @@ void main() {
     test('concluir visita agendada falha e mantem o status', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       final visit = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
-          technicianId: technician.id,
         ),
       );
 
@@ -224,20 +212,13 @@ void main() {
     test('marca item do checklist', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       final visit = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca',
           clientId: client.id,
-          technicianId: technician.id,
           checklist: [_ok(ChecklistItem.create(description: 'Testar sinal'))],
         ),
       );
@@ -271,20 +252,13 @@ void main() {
     test('listagem resolve nome do cliente, do tecnico e progresso', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'Troca do roteador',
           clientId: client.id,
-          technicianId: technician.id,
           checklist: [
             _ok(ChecklistItem.create(description: 'A')),
             _ok(ChecklistItem.create(description: 'B')),
@@ -304,20 +278,13 @@ void main() {
     test('filtro por status devolve apenas as visitas do status', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
       final client = await _client(clients);
-      final technician = await _technician(technicians);
-      final useCases = _useCases(
-        visits: visits,
-        clients: clients,
-        technicians: technicians,
-      );
+      final useCases = _useCases(visits: visits, clients: clients);
       final scheduled = _ok(
         await useCases.scheduleVisit(
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'A',
           clientId: client.id,
-          technicianId: technician.id,
         ),
       );
       _ok(
@@ -325,7 +292,6 @@ void main() {
           scheduledAt: DateTime(2026, 11, 21, 10),
           title: 'B',
           clientId: client.id,
-          technicianId: technician.id,
         ),
       );
       _ok(await useCases.startVisit(scheduled.id));
@@ -341,41 +307,37 @@ void main() {
       expect(inProgress.map((v) => v.title), ['A']);
     });
 
-    test('lista clientes e tecnicos', () async {
+    test('filtro por dia devolve apenas as visitas daquele dia', () async {
+      final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
-      final technicians = InMemoryTechnicianStore(latency: Duration.zero);
-      final useCases = _useCases(clients: clients, technicians: technicians);
+      final client = await _client(clients);
+      final useCases = _useCases(visits: visits, clients: clients);
+      _ok(
+        await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 21, 10),
+          title: 'Dia 21',
+          clientId: client.id,
+        ),
+      );
+      _ok(
+        await useCases.scheduleVisit(
+          scheduledAt: DateTime(2026, 11, 22, 10),
+          title: 'Dia 22',
+          clientId: client.id,
+        ),
+      );
+
+      final day = await useCases.listVisits(day: DateTime(2026, 11, 22));
+
+      expect(day.map((v) => v.title), ['Dia 22']);
+    });
+
+    test('lista clientes para o formulario', () async {
+      final clients = InMemoryClientStore(latency: Duration.zero);
+      final useCases = _useCases(clients: clients);
       await _client(clients);
-      await _technician(technicians);
 
       expect((await useCases.listClients()).single.name, 'Cliente');
-      expect((await useCases.listTechnicians()).single.name, 'Ana');
-    });
-  });
-
-  group('VisitUseCases (cadastros)', () {
-    test('cria cliente e tecnico', () async {
-      final useCases = _useCases();
-
-      final client = _ok(
-        await useCases.createClient(name: 'Empresa X', phone: '11988887777'),
-      );
-      final technician = _ok(
-        await useCases.createTechnician(name: 'Bruno', specialty: 'Software'),
-      );
-
-      expect(client.id, isNonZero);
-      expect(technician.id, isNonZero);
-      expect((await useCases.listClients()), hasLength(1));
-    });
-
-    test('cliente com telefone invalido falha', () async {
-      final useCases = _useCases();
-
-      final result = await useCases.createClient(name: 'Empresa X', phone: '1');
-
-      expect(_code(result), VisitFailureCodes.clientPhoneInvalid);
-      expect(await useCases.listClients(), isEmpty);
     });
   });
 }

@@ -2,8 +2,6 @@ import 'package:poc/core/result.dart';
 
 import '../support/fixtures.dart';
 
-import 'package:poc/modules/visits/data/client_store.dart';
-import 'package:poc/modules/visits/data/technician_store.dart';
 import 'package:poc/modules/visits/data/visit_store.dart';
 import 'package:poc/modules/visits/domain/.index.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -25,7 +23,7 @@ void main() {
             scheduledAt: at(21),
             title: 'A',
             clientId: 1,
-            technicianId: 1,
+            technicianName: 'Ana',
           ),
         ),
       );
@@ -35,7 +33,7 @@ void main() {
             scheduledAt: at(21),
             title: 'B',
             clientId: 1,
-            technicianId: 1,
+            technicianName: 'Ana',
           ),
         ),
       );
@@ -74,7 +72,7 @@ void main() {
             scheduledAt: at(21),
             title: 'A',
             clientId: 1,
-            technicianId: 1,
+            technicianName: 'Ana',
           ),
         ),
       );
@@ -83,34 +81,6 @@ void main() {
       await store.deleteVisit(999);
 
       expect(await store.listVisits(), isEmpty);
-    });
-  });
-
-  group('InMemoryClientStore', () {
-    test('save gera id e listClients devolve o cliente', () async {
-      final store = InMemoryClientStore(latency: Duration.zero);
-
-      final saved = await store.saveClient(
-        _ok(Client.create(name: 'Cliente', phone: '11988887777')),
-      );
-
-      expect(saved.id, 1);
-      expect((await store.listClients()).single.name, 'Cliente');
-      expect(await store.findClientById(saved.id), isNotNull);
-    });
-  });
-
-  group('InMemoryTechnicianStore', () {
-    test('save gera id e listTechnicians devolve o tecnico', () async {
-      final store = InMemoryTechnicianStore(latency: Duration.zero);
-
-      final saved = await store.saveTechnician(
-        _ok(Technician.create(name: 'Ana', specialty: 'Rede')),
-      );
-
-      expect(saved.id, 1);
-      expect((await store.listTechnicians()).single.name, 'Ana');
-      expect(await store.findTechnicianById(saved.id), isNotNull);
     });
   });
 }

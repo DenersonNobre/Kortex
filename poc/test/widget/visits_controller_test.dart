@@ -1,14 +1,34 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kortex/kortex.dart';
+import 'package:poc/core/result.dart';
+import 'package:poc/modules/clients/data/.index.dart';
+import 'package:poc/modules/clients/domain/.index.dart';
+import 'package:poc/modules/session/.index.dart';
 import 'package:poc/modules/visits/data/.index.dart';
 import 'package:poc/modules/visits/features/visit_use_cases.dart';
 import 'package:poc/modules/visits/ui/visits_controller.dart';
 
-/// Monta a fachada sobre stores em memoria (sem latencia, para teste).
-VisitUseCases _useCases() => DefaultVisitUseCases(
-  visits: InMemoryVisitStore(latency: Duration.zero),
-  clients: InMemoryClientStore(latency: Duration.zero),
-  technicians: InMemoryTechnicianStore(latency: Duration.zero),
+/// Desembrulha um `Ok` (falha o teste se for `Fail`).
+T _ok<T>(Result<T> result) {
+  expect(result, isA<Ok<T>>());
+  return (result as Ok<T>).value;
+}
+
+/// Fachada sobre stores em memoria (sem latencia, para teste).
+VisitUseCases _useCases({
+  InMemoryVisitStore? visits,
+  InMemoryClientStore? clients,
+}) => DefaultVisitUseCases(
+  visits: visits ?? InMemoryVisitStore(latency: Duration.zero),
+  clients: clients ?? InMemoryClientStore(latency: Duration.zero),
+  session: InMemorySessionProvider.demo(),
+);
+
+/// Controller com o cliente de demonstracao ja' cadastrado.
+VisitsController _controllerWithClient() => VisitsController(
+  _useCases(
+    clients: InMemoryClientStore(latency: Duration.zero, seedDemo: true),
+  ),
 );
 
 void main() {
@@ -25,30 +45,62 @@ void main() {
       controller.dispose();
     });
 
-    test('agenda visita e recarrega a lista', () async {
-      final controller = VisitsController(_useCases());
-      final client = controller.clients.value;
-      expect(client, isEmpty);
+    test('agenda visita no nome do tecnico da sessao', () async {
+      final controller = _controllerWithClient();
+      expect(controller.clients.value, isEmpty);
 
-      await controller.refresh();
-
-      final created = await controller.createClient('Empresa X', '11988887777');
-      expect(created, isTrue);
-      final technician = await controller.createTechnician('Ana', 'Rede');
-      expect(technician, isTrue);
+      await controller.loadClients();
+      expect(controller.clients.value, hasLength(1));
+      expect(controller.technicianName, 'Tecnico Demo');
 
       final scheduled = await controller.scheduleVisit('Troca do roteador');
       expect(scheduled, isTrue);
 
       final rows = controller.visits.state.value.valueOrNull;
       expect(rows, hasLength(1));
-      expect(rows!.single.clientName, 'Empresa X');
+      expect(rows!.single.clientName, 'Cliente Demo');
+      expect(rows.single.technicianName, 'Tecnico Demo');
+      controller.dispose();
+    });
+
+    test('agenda para o cliente escolhido', () async {
+      final clients = InMemoryClientStore(
+        latency: Duration.zero,
+        seedDemo: true,
+      );
+      final extra = await clients.saveClient(
+        _ok(Client.create(name: 'Segundo', phone: '11977776666')),
+      );
+      final controller = VisitsController(_useCases(clients: clients));
+      await controller.loadClients();
+
+      final scheduled = await controller.scheduleVisit(
+        'Visita do segundo cliente',
+        clientId: extra.id,
+      );
+
+      expect(scheduled, isTrue);
+      expect(
+        controller.visits.state.value.valueOrNull!.single.clientName,
+        'Segundo',
+      );
+      controller.dispose();
+    });
+
+    test('sem cliente cadastrado publica erro e nao agenda', () async {
+      final controller = VisitsController(_useCases());
+      await controller.loadClients();
+
+      final scheduled = await controller.scheduleVisit('Troca');
+
+      expect(scheduled, isFalse);
+      expect(controller.error.value, isNotEmpty);
       controller.dispose();
     });
 
     test('falha de negocio vira mensagem de erro', () async {
-      final controller = VisitsController(_useCases());
-      await controller.refresh();
+      final controller = _controllerWithClient();
+      await controller.loadClients();
 
       final created = await controller.scheduleVisit('   ');
 
@@ -58,10 +110,8 @@ void main() {
     });
 
     test('inicia visita e atualiza o status na lista', () async {
-      final controller = VisitsController(_useCases());
-      await controller.refresh();
-      await controller.createClient('Empresa X', '11988887777');
-      await controller.createTechnician('Ana', 'Rede');
+      final controller = _controllerWithClient();
+      await controller.loadClients();
       await controller.scheduleVisit('Troca');
       final visitId = controller.visits.state.value.valueOrNull!.single.id;
 
@@ -89,13 +139,7 @@ void main() {
     test('erro de infraestrutura vira KortexAsyncError na lista', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero)
         ..failNext = true;
-      final controller = VisitsController(
-        DefaultVisitUseCases(
-          visits: visits,
-          clients: InMemoryClientStore(latency: Duration.zero),
-          technicians: InMemoryTechnicianStore(latency: Duration.zero),
-        ),
-      );
+      final controller = VisitsController(_useCases(visits: visits));
 
       await controller.refresh();
 

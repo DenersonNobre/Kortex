@@ -1,6 +1,6 @@
 /// Dialog de nova visita (usa `KortexScope.capture` do `Overlay`).
 ///
-/// SRP: coletar titulo e agendar a visita no controller do escopo capturado.
+/// SRP: coletar titulo e cliente e agendar no controller do escopo capturado.
 /// NAO faz: regra de negocio nem carga de dados.
 ///
 /// Patterns: `StatefulWidget` de formulario + escopo capturado no dialog.
@@ -31,22 +31,52 @@ class NewVisitDialog extends StatefulWidget {
 }
 
 class _NewVisitDialogState extends State<NewVisitDialog> {
-  final _formKey = GlobalKey<FormState>();
   var _title = '';
+  int? _clientId;
 
   @override
   Widget build(BuildContext context) {
     final controller = context.readKortex<VisitsController>();
     return AlertDialog(
       title: const Text('Nova visita'),
-      content: Form(
-        key: _formKey,
-        child: TextFormField(
-          key: const Key('new-visit-title'),
-          initialValue: '',
-          decoration: const InputDecoration(labelText: 'Título'),
-          onChanged: (value) => _title = value,
-        ),
+      content: KortexWatch(
+        builder: (context, child) {
+          final clients = controller.clients.value;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextFormField(
+                key: const Key('new-visit-title'),
+                initialValue: '',
+                decoration: const InputDecoration(labelText: 'Título'),
+                onChanged: (value) => _title = value,
+              ),
+              const SizedBox(height: 12),
+              if (clients.isEmpty)
+                const Text('Cadastre um cliente antes de agendar.')
+              else
+                DropdownButtonFormField<int>(
+                  key: const Key('new-visit-client'),
+                  initialValue: _clientId ?? clients.first.id,
+                  decoration: const InputDecoration(labelText: 'Cliente'),
+                  items: [
+                    for (final client in clients)
+                      DropdownMenuItem(
+                        value: client.id,
+                        child: Text(client.name),
+                      ),
+                  ],
+                  onChanged: (value) => setState(() => _clientId = value),
+                ),
+              const SizedBox(height: 12),
+              Text(
+                'Técnico: ${controller.technicianName}',
+                key: const Key('new-visit-technician'),
+              ),
+            ],
+          );
+        },
       ),
       actions: [
         TextButton(
@@ -64,7 +94,7 @@ class _NewVisitDialogState extends State<NewVisitDialog> {
   }
 
   Future<void> _save(VisitsController controller) async {
-    final created = await controller.scheduleVisit(_title);
+    final created = await controller.scheduleVisit(_title, clientId: _clientId);
     if (!created) return;
     if (!mounted) return;
     Navigator.of(context).pop();

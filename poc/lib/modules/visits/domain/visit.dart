@@ -21,7 +21,7 @@ final class Visit {
     required this.id,
     required this.title,
     required this.clientId,
-    required this.technicianId,
+    required this.technicianName,
     required this.scheduledAt,
     required this.status,
     required this.checklist,
@@ -37,8 +37,8 @@ final class Visit {
   /// Cliente (site) atendido.
   final int clientId;
 
-  /// Tecnico responsavel.
-  final int technicianId;
+  /// Nome do tecnico responsavel (snapshot do usuario da sessao).
+  final String technicianName;
 
   /// Data e hora agendadas (sempre futuras na criacao).
   final ScheduledAt scheduledAt;
@@ -63,7 +63,7 @@ final class Visit {
   static Result<Visit> draft({
     required String title,
     required int clientId,
-    required int technicianId,
+    required String technicianName,
     required ScheduledAt scheduledAt,
     List<ChecklistItem> checklist = const [],
     String notes = '',
@@ -77,7 +77,7 @@ final class Visit {
         id: 0,
         title: (parsed as Ok<VisitTitle>).value,
         clientId: clientId,
-        technicianId: technicianId,
+        technicianName: technicianName,
         scheduledAt: scheduledAt,
         status: VisitStatus.scheduled,
         checklist: List.of(checklist),
@@ -92,7 +92,7 @@ final class Visit {
         id: id ?? this.id,
         title: title,
         clientId: clientId,
-        technicianId: technicianId,
+        technicianName: technicianName,
         scheduledAt: scheduledAt,
         status: status ?? this.status,
         checklist: checklist ?? this.checklist,

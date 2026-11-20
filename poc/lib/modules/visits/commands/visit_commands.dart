@@ -4,35 +4,37 @@
 /// NAO faz: leitura para UI nem decisao de apresentacao.
 ///
 /// Patterns: Command por caso de uso, com guarda de invariante.
-/// Dependencias: ports + dominio (puro).
+/// Dependencias: ports (visitas/clientes), sessao e dominio (puro).
 library;
 
 import '../../../core/result.dart';
+import '../../clients/domain/.index.dart';
+import '../../session/.index.dart';
 import '../domain/.index.dart';
 
-/// Agenda uma visita para um cliente e um tecnico existentes.
+/// Agenda uma visita para um cliente existente, atribuida ao usuario da sessao.
 class ScheduleVisitCommand {
-  /// Cria o command sobre [visits], [clients] e [technicians].
+  /// Cria o command sobre [visits] e [clients].
   ///
+  /// O tecnico responsavel vem de [session]: na POC o usuario logado e' o
+  /// proprio tecnico, entao a visita nasce no nome dele.
   /// [now] e' injetavel para manter o dominio deterministico nos testes.
   ScheduleVisitCommand(
     this._visits,
     this._clients,
-    this._technicians, {
+    this._session, {
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
   final VisitRepository _visits;
   final ClientRepository _clients;
-  final TechnicianRepository _technicians;
+  final ISessionProvider _session;
   final DateTime Function() _now;
 
-  /// Agenda a visita; falha se cliente/tecnico nao existirem ou a data for
-  /// passada.
+  /// Agenda a visita; falha se o cliente nao existir ou a data for passada.
   Future<Result<Visit>> call({
     required String title,
     required int clientId,
-    required int technicianId,
     required DateTime scheduledAt,
     List<ChecklistItem> checklist = const [],
     String notes = '',
@@ -44,7 +46,7 @@ class ScheduleVisitCommand {
     final draft = Visit.draft(
       title: title,
       clientId: clientId,
-      technicianId: technicianId,
+      technicianName: _session.currentUser.name,
       scheduledAt: (scheduled as Ok<ScheduledAt>).value,
       checklist: checklist,
       notes: notes,
@@ -53,16 +55,7 @@ class ScheduleVisitCommand {
       return draft;
     }
     if (await _clients.findClientById(clientId) == null) {
-      return const Fail(
-        VisitFailureCodes.clientNotFound,
-        'Cliente nao encontrado.',
-      );
-    }
-    if (await _technicians.findTechnicianById(technicianId) == null) {
-      return const Fail(
-        VisitFailureCodes.technicianNotFound,
-        'Tecnico nao encontrado.',
-      );
+      return const Fail(ClientFailureCodes.notFound, 'Cliente nao encontrado.');
     }
     return Ok(await _visits.saveVisit((draft as Ok<Visit>).value));
   }

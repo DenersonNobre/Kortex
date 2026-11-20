@@ -10,7 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
-import '../../visits/domain/.index.dart';
+import '../domain/.index.dart';
 import 'clients_controller.dart';
 import 'widgets/new_client_dialog.dart';
 

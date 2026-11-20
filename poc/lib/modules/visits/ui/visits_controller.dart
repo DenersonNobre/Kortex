@@ -1,7 +1,7 @@
 /// Controller reativo do app de visitas.
 ///
-/// SRP: expor a lista de visitas (assincrona, com `previousValue` e
-/// `KortexAsyncState`), o filtro por status e as acoes do ciclo da visita.
+/// SRP: expor a lista de visitas (assincrona, com `KortexAsyncState`), o
+/// filtro por status, os clientes do formulario e as acoes do ciclo da visita.
 /// NAO faz: UI, navegacao nem regra de negocio (vive nos commands).
 ///
 /// Patterns: `IKortexController` + `KortexResource` (carga concorrente) e
@@ -12,6 +12,7 @@ library;
 import 'package:kortex/kortex.dart';
 
 import '../../../core/result.dart';
+import '../../clients/domain/.index.dart';
 import '../domain/.index.dart';
 import '../features/list_visits/visit_row.dart';
 import '../features/visit_use_cases.dart';
@@ -52,39 +53,19 @@ class VisitsController extends IKortexController {
   /// Exibe o dialog de nova visita.
   final KortexSignal<bool> showNewVisitDialog = KortexSignal(false);
 
-  /// Clientes cadastrados (para o formulario).
+  /// Clientes cadastrados (para o formulario de agendamento).
   final KortexSignal<List<Client>> clients = KortexSignal(const []);
 
-  /// Tecnicos cadastrados (para o formulario).
-  final KortexSignal<List<Technician>> technicians = KortexSignal(const []);
+  /// Nome do tecnico logado: toda visita criada nasce no nome dele.
+  String get technicianName => _useCases.currentUser.name;
 
   /// Recarrega a lista de visitas.
   Future<void> refresh() => visits.refresh();
 
-  /// Recarrega clientes e tecnicos do formulario.
-  ///
-  /// Com [seedIfEmpty], cria um cliente e um tecnico de demonstracao quando
-  /// as listas estao vazias — deixa a POC utilizavel no primeiro `flutter run`.
-  Future<void> loadFormData({bool seedIfEmpty = false}) async {
+  /// Recarrega os clientes do formulario de agendamento.
+  Future<void> loadClients() async {
     try {
-      var clientList = await _useCases.listClients();
-      var technicianList = await _useCases.listTechnicians();
-      if (seedIfEmpty && clientList.isEmpty) {
-        await _useCases.createClient(
-          name: 'Cliente Demo',
-          phone: '11988887777',
-        );
-        clientList = await _useCases.listClients();
-      }
-      if (seedIfEmpty && technicianList.isEmpty) {
-        await _useCases.createTechnician(
-          name: 'Tecnico Demo',
-          specialty: 'Rede',
-        );
-        technicianList = await _useCases.listTechnicians();
-      }
-      clients.value = clientList;
-      technicians.value = technicianList;
+      clients.value = await _useCases.listClients();
     } catch (_) {
       // A lista principal ja' publica o erro de infraestrutura em
       // `visits.state` (KortexAsyncError); o formulario nao duplica o aviso.
@@ -97,45 +78,22 @@ class VisitsController extends IKortexController {
     await refresh();
   }
 
-  /// Cadastra cliente; devolve `true` em caso de sucesso.
-  Future<bool> createClient(String name, String phone) async {
-    final result = await _useCases.createClient(name: name, phone: phone);
-    if (result is Fail<Client>) {
-      _publishError(result.message);
-      return false;
-    }
-    error.value = '';
-    await loadFormData();
-    return true;
-  }
-
-  /// Cadastra tecnico; devolve `true` em caso de sucesso.
-  Future<bool> createTechnician(String name, String specialty) async {
-    final result = await _useCases.createTechnician(
-      name: name,
-      specialty: specialty,
-    );
-    if (result is Fail<Technician>) {
-      _publishError(result.message);
-      return false;
-    }
-    error.value = '';
-    await loadFormData();
-    return true;
-  }
-
-  /// Agenda visita usando o primeiro cliente e o primeiro tecnico.
-  Future<bool> scheduleVisit(String title, {DateTime? scheduledAt}) async {
-    final currentClients = clients.peek();
-    final currentTechnicians = technicians.peek();
-    if (currentClients.isEmpty || currentTechnicians.isEmpty) {
-      _publishError('Cadastre um cliente e um tecnico antes de agendar.');
+  /// Agenda visita para [clientId] (ou o primeiro cliente cadastrado).
+  ///
+  /// O tecnico responsavel e' o usuario da sessao.
+  Future<bool> scheduleVisit(
+    String title, {
+    int? clientId,
+    DateTime? scheduledAt,
+  }) async {
+    final targetClient = clientId ?? _firstClientId();
+    if (targetClient == null) {
+      _publishError('Cadastre um cliente antes de agendar.');
       return false;
     }
     final result = await _useCases.scheduleVisit(
       title: title,
-      clientId: currentClients.first.id,
-      technicianId: currentTechnicians.first.id,
+      clientId: targetClient,
       scheduledAt: scheduledAt ?? DateTime.now().add(const Duration(days: 1)),
       checklist: _defaultChecklist(),
     );
@@ -146,6 +104,11 @@ class VisitsController extends IKortexController {
     error.value = '';
     await refresh();
     return true;
+  }
+
+  int? _firstClientId() {
+    final current = clients.peek();
+    return current.isEmpty ? null : current.first.id;
   }
 
   /// Checklist padrao aplicado a toda visita nova (POC).

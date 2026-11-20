@@ -17,6 +17,7 @@ flowchart LR
     E4 --> E5["EPIC05: POC Robusta (Premissas Oraculo)"]
     E5 --> E6["EPIC06: App de Visitas Tecnicas"]
     E6 --> E7["EPIC07: Clientes e Agenda"]
+    E7 --> E8["EPIC08: Modulos de Clientes e Sessao"]
 ```
 
 ---
@@ -33,6 +34,7 @@ flowchart LR
 | `EPIC05` | POC Robusta (Premissas Oráculo) | `EPIC04` | Alta | `Concluído` | [epic-05-poc-robusta.md](epics/epic-05-poc-robusta.md) |
 | `EPIC06` | App de Visitas Técnicas | `EPIC05` | Alta | `Concluído` | [epic-06-app-visitas.md](epics/epic-06-app-visitas.md) |
 | `EPIC07` | Clientes & Agenda | `EPIC06` | Alta | `Concluído` | [epic-07-clientes-agenda.md](epics/epic-07-clientes-agenda.md) |
+| `EPIC08` | Módulos de Clientes & Sessão | `EPIC07` | Alta | `Concluído` | [epic-08-modulos-apoio.md](epics/epic-08-modulos-apoio.md) |
 ---
 
 ## 3. Definition of Ready (DoR) & Definition of Done (DoD)

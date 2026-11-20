@@ -1,14 +1,14 @@
-/// Cliente (site) da visita tecnica (`Client`).
+/// Cliente (site) atendido (`Client`).
 ///
-/// SRP: identificar o site atendido com nome e telefone validos.
+/// SRP: identificar o site com nome e telefone validos.
 /// NAO faz: agenda, persistencia ou UI.
 ///
-/// Patterns: Entidade imutavel + fabrica que devolve `Result`.
+/// Patterns: Entidade imutavel + fabrica que devolve `Result` + `_copy`.
 /// Dependencias: `core/result.dart` + codigos (puro).
 library;
 
 import '../../../core/result.dart';
-import 'visit_failures.dart';
+import 'client_failures.dart';
 
 /// Telefone do cliente: apenas digitos, de 10 a 11.
 final RegExp _phonePattern = RegExp(r'^\d{10,11}$');
@@ -34,10 +34,6 @@ final class Client {
   /// Endereco do site (opcional).
   final String address;
 
-  /// Devolve copia com o [id] aplicado (persistência).
-  Client withId(int id) =>
-      Client._(id: id, name: name, phone: phone, address: address);
-
   /// Valida os campos e devolve `Ok` ou `Fail` com codigo estavel.
   static Result<Client> create({
     required String name,
@@ -46,15 +42,12 @@ final class Client {
   }) {
     final trimmedName = name.trim();
     if (trimmedName.isEmpty) {
-      return const Fail(
-        VisitFailureCodes.clientPhoneInvalid,
-        'Cliente sem nome.',
-      );
+      return const Fail(ClientFailureCodes.nameEmpty, 'Cliente sem nome.');
     }
     final digits = phone.replaceAll(RegExp(r'\D'), '');
     if (!_phonePattern.hasMatch(digits)) {
       return const Fail(
-        VisitFailureCodes.clientPhoneInvalid,
+        ClientFailureCodes.phoneInvalid,
         'Telefone do cliente invalido.',
       );
     }
@@ -67,4 +60,16 @@ final class Client {
       ),
     );
   }
+
+  /// Devolve copia com os campos sobrescritos (unico ponto de reconstrucao).
+  Client copyWith({int? id, String? name, String? phone, String? address}) =>
+      Client._(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        phone: phone ?? this.phone,
+        address: address ?? this.address,
+      );
+
+  /// Devolve copia com o [id] aplicado (persistencia).
+  Client withId(int id) => copyWith(id: id);
 }

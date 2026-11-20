@@ -10,8 +10,7 @@ library;
 import 'dart:async';
 
 import '../../../core/result.dart';
-import '../domain/client.dart';
-import '../domain/visit_repository.dart';
+import '../domain/.index.dart';
 
 /// Store volatil de clientes com latencia simulada.
 class InMemoryClientStore implements ClientRepository {

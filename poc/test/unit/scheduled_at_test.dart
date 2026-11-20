@@ -55,7 +55,7 @@ void main() {
         Visit.draft(
           title: 'Troca do roteador',
           clientId: 1,
-          technicianId: 2,
+          technicianName: 'Ana',
           scheduledAt: _ok(
             ScheduledAt.create(DateTime(2026, 11, 21, 14, 45), now: now),
           ),
@@ -70,7 +70,7 @@ void main() {
         Visit.draft(
           title: 'Troca',
           clientId: 1,
-          technicianId: 2,
+          technicianName: 'Ana',
           scheduledAt: _ok(
             ScheduledAt.create(DateTime(2026, 11, 21, 8, 0), now: now),
           ),

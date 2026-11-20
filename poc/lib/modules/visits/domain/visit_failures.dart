@@ -1,7 +1,8 @@
 /// Codigos estaveis de falha do modulo de visitas.
 ///
-/// SRP: centralizar os `code`s de `Fail` do dominio. NAO faz: mensagens
-/// (vao no `Fail.message` de cada sitio).
+/// SRP: centralizar os `code`s de `Fail` do dominio de visitas. NAO faz:
+/// mensagens (vao no `Fail.message` de cada sitio) nem codigos de outros
+/// modulos (cada agregado tem os seus).
 library;
 
 /// Codigos de falha de negocio das visitas.
@@ -17,18 +18,6 @@ abstract final class VisitFailureCodes {
 
   /// Descricao de item de checklist vazia.
   static const checklistDescriptionEmpty = 'CHECKLIST_DESCRIPTION_EMPTY';
-
-  /// Telefone do cliente invalido.
-  static const clientPhoneInvalid = 'CLIENT_PHONE_INVALID';
-
-  /// Especialidade do tecnico vazia.
-  static const technicianSpecialtyEmpty = 'TECHNICIAN_SPECIALTY_EMPTY';
-
-  /// Cliente inexistente.
-  static const clientNotFound = 'CLIENT_NOT_FOUND';
-
-  /// Tecnico inexistente.
-  static const technicianNotFound = 'TECHNICIAN_NOT_FOUND';
 
   /// Visita inexistente.
   static const visitNotFound = 'VISIT_NOT_FOUND';
