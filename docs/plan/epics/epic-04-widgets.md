@@ -29,7 +29,7 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 | **UC-04.01** | `IKortexPage`, `KortexWatch` (`child`) e `KortexSelector<T>` | Nenhuma | `Pendente` |
 | **UC-04.02** | `KortexListener<T>`, `KortexResourceBuilder<T>` e `KortexListenableAdapter` | `UC-04.01` | `Pendente` |
 | **UC-04.03** | Barrel `lib/kortex.dart` e app de exemplo em `example/` | `UC-04.02` | `Pendente` |
-| **UC-04.04** | Pipeline CI remota e release `v0.1.0` | `UC-04.03` | `Pendente` |
+| **UC-04.04** | Pipeline CI remota (Gitea + GitHub) e release `v0.1.0` | `UC-04.03` | `Pendente` |
 
 ---
 
@@ -39,7 +39,7 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 - [ ] `lib/kortex.dart` ocultando coordenadores internos (`KortexTracker`).
 - [ ] `example/` compilando e analisando sem warnings sob `flutter analyze`.
 - [ ] Suíte completa (`flutter analyze` + `flutter test`) verde.
-- [ ] Pipeline CI remota (GitHub Actions) verde em runner limpo a cada push/PR em `main`.
+- [ ] Pipeline CI remota verde em runner limpo a cada push/PR em `main`, nas duas plataformas: Gitea Actions (`.gitea/workflows/ci.yml`, runner self-hosted) e GitHub Actions (`.github/workflows/ci.yml`).
 - [ ] Release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado (`0.1.0`).
 
 ---
@@ -148,7 +148,7 @@ Esquema do Cenário: Exportação pública e exemplo mínimo
 
 ---
 
-### Caso de Uso UC-04.04 — Pipeline CI Remota e Release `v0.1.0`
+### Caso de Uso UC-04.04 — Pipeline CI Remota (Gitea + GitHub) e Release `v0.1.0`
 
 - **Identificador**: `UC-04.04`
 - **Status**: `Pendente`
@@ -156,8 +156,8 @@ Esquema do Cenário: Exportação pública e exemplo mínimo
 #### Narrativa (User Story)
 
 - **Como** mantenedor do pacote `kortex`
-- **Eu quero** uma pipeline remota (GitHub Actions) que rode `flutter analyze` + `flutter test` a cada push/PR em `main`, e uma release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado
-- **Para que** o "verde" tenha testemunha independente do ambiente local e o versionamento seja rastreável por tag
+- **Eu quero** pipelines remotas (Gitea Actions + GitHub Actions) que rodem `flutter analyze` + `flutter test` a cada push/PR em `main`, e uma release `v0.1.0` tagueada com `CHANGELOG.md` promovido e `pubspec.yaml` alinhado
+- **Para que** o "verde" tenha testemunha independente do ambiente local em ambas as plataformas e o versionamento seja rastreável por tag
 
 #### Critérios de Aceitação (Gherkin Executável)
 
@@ -169,8 +169,9 @@ Esquema do Cenário: CI remota e promoção da release v0.1.0
 
   Exemplos:
     | artefato | evento | status |
-    | .github/workflows/ci.yml | push/PR em main | analyze + test executados em runner limpo com exit 0 |
-    | .github/workflows/ci.yml (prova negativa) | teste quebrado em branch de PR | pipeline reprova (exit != 0), sem merge |
+    | .gitea/workflows/ci.yml | push/PR em main (Gitea) | analyze + test executados em runner self-hosted com exit 0 |
+    | .github/workflows/ci.yml | push/PR em main (GitHub) | analyze + test executados em runner limpo com exit 0 |
+    | pipeline (prova negativa) | teste quebrado em branch de PR | pipeline reprova (exit != 0), sem merge |
     | pubspec.yaml + CHANGELOG.md | tag v0.1.0 | version: 0.1.0 e [Não publicado] promovido para seção datada |
 ```
 
@@ -178,5 +179,5 @@ Esquema do Cenário: CI remota e promoção da release v0.1.0
 
 | UC | NFR | Métrica | Target | Medição |
 | --- | --- | --- | --- | --- |
-| `UC-04.04` | `NFR-02` | `flutter analyze` no runner limpo | `0 warnings / 0 erros` | Log do workflow |
+| `UC-04.04` | `NFR-02` | `flutter analyze` nos runners limpos (Gitea + GitHub) | `0 warnings / 0 erros` | Logs dos workflows |
 | `UC-04.04` | — | Prova negativa da pipeline versionada | PR com teste quebrado reprova | Execução do workflow |
