@@ -1,40 +1,40 @@
-/// Grafo de observação e transação reativa (`KortexTracker`, batch).
+/// Observation graph and reactive transaction (`KortexTracker`, batch).
 ///
-/// SRP: rastrear qual observador lê qual nó, e consolidar notificações em
-/// lote com fila deduplicada. NÃO faz: armazenar valores, derivar computados
-/// ou executar efeitos (isso é papel dos nós e observadores).
+/// SRP: track which observer reads which node and consolidate notifications
+/// into a batch with a deduplicated queue. It does NOT store values, derive
+/// computeds or run effects (those are the nodes' and observers' jobs).
 ///
-/// Patterns: Observer (assinatura explícita) + Unit of Work (batch com
-/// flush no fechamento mais externo, inclusive sob exceção).
-/// Dependências: apenas `dart:core` (puro — sem Flutter, sem `BuildContext`).
+/// Patterns: Observer (explicit subscription) + Unit of Work (batch flushed
+/// at the outermost exit, including under exceptions).
+/// Dependencies: `dart:core` only (pure — no Flutter, no `BuildContext`).
 library;
 
 import 'kortex_disposable.dart';
 
-/// Recebe o aviso de que um nó foi lido ou mudou.
+/// Receives the notification that a node was read or changed.
 ///
-/// Chamado em dois momentos: durante a coleta de dependências (dentro de
-/// `KortexTracker.runWithObserver`) e no despacho de mudanças. Cabe ao
-/// observador distinguir coleta de invalidação pelo próprio estado.
+/// Called at two moments: during dependency collection (inside
+/// `KortexTracker.runWithObserver`) and when changes are dispatched. Each
+/// observer distinguishes collection from invalidation by its own state.
 abstract interface class IKortexObserver {
-  /// Reage à leitura ou mudança de [node].
+  /// Reacts to the read or change of [node].
   void onRead(IKortexReactiveNode node);
 }
 
-/// Fonte observável que gerencia assinantes e descarte.
+/// Observable source that manages subscribers and disposal.
 abstract interface class IKortexReactiveNode implements IKortexDisposable {
-  /// Assina [observer] (idempotente).
+  /// Subscribes [observer] (idempotent).
   void addObserver(IKortexObserver observer);
 
-  /// Remove [observer] (sem efeito se ausente).
+  /// Unsubscribes [observer] (no effect when absent).
   void removeObserver(IKortexObserver observer);
 
-  /// Libera assinantes. Leitura posterior via tracker não reassina.
+  /// Releases subscribers. A later read through the tracker does not resubscribe.
   @override
   void dispose();
 }
 
-/// Moldura de rastreamento: observador ativo + coletor opcional de nós.
+/// Tracking frame: active observer plus an optional node collector.
 class _TrackingFrame {
   _TrackingFrame(this.observer, this.onTrack);
 
@@ -42,16 +42,16 @@ class _TrackingFrame {
   final void Function(IKortexReactiveNode)? onTrack;
 }
 
-/// Fila deduplicada de notificações pendentes (um aviso por observador).
+/// Deduplicated queue of pending notifications (one notice per observer).
 class _PendingFlush {
   final Map<IKortexObserver, IKortexReactiveNode> _entries = {};
 
-  /// Enfileira [observer] avisado por [node] (primeiro nó vence).
+  /// Enqueues [observer] notified by [node] (the first node wins).
   void add(IKortexReactiveNode node, IKortexObserver observer) {
     _entries.putIfAbsent(observer, () => node);
   }
 
-  /// Despacha tudo e esvazia a fila.
+  /// Dispatches everything and empties the queue.
   void flush() {
     if (_entries.isEmpty) return;
     final snapshot = Map.of(_entries);
@@ -70,10 +70,10 @@ class _PendingFlush {
   }
 }
 
-/// Coordenador interno do rastreamento reativo (não exportado no barrel).
+/// Internal coordinator of reactive tracking (not exported by the barrel).
 ///
-/// Pilha de molduras (`runWithObserver`/`recordRead`), contador de
-/// profundidade de lote (`batch`) e suspensão de rastreio (`untracked`).
+/// A stack of frames (`runWithObserver`/`recordRead`), a batch depth counter
+/// (`batch`) and tracking suspension (`untracked`).
 class KortexTracker {
   KortexTracker._();
 
@@ -81,7 +81,7 @@ class KortexTracker {
   static final _PendingFlush _pending = _PendingFlush();
   static var _batchDepth = 0;
 
-  /// Executa [action] coletando leituras em [observer].
+  /// Runs [action] collecting reads into [observer].
   static T runWithObserver<T>(
     IKortexObserver observer,
     T Function() action, {
@@ -95,15 +95,15 @@ class KortexTracker {
     }
   }
 
-  /// Registra a leitura de [node] pelo observador do topo da pilha.
+  /// Records the read of [node] by the observer on top of the stack.
   ///
-  /// Sem moldura ativa, não faz nada (leitura fora de rastreio).
+  /// With no active frame it does nothing (untracked read).
   static void recordRead(IKortexReactiveNode node) {
     if (_frames.isEmpty) return;
     _trackInTopFrame(node);
   }
 
-  /// Agenda [observers] de [node]: imediato fora de lote, fila dentro.
+  /// Schedules [observers] of [node]: immediately outside a batch, queued inside.
   static void notifyChange(
     IKortexReactiveNode node,
     Set<IKortexObserver> observers,
@@ -115,9 +115,9 @@ class KortexTracker {
     _dispatchNow(node, observers);
   }
 
-  /// Agrupa mutações: observadores recebem um aviso ao sair do lote externo.
+  /// Groups mutations: observers are notified once when the outermost batch ends.
   ///
-  /// Sob exceção, descarrega a fila mesmo assim (estado já mutou).
+  /// On exception the queue is flushed anyway (the state already changed).
   static void batch(void Function() action) {
     _batchDepth++;
     try {
@@ -128,7 +128,7 @@ class KortexTracker {
     }
   }
 
-  /// Executa [action] sem registrar leituras (suspende a pilha).
+  /// Runs [action] without recording reads (suspends the stack).
   static T untracked<T>(T Function() action) {
     if (_frames.isEmpty) return action();
     return _runDetached(action);
@@ -183,8 +183,8 @@ class KortexTracker {
   }
 }
 
-/// Agrupa mutações de sinais sem glitches (ver [KortexTracker.batch]).
+/// Groups signal mutations without glitches (see [KortexTracker.batch]).
 void kortexBatch(void Function() action) => KortexTracker.batch(action);
 
-/// Lê sinais sem registrar dependência (ver [KortexTracker.untracked]).
+/// Reads signals without registering a dependency (see [KortexTracker.untracked]).
 T kortexUntracked<T>(T Function() action) => KortexTracker.untracked(action);

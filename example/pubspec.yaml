@@ -1,5 +1,5 @@
 name: example
-description: Exemplo mínimo do pacote kortex para o pub.dev (contador + salvamento).
+description: Minimal example of the kortex package for pub.dev (counter + saving).
 publish_to: none
 
 environment:

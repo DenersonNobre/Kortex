@@ -1,34 +1,34 @@
-/// Provedor imutável de dependências (`KortexProvider` + leitor de escopo).
+/// Immutable dependency provider (`KortexProvider` + scope reader).
 ///
-/// SRP: descrever COMO criar/descartar um `T` (fábrica, descarte opcional,
-/// `lazy` ou valor externo). NÃO faz: armazenar instâncias, resolver a
-/// árvore nem notificar widgets (papel do `KortexScope`).
+/// SRP: describe HOW to create/dispose a `T` (factory, optional disposal,
+/// `lazy` or an external value). It does NOT store instances, resolve the
+/// tree nor notify widgets (that is `KortexScope`'s job).
 ///
-/// Patterns: Factory Method (via `create`) + Explicit Dispose.
-/// Dependências: `dart:core` + `IKortexDisposable` (puro, sem Flutter).
+/// Patterns: Factory Method (through `create`) + explicit dispose.
+/// Dependencies: `dart:core` + `IKortexDisposable` (pure, no Flutter).
 ///
-/// Os nomes dos parâmetros seguem o contrato da SPEC e diferem dos campos
-/// internos — por isso este arquivo não usa formais inicializadores.
+/// Parameter names follow the SPEC contract and differ from the internal
+/// fields — hence this file does not use initializing formals.
 // ignore_for_file: prefer_initializing_formals
 library;
 
 import '../reactive/reactive.dart';
 
-/// Leitor explícito para resolver irmãos dentro de `KortexProvider.create`.
+/// Explicit reader used to resolve siblings inside `KortexProvider.create`.
 abstract interface class IKortexScopeReader {
-  /// Resolve [T] entre irmãos do escopo ou nos ancestrais.
+  /// Resolves [T] among the scope's siblings or in the ancestors.
   T read<T>();
 }
 
-/// Fábrica que cria [T] recebendo apenas o leitor do escopo.
+/// Factory creating [T] receiving only the scope reader.
 typedef KortexCreate<T> = T Function(IKortexScopeReader scope);
 
-/// Descarte explícito de uma instância criada pelo provider.
+/// Explicit disposal of an instance created by the provider.
 typedef KortexDispose<T> = void Function(T instance);
 
-/// Definição imutável de criação (`create`), `lazy`, `.value` e `dispose`.
+/// Immutable definition of creation (`create`), `lazy`, `.value` and `dispose`.
 class KortexProvider<T> {
-  /// Provider com criação sob demanda; `dispose` opcional e explícito.
+  /// Provider with on-demand creation; `dispose` is optional and explicit.
   KortexProvider({
     required KortexCreate<T> create,
     KortexDispose<T>? dispose,
@@ -39,7 +39,7 @@ class KortexProvider<T> {
        _value = null,
        isValue = false;
 
-  /// Provider de valor externo: sem criação e sem descarte pelo escopo.
+  /// Provider of an external value: no creation and no disposal by the scope.
   KortexProvider.value({required T value})
     : _create = _noFactory,
       _dispose = null,
@@ -47,7 +47,8 @@ class KortexProvider<T> {
       _value = value,
       isValue = true;
 
-  static const _valueHasNoFactory = 'KortexProvider.value não cria instâncias.';
+  static const _valueHasNoFactory =
+      'KortexProvider.value does not create instances.';
 
   static Never _noFactory(IKortexScopeReader _) =>
       throw StateError(_valueHasNoFactory);
@@ -55,25 +56,25 @@ class KortexProvider<T> {
   final KortexCreate<T> _create;
   final KortexDispose<T>? _dispose;
 
-  /// Verdadeiro quando a criação ocorre só no primeiro `read`.
+  /// True when creation happens on the first `read` only.
   final bool isLazy;
 
-  /// Verdadeiro para `KortexProvider.value` (posse externa).
+  /// True for `KortexProvider.value` (externally owned).
   final bool isValue;
   final T? _value;
 
-  /// Token de tipo usado como chave no `KortexScope`.
+  /// Type token used as key inside the `KortexScope`.
   Type get type => T;
 
-  /// Valor externo (válido apenas para `.value`).
+  /// External value (valid for `.value` only).
   T get value => _value as T;
 
-  /// Cria a instância via `create` (`.value` lança via sentinela).
+  /// Creates the instance through `create` (`.value` throws via sentinel).
   T createInstance(IKortexScopeReader reader) => _create(reader);
 
-  /// Descarta [instance]: callback explícito ou `IKortexDisposable`.
+  /// Disposes [instance]: explicit callback or `IKortexDisposable`.
   ///
-  /// Instâncias `.value` nunca são descartadas pelo escopo.
+  /// `.value` instances are never disposed by the scope.
   void disposeInstance(T instance) {
     if (isValue) {
       return;

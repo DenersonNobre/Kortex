@@ -1,11 +1,11 @@
-/// Comando assíncrono com trava contra reentrância (`KortexCommand`).
+/// Async command with a re-entrancy lock (`KortexCommand`).
 ///
-/// SRP: executar uma ação/mutação assíncrona expondo `isExecuting` e o
-/// estado reativo, ignorando disparos concorrentes. NÃO faz: fila de
-/// intenções, debounce entre chamadas nem retry.
+/// SRP: run an async action/mutation exposing `isExecuting` and the reactive
+/// state, ignoring concurrent triggers. It does NOT queue intents, debounce
+/// between calls nor retry.
 ///
-/// Patterns: Guard Clause (trava) + Fire-and-remember do resultado tardio.
-/// Dependências: `dart:async`, `dart:core` + camada reativa (puro).
+/// Patterns: Guard Clause (lock) + fire-and-remember of the late result.
+/// Dependencies: `dart:async`, `dart:core` + the reactive layer (pure).
 library;
 
 import 'dart:async';
@@ -14,40 +14,40 @@ import 'kortex_disposable.dart';
 import 'kortex_resource.dart';
 import 'kortex_signal.dart';
 
-/// Ação executada pelo comando com o parâmetro recebido.
+/// Action executed by the command with the received parameter.
 typedef KortexCommandAction<TParam, TResult> = Future<TResult> Function(
   TParam param,
 );
 
-/// Encapsulador de mutação assíncrona com trava de duplo disparo.
+/// Async mutation wrapper with a double-trigger lock.
 ///
-/// `execute` concorrente (com `isExecuting == true`) retorna `null` sem
-/// iniciar nova execução. Conclusões pós-`dispose` são descartadas.
+/// A concurrent `execute` (while `isExecuting == true`) returns `null`
+/// without starting a new run. Conclusions after `dispose` are discarded.
 class KortexCommand<TParam, TResult> implements IKortexDisposable {
-  /// Cria o comando em repouso (`isExecuting == false`, `state == null`).
+  /// Creates the command at rest (`isExecuting == false`, `state == null`).
   KortexCommand(KortexCommandAction<TParam, TResult> action)
     : _action = action,
       _isExecuting = KortexSignal<bool>(false),
       _state = KortexSignal<IKortexAsyncState<TResult>?>(null);
 
-  static const _disposedMessage = 'KortexCommand usado após dispose()';
+  static const _disposedMessage = 'KortexCommand used after dispose()';
 
   final KortexCommandAction<TParam, TResult> _action;
   final KortexSignal<bool> _isExecuting;
   final KortexSignal<IKortexAsyncState<TResult>?> _state;
   var _isDisposed = false;
 
-  /// Indica se o comando foi descartado.
+  /// Whether the command has been disposed.
   bool get isDisposed => _isDisposed;
 
-  /// Sinal reativo da execução em curso.
+  /// Reactive signal of the run in progress.
   IKortexReadonlySignal<bool> get isExecuting => _isExecuting.readonly;
 
-  /// Último resultado (`Data`/`Error`) ou `null` antes da 1a execução.
+  /// Last result (`Data`/`Error`) or `null` before the first run.
   IKortexReadonlySignal<IKortexAsyncState<TResult>?> get state =>
       _state.readonly;
 
-  /// Executa [param]; concorrente retorna `null` sem re-disparar.
+  /// Executes [param]; a concurrent call returns `null` without re-triggering.
   Future<TResult?> execute(TParam param) {
     _requireAlive();
     if (_isExecuting.peek()) return Future.value();
@@ -91,7 +91,7 @@ class KortexCommand<TParam, TResult> implements IKortexDisposable {
   }
 }
 
-/// Atalho ergonômico para `KortexCommand(...)`.
+/// Ergonomic shortcut for `KortexCommand(...)`.
 KortexCommand<TParam, TResult> kortexCommand<TParam, TResult>(
   KortexCommandAction<TParam, TResult> action,
 ) => KortexCommand(action);

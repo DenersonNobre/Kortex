@@ -30,6 +30,7 @@ Evoluir o `poc/` de app mínimo para POC robusta que demonstra, em código execu
 | **UC-05.02** | Commands, segundo agregado (`Category`) e fachada `TaskUseCases` | `UC-05.01` | `Concluído` |
 | **UC-05.03** | Controller, Page e fluxo de widget | `UC-05.02` | `Pendente` |
 | **UC-05.04** | Exemplo mínimo publicável (`example/`, pub.dev) | Nenhuma | `Concluído` |
+| **UC-05.05** | Internacionalização das superfícies públicas (EN) | `UC-05.04` | `Concluído` |
 
 ---
 
@@ -186,3 +187,39 @@ Esquema do Cenário: Exemplo mínimo executável e publicável
 | UC | NFR | Métrica | Target | Medição |
 | --- | --- | --- | --- | --- |
 | `UC-05.04` | `NFR-01` | Dependências externas em `example/` | `0` (só `flutter` + `kortex` path) | Inspeção `pubspec.yaml` |
+| `UC-05.05` | Alcance | Diacríticos pt-BR em superfícies públicas | `0` ocorrências | grep + `dry-run` |
+
+---
+
+### Caso de Uso UC-05.05 — Internacionalização das Superfícies Públicas (EN)
+
+- **Identificador**: `UC-05.05`
+- **Status**: `Concluído`
+
+#### Narrativa (User Story)
+
+- **Como** mantenedor do pacote `kortex`
+- **Eu quero** README, CHANGELOG, doc comments, `example/` e descrição do pubspec em inglês
+- **Para que** o pacote alcance consumidores fora do Brasil no pub.dev, sem reescrever o padrão interno em pt-BR
+
+#### Critérios de Aceitação (Gherkin Executável)
+
+```gherkin
+Esquema do Cenário: Superfícies públicas em inglês, governança interna em pt-BR
+  Dado o pacote com <superficie>
+  Quando inspeciono <conteudo>
+  Então <resultado>
+
+  Exemplos:
+    | superficie | conteudo | resultado |
+    | README.md, CHANGELOG.md, pubspec.yaml, lib/**, example/** | diacríticos pt-BR | 0 ocorrências |
+    | docs/**, AGENTS.md, CHECKPOINT.md, LEARNINGS.md, plan/** | diacríticos pt-BR | preservados (pt-BR) |
+    | dart pub publish --dry-run | warnings | 0 |
+```
+
+#### NFRs Mensuráveis
+
+| UC | NFR | Métrica | Target | Medição |
+| --- | --- | --- | --- | --- |
+| `UC-05.05` | `NFR-01` | Dependências externas em `example/` | `0` | Inspeção `pubspec.yaml` |
+| `UC-05.05` | — | Warnings do `dart pub publish --dry-run` | `0` | Saída do comando |

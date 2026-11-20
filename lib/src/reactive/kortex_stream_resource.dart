@@ -1,11 +1,11 @@
-/// Ponte reativa para `Stream` com cancelamento automático.
+/// Reactive bridge to `Stream` with automatic cancellation.
 ///
-/// SRP: espelhar um `Stream<T>` em `IKortexAsyncState` e expor sinais como
-/// `Stream<T>`, cancelando/removendo assinaturas no `dispose`/`cancel`.
-/// NÃO faz: transformar eventos, bufferizar nem repetir último valor.
+/// SRP: mirror a `Stream<T>` into an `IKortexAsyncState` and expose signals
+/// as `Stream<T>`, cancelling/removing subscriptions on `dispose`/`cancel`.
+/// It does NOT transform events, buffer them nor replay the last value.
 ///
-/// Patterns: Adapter (stream ↔ sinal) + Geração monotônica no `restart`.
-/// Dependências: `dart:async`, `dart:core` + camada reativa (puro).
+/// Patterns: Adapter (stream ↔ signal) + monotonic generation on `restart`.
+/// Dependencies: `dart:async`, `dart:core` + the reactive layer (pure).
 library;
 
 import 'dart:async';
@@ -15,15 +15,15 @@ import 'kortex_observer.dart';
 import 'kortex_resource.dart';
 import 'kortex_signal.dart';
 
-/// Fábrica que abre o stream observado pelo recurso.
+/// Factory opening the stream observed by the resource.
 typedef KortexStreamFactory<T> = Stream<T> Function();
 
-/// Recurso que espelha um `Stream<T>` em `IKortexAsyncState`.
+/// Resource mirroring a `Stream<T>` into an `IKortexAsyncState`.
 ///
-/// `restart()` cancela a assinatura anterior e recaptura a fábrica
-/// preservando o valor atual como `previousValue`.
+/// `restart()` cancels the previous subscription and recaptures the factory,
+/// preserving the current value as `previousValue`.
 class KortexStreamResource<T> implements IKortexDisposable {
-  /// Cria o recurso; com [immediate] assina a fábrica no construtor.
+  /// Creates the resource; with [immediate] it subscribes in the constructor.
   KortexStreamResource(
     KortexStreamFactory<T> streamFactory, {
     bool immediate = true,
@@ -34,7 +34,7 @@ class KortexStreamResource<T> implements IKortexDisposable {
     }
   }
 
-  static const _disposedMessage = 'KortexStreamResource usado após dispose()';
+  static const _disposedMessage = 'KortexStreamResource used after dispose()';
 
   final KortexStreamFactory<T> _factory;
   final KortexSignal<IKortexAsyncState<T>> _state;
@@ -42,13 +42,13 @@ class KortexStreamResource<T> implements IKortexDisposable {
   var _listenId = 0;
   var _isDisposed = false;
 
-  /// Indica se o recurso foi descartado.
+  /// Whether the resource has been disposed.
   bool get isDisposed => _isDisposed;
 
-  /// Sinal somente-leitura do estado atual.
+  /// Read-only signal of the current state.
   IKortexReadonlySignal<IKortexAsyncState<T>> get state => _state.readonly;
 
-  /// Cancela a assinatura atual e recaptura a fábrica.
+  /// Cancels the current subscription and recaptures the factory.
   void restart() {
     _requireAlive();
     final id = ++_listenId;
@@ -110,7 +110,7 @@ class KortexStreamResource<T> implements IKortexDisposable {
   }
 }
 
-/// Ponte que entrega mudanças do sinal num `StreamController`.
+/// Bridge delivering signal changes to a `StreamController`.
 class _SignalBridge<T> implements IKortexObserver {
   _SignalBridge(this._read, this._emit);
 
@@ -121,7 +121,7 @@ class _SignalBridge<T> implements IKortexObserver {
   void onRead(IKortexReactiveNode node) => _emit(_read());
 }
 
-/// Abertura preguiçosa do stream de um sinal (anexa no `listen`).
+/// Lazy stream opening for a signal (attaches on `listen`).
 class _SignalStream<T> {
   _SignalStream(this._node);
 
@@ -152,15 +152,15 @@ class _SignalStream<T> {
   }
 }
 
-/// Ponte de leitura: emite mudanças reativas como `Stream<T>`.
+/// Read bridge: emits reactive changes as a `Stream<T>`.
 ///
-/// A observação começa no `listen` e é removida no `cancel`.
+/// Observation starts on `listen` and is removed on `cancel`.
 extension KortexSignalToStream<T> on IKortexReadonlySignal<T> {
-  /// Abre o stream das mudanças deste sinal.
+  /// Opens the stream of changes of this signal.
   Stream<T> toStream() => _SignalStream<T>(this).open();
 }
 
-/// Atalho ergonômico para `KortexStreamResource(...)`.
+/// Ergonomic shortcut for `KortexStreamResource(...)`.
 KortexStreamResource<T> kortexStreamResource<T>(
   KortexStreamFactory<T> streamFactory, {
   bool immediate = true,

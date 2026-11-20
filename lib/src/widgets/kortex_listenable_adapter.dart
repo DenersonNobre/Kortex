@@ -1,25 +1,25 @@
-/// Pontes bidirecionais com `Listenable` do Flutter.
+/// Bidirectional bridges with Flutter's `Listenable`.
 ///
-/// SRP: adaptar `Listenable`/`ValueListenable` para leitura reativa e expor
-/// sinais como `Listenable` (ex.: `refreshListenable` do `go_router`), sem
-/// transferir posse nem ciclo de vida. NÃO faz: transformar eventos.
+/// SRP: adapt `Listenable`/`ValueListenable` for reactive reads and expose
+/// signals as `Listenable` (e.g. a router's `refreshListenable`), without
+/// transferring ownership or lifecycle. It does NOT transform events.
 ///
-/// Patterns: Adapter com descarte que só remove o próprio vínculo.
-/// Dependências: `package:flutter/foundation.dart` + camada reativa.
+/// Patterns: Adapter whose disposal only removes its own link.
+/// Dependencies: `package:flutter/foundation.dart` + the reactive layer.
 library;
 
 import 'package:flutter/foundation.dart';
 
 import '../reactive/reactive.dart';
 
-/// Visão somente-leitura de um `Listenable` como sinal reativo.
+/// Read-only view of a `Listenable` as a reactive signal.
 ///
-/// O `dispose` remove apenas o vínculo (preserva o `Listenable` original).
+/// `dispose` removes only the link (the original `Listenable` is preserved).
 class KortexListenableSignal<T>
     implements IKortexReadonlySignal<T>, IKortexDisposable {
   KortexListenableSignal._(this._listenable, this._read);
 
-  static const _disposedMessage = 'KortexListenableSignal usado após dispose()';
+  static const _disposedMessage = 'KortexListenableSignal used after dispose()';
 
   final Listenable _listenable;
   final T Function() _read;
@@ -83,21 +83,21 @@ class KortexListenableSignal<T>
   }
 }
 
-/// Adapta `ValueListenable` (`ValueNotifier`, `TextEditingController`).
+/// Adapts a `ValueListenable` (`ValueNotifier`, `TextEditingController`).
 extension KortexValueListenableSignal<T> on ValueListenable<T> {
-  /// Expõe este observável como sinal somente-leitura.
+  /// Exposes this observable as a read-only signal.
   KortexListenableSignal<T> toKortexSignal() =>
       KortexListenableSignal<T>._(this, () => value);
 }
 
-/// Adapta `Listenable` (`ChangeNotifier`, `ScrollController`) com leitura.
+/// Adapts a `Listenable` (`ChangeNotifier`, `ScrollController`) with a read.
 extension KortexListenableSignalWith on Listenable {
-  /// Expõe este observável via [read] a cada notificação.
+  /// Exposes this observable through [read] on every notification.
   KortexListenableSignal<T> toKortexSignalWith<T>(T Function() read) =>
       KortexListenableSignal<T>._(this, read);
 }
 
-/// Ponte que observa um nó e avisa ouvintes `VoidCallback`.
+/// Bridge observing a node and notifying `VoidCallback` listeners.
 class _ListenableBridge implements IKortexObserver {
   _ListenableBridge(this._emit);
 
@@ -107,11 +107,11 @@ class _ListenableBridge implements IKortexObserver {
   void onRead(IKortexReactiveNode node) => _emit(node);
 }
 
-/// `Listenable` sobre um sinal (ex.: `refreshListenable` de roteadores).
+/// `Listenable` over a signal (e.g. a router's `refreshListenable`).
 class KortexSignalListenable implements Listenable, IKortexDisposable {
   KortexSignalListenable._(this._node);
 
-  static const _disposedMessage = 'KortexSignalListenable usado após dispose()';
+  static const _disposedMessage = 'KortexSignalListenable used after dispose()';
 
   final IKortexReactiveNode _node;
   final Set<VoidCallback> _listeners = {};
@@ -173,8 +173,8 @@ class KortexSignalListenable implements Listenable, IKortexDisposable {
   }
 }
 
-/// Expõe o sinal como `Listenable` (observa sob demanda de ouvintes).
+/// Exposes the signal as a `Listenable` (observes on demand of listeners).
 extension KortexSignalToListenable<T> on IKortexReadonlySignal<T> {
-  /// Abre o `Listenable` espelhado neste sinal.
+  /// Opens the `Listenable` mirroring this signal.
   KortexSignalListenable toListenable() => KortexSignalListenable._(this);
 }

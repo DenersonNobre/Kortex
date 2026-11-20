@@ -1,44 +1,46 @@
-/// Sinal mutável com igualdade configurável (`KortexSignal`).
+/// Mutable signal with configurable equality (`KortexSignal`).
 ///
-/// SRP: guardar um valor, comparar com `equals` e notificar assinantes só
-/// quando mudar. NÃO faz: derivação (papel do `KortexComputed`), efeitos
-/// (papel do `KortexEffect`) nem loteamento (papel do `KortexTracker`).
+/// SRP: hold a value, compare it with `equals` and notify subscribers only
+/// when it changes. It does NOT derive values (that is `KortexComputed`),
+/// run effects (that is `KortexEffect`) or batch notifications (that is
+/// `KortexTracker`).
 ///
-/// Patterns: Observer (via `IKortexReactiveNode`) + Guard Clause.
-/// Dependências: apenas `dart:core` + `kortex_observer.dart` (puro).
+/// Patterns: Observer (through `IKortexReactiveNode`) + Guard Clause.
+/// Dependencies: `dart:core` + `kortex_observer.dart` (pure).
 library;
 
 import 'kortex_observer.dart';
 
-/// Igualdade entre valor anterior e próximo (`true` = sem mudança).
+/// Equality between the previous and the next value (`true` = unchanged).
 typedef KortexEquals<T> = bool Function(T previous, T next);
 
-/// Deriva o próximo valor a partir do atual (usado em `update`).
+/// Derives the next value from the current one (used by `update`).
 typedef KortexUpdater<T> = T Function(T current);
 
 bool _defaultEquals<T>(T previous, T next) => previous == next;
 
-/// Visão somente-leitura de um sinal (fronteira de encapsulamento).
+/// Read-only view of a signal (encapsulation boundary).
 abstract interface class IKortexReadonlySignal<T>
     implements IKortexReactiveNode {
-  /// Indica se o sinal foi descartado.
+  /// Whether the signal has been disposed.
   bool get isDisposed;
 
-  /// Valor atual, registrando leitura no `KortexTracker` ativo.
+  /// Current value, registering the read in the active `KortexTracker`.
   T get value;
 
-  /// Valor atual sem registrar leitura.
+  /// Current value without registering a read.
   T peek();
 }
 
-/// Contêiner mutável com notificação condicional e bloqueio pós-dispose.
+/// Mutable container with conditional notification and post-dispose blocking.
 class KortexSignal<T> implements IKortexReadonlySignal<T> {
-  /// Cria o sinal com [initialValue] e [equals] opcional (padrão `==`).
+  /// Creates the signal with [initialValue] and an optional [equals]
+  /// (defaults to `==`).
   KortexSignal(T initialValue, {KortexEquals<T>? equals})
     : _value = initialValue,
       _equals = equals ?? _defaultEquals;
 
-  static const _disposedMessage = 'KortexSignal usado após dispose()';
+  static const _disposedMessage = 'KortexSignal used after dispose()';
 
   T _value;
   final KortexEquals<T> _equals;
@@ -61,7 +63,7 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
     return _value;
   }
 
-  /// Substitui o valor; sem notificação se [equals] aprovar.
+  /// Replaces the value; no notification when [equals] approves it.
   set value(T next) {
     _requireAlive();
     if (_equals(_value, next)) return;
@@ -69,10 +71,10 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
     KortexTracker.notifyChange(this, _observers);
   }
 
-  /// Aplica [updater] ao valor atual em escrita única.
+  /// Applies [updater] to the current value in a single write.
   void update(KortexUpdater<T> updater) => value = updater(peek());
 
-  /// Visão somente-leitura deste sinal (mesmo ciclo de vida).
+  /// Read-only view of this signal (same lifecycle).
   IKortexReadonlySignal<T> get readonly => this;
 
   @override
@@ -97,6 +99,6 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
   }
 }
 
-/// Atalho ergonômico para `KortexSignal(...)`.
+/// Ergonomic shortcut for `KortexSignal(...)`.
 KortexSignal<T> kortexSignal<T>(T initialValue, {KortexEquals<T>? equals}) =>
     KortexSignal(initialValue, equals: equals);

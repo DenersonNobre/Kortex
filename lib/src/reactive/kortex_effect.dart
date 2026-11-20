@@ -1,11 +1,11 @@
-/// Reação automática a sinais em Dart puro (`KortexEffect`).
+/// Automatic reaction to signals in pure Dart (`KortexEffect`).
 ///
-/// SRP: reexecutar [efeito] quando dependências mudarem, com limpeza
-/// (`onCleanup`), anti-rebote (`debounce`) e descarte explícito. NÃO faz:
-/// guardar valor observável (não é nó) nem loteamento.
+/// SRP: re-run the effect when its dependencies change, with cleanup
+/// (`onCleanup`), debouncing and explicit disposal. It does NOT hold an
+/// observable value (it is not a node) nor batch notifications.
 ///
-/// Patterns: Observer (folha) + Debounce via `Timer` de `dart:async`.
-/// Dependências: `dart:async`, `dart:core` + camada reativa (puro).
+/// Patterns: Observer (leaf) + Debounce via a `dart:async` Timer.
+/// Dependencies: `dart:async`, `dart:core` + the reactive layer (pure).
 library;
 
 import 'dart:async';
@@ -13,24 +13,24 @@ import 'dart:async';
 import 'kortex_disposable.dart';
 import 'kortex_observer.dart';
 
-/// Limpeza registrada via `onCleanup` (executa antes da próxima rodada).
+/// Cleanup registered through `onCleanup` (runs before the next round).
 typedef KortexCleanup = void Function();
 
-/// Registra a limpeza da rodada atual do efeito.
+/// Registers the cleanup of the effect's current round.
 typedef KortexEffectCleanupRegistrar = void Function(KortexCleanup cleanup);
 
-/// Corpo do efeito; recebe o registrador de limpeza.
+/// Effect body; receives the cleanup registrar.
 typedef KortexEffectCallback = void Function(
   KortexEffectCleanupRegistrar onCleanup,
 );
 
-/// Efeito colateral reativo com `onCleanup`, `debounce` e `dispose`.
+/// Reactive side effect with `onCleanup`, `debounce` and `dispose`.
 ///
-/// Executa na criação; reagenda a cada mudança de dependência (imediato
-/// ou após [debounce]). Auto-notificações disparadas pela própria execução
-/// síncrona são ignoradas (guarda `_isRunning`).
+/// Runs on creation and is rescheduled on every dependency change
+/// (immediately or after [debounce]). Self-triggered notifications raised by
+/// the synchronous execution are ignored (`_isRunning` guard).
 class KortexEffect implements IKortexObserver, IKortexDisposable {
-  /// Cria e executa o [effect] imediatamente.
+  /// Creates and immediately runs the [effect].
   KortexEffect(this._effect, {this._debounce}) {
     _run();
   }
@@ -119,6 +119,6 @@ class KortexEffect implements IKortexObserver, IKortexDisposable {
   }
 }
 
-/// Atalho ergonômico para `KortexEffect(...)`.
+/// Ergonomic shortcut for `KortexEffect(...)`.
 KortexEffect kortexEffect(KortexEffectCallback effect, {Duration? debounce}) =>
     KortexEffect(effect, debounce: debounce);

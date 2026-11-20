@@ -1,24 +1,26 @@
-/// Valor derivado preguiçoso com cache (`KortexComputed`).
+/// Lazy derived value with cache (`KortexComputed`).
 ///
-/// SRP: derivar um valor de outros nós, recomputando só quando lido após
-/// mudança (lazy + cache) e notificando a jusante só se o derivado mudar.
-/// NÃO faz: efeitos colaterais (papel do `KortexEffect`) nem loteamento.
+/// SRP: derive a value from other nodes, recomputing only when read after a
+/// change (lazy + cache) and notifying downstream only when the derived value
+/// changes. It does NOT run side effects (that is `KortexEffect`) nor batch
+/// notifications.
 ///
-/// Patterns: Lazy Evaluation + Cache com invalidação em cascata.
-/// Dependências: apenas `dart:core` + camada reativa (puro).
+/// Patterns: Lazy Evaluation + Cache with cascading invalidation.
+/// Dependencies: `dart:core` + the reactive layer (pure).
 library;
 
 import 'kortex_observer.dart';
 import 'kortex_signal.dart';
 
-/// Valor computado a partir de [compute], com cache e invalidação lazy.
+/// Value computed from [compute], with cache and lazy invalidation.
 class KortexComputed<T> implements IKortexReadonlySignal<T>, IKortexObserver {
-  /// Cria o derivado com [compute] e [equals] opcional (padrão `==`).
+  /// Creates the derived value with [compute] and an optional [equals]
+  /// (defaults to `==`).
   KortexComputed(T Function() compute, {KortexEquals<T>? equals})
     : _compute = compute,
       _equals = equals ?? _plainEquals;
 
-  static const _disposedMessage = 'KortexComputed usado após dispose()';
+  static const _disposedMessage = 'KortexComputed used after dispose()';
 
   final T Function() _compute;
   final KortexEquals<T> _equals;
@@ -113,8 +115,8 @@ class KortexComputed<T> implements IKortexReadonlySignal<T>, IKortexObserver {
     KortexTracker.notifyChange(this, _observers);
   }
 
-  /// Sem observadores: só marca dirty (recomputa preguiçoso na leitura).
-  /// Com observadores: recomputa já e avisa a jusante só se mudou.
+  /// Without observers: only marks dirty (recomputes lazily on read).
+  /// With observers: recomputes now and notifies downstream only if changed.
   void _invalidate() {
     if (_observers.isEmpty) {
       _isDirty = true;
@@ -137,7 +139,7 @@ class KortexComputed<T> implements IKortexReadonlySignal<T>, IKortexObserver {
 
 bool _plainEquals<T>(T previous, T next) => previous == next;
 
-/// Atalho ergonômico para `KortexComputed(...)`.
+/// Ergonomic shortcut for `KortexComputed(...)`.
 KortexComputed<T> kortexComputed<T>(
   T Function() compute, {
   KortexEquals<T>? equals,

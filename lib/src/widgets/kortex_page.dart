@@ -1,10 +1,11 @@
-/// Página `StatelessWidget` com controller resolvido via escopo.
+/// `StatelessWidget` page with a scope-resolved controller.
 ///
-/// SRP: resolver `TController` no `KortexScope` e delegar a `buildPage`.
-/// NÃO faz: gerenciar estado (papel dos sinais), navegação ou provisão.
+/// SRP: resolve `TController` in the `KortexScope` and delegate to
+/// `buildPage`. It does NOT manage state (that is the signals' job),
+/// navigate or provide dependencies.
 ///
-/// Patterns: Template Method (`build` chama `buildPage`).
-/// Dependências: Flutter + camadas `reactive`/`scope` (sem GetView global).
+/// Patterns: Template Method (`build` calls `buildPage`).
+/// Dependencies: Flutter + the `reactive`/`scope` layers (no global GetView).
 library;
 
 import 'package:flutter/widgets.dart';
@@ -12,17 +13,17 @@ import 'package:flutter/widgets.dart';
 import '../reactive/reactive.dart';
 import '../scope/scope.dart';
 
-/// Página sem estado cujo controller vem do `KortexScope` ancestral.
+/// Stateless page whose controller comes from the ancestor `KortexScope`.
 abstract class IKortexPage<TController extends IKortexController>
     extends StatelessWidget {
-  /// Cria a página (sem `StatefulWidget` para estado de negócio).
+  /// Creates the page (no `StatefulWidget` for business state).
   const IKortexPage({super.key});
 
-  /// Resolve o controller via `BuildContext` (falha sem escopo).
+  /// Resolves the controller through `BuildContext` (fails without a scope).
   TController controllerOf(BuildContext context) =>
       context.readKortex<TController>();
 
-  /// Constrói a UI com o [controller] resolvido.
+  /// Builds the UI with the resolved [controller].
   Widget buildPage(BuildContext context, TController controller);
 
   @override

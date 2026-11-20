@@ -1,17 +1,17 @@
-/// Controller do contador do exemplo mínimo.
+/// Counter controller of the minimal example.
 ///
-/// SRP: expor contador reativo e salvamento com trava de reentrância.
-/// NÃO faz: UI, roteamento ou persistência real.
+/// SRP: expose the reactive counter and the save operation with a
+/// double-trigger lock. It does NOT do UI, routing or real persistence.
 ///
-/// Patterns: `IKortexController` com inicialização no construtor.
-/// Dependências: `kortex` (puro + escopo) e `dart:async` via `Future`.
+/// Patterns: `IKortexController` with initialization in the constructor.
+/// Dependencies: `kortex` (pure + scope) and `dart:async` via `Future`.
 library;
 
 import 'package:kortex/kortex.dart';
 
-/// Contador com salvamento assíncrono simulado.
+/// Counter with simulated async saving.
 class CounterController extends IKortexController {
-  /// Registra sinal e comando no `disposeBag` (descarte automático).
+  /// Registers the signal and the command in the `disposeBag` (auto-disposed).
   CounterController() {
     autoDispose(count);
     save = autoDispose(
@@ -22,15 +22,15 @@ class CounterController extends IKortexController {
     );
   }
 
-  /// Contador (leitura reativa, escrita encapsulada).
+  /// The counter (reactive read, encapsulated write).
   final KortexSignal<int> count = KortexSignal(0);
 
-  /// Salvamento com `isExecuting` e trava de duplo clique.
+  /// Save operation with `isExecuting` and a double-trigger lock.
   late final KortexCommand<void, int> save;
 
-  /// Incrementa o contador.
+  /// Increments the counter.
   void increment() => count.update((value) => value + 1);
 
-  /// Decrementa o contador.
+  /// Decrements the counter.
   void decrement() => count.update((value) => value - 1);
 }

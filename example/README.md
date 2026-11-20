@@ -1,11 +1,11 @@
-# Exemplo — Kortex (pub.dev)
+# Example — Kortex (pub.dev)
 
-Exemplo mínimo do pacote [`kortex`](../README.md) para a aba Example do
-pub.dev: contador reativo + salvamento assíncrono com trava de duplo
-clique, usando só a API pública (`package:kortex/kortex.dart`).
+Minimal example of the [`kortex`](../README.md) package for the pub.dev
+Example tab: reactive counter plus async saving with a double-trigger lock,
+using only the public API (`package:kortex/kortex.dart`).
 
-A POC robusta de desenvolvimento (VSA completo, dois agregados,
-`Result`, fachada) vive em [`../poc/`](../poc/README.md).
+The richer proof of concept used during development (full VSA layout, two
+aggregates, `Result`, use-case facade) lives in [`../poc/`](../poc/README.md).
 
 ```sh
 flutter pub get

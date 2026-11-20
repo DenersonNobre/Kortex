@@ -1,11 +1,11 @@
-/// Efeitos colaterais seguros na UI (`KortexListener`).
+/// Safe UI side effects (`KortexListener`).
 ///
-/// SRP: separar leitura pura (`watch`, descoberta em `initState`) do efeito
-/// imperativo (`listener`, sempre fora da fase de `build`). NÃO faz:
-/// reconstruir UI (papel do `KortexWatch`) nem guardar valor.
+/// SRP: separate the pure read (`watch`, discovered in `initState`) from the
+/// imperative effect (`listener`, always outside the build phase). It does NOT
+/// rebuild the UI (that is `KortexWatch`) nor hold values.
 ///
-/// Patterns: Observer com coleta inicial + guarda de fase do `Scheduler`.
-/// Dependências: Flutter (`widgets`, `scheduler`) + camada reativa.
+/// Patterns: Observer with initial collection + `Scheduler` phase guard.
+/// Dependencies: Flutter (`widgets`, `scheduler`) + the reactive layer.
 library;
 
 import 'package:flutter/scheduler.dart';
@@ -13,12 +13,13 @@ import 'package:flutter/widgets.dart';
 
 import '../reactive/reactive.dart';
 
-/// Ouve mudanças e executa o efeito com `BuildContext` real.
+/// Listens for changes and runs the effect with a real `BuildContext`.
 typedef KortexContextListener<T> = void Function(BuildContext context, T value);
 
-/// Executa [listener] quando `watch()` mudar (nunca durante `build`).
+/// Runs [listener] when `watch()` changes (never during `build`).
 class KortexListener<T> extends StatefulWidget {
-  /// Cria o ouvinte com leitura pura [watch] e efeito [listener].
+  /// Creates the listener with the pure read [watch] and the effect
+  /// [listener].
   const KortexListener({
     super.key,
     required this.watch,
@@ -28,19 +29,19 @@ class KortexListener<T> extends StatefulWidget {
     required this.child,
   });
 
-  /// Leitura pura avaliada em `initState` para descobrir dependências.
+  /// Pure read evaluated in `initState` to discover dependencies.
   final T Function() watch;
 
-  /// Efeito executado fora do `build` quando `watch()` mudar.
+  /// Effect executed outside `build` when `watch()` changes.
   final KortexContextListener<T> listener;
 
-  /// Igualdade da mudança (padrão `==`).
+  /// Equality of the change (defaults to `==`).
   final KortexEquals<T>? equals;
 
-  /// Dispara [listener] logo após a montagem com o valor inicial.
+  /// Fires [listener] right after mounting with the initial value.
   final bool fireImmediately;
 
-  /// Subárvore que nunca reconstrói por este widget.
+  /// Subtree that never rebuilds because of this widget.
   final Widget child;
 
   @override

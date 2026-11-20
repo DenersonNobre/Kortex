@@ -1,12 +1,12 @@
-/// Recurso assíncrono com `previousValue` e descarte de tardias.
+/// Async resource with `previousValue` and stale-result disposal.
 ///
-/// SRP: representar carga assíncrona como sinal de `IKortexAsyncState`,
-/// preservando o último valor em `refresh()` e ignorando conclusões
-/// superadas por novo `refresh()` ou `dispose()`. NÃO faz: retry, cache
-/// com TTL nem paginação (camadas acima).
+/// SRP: represent an async load as an `IKortexAsyncState` signal, keeping
+/// the last value across `refresh()` and ignoring conclusions superseded by a
+/// newer `refresh()` or by `dispose()`. It does NOT do retry, TTL caching or
+/// pagination (higher layers).
 ///
-/// Patterns: Geração monotônica (`_loadId`) para descarte silencioso.
-/// Dependências: `dart:async`, `dart:core` + camada reativa (puro).
+/// Patterns: Monotonic generation (`_loadId`) for silent disposal.
+/// Dependencies: `dart:async`, `dart:core` + the reactive layer (pure).
 library;
 
 import 'dart:async';
@@ -14,24 +14,24 @@ import 'dart:async';
 import 'kortex_disposable.dart';
 import 'kortex_signal.dart';
 
-/// Carregador que produz o valor assíncrono do recurso.
+/// Loader producing the async value of the resource.
 typedef KortexAsyncLoader<T> = Future<T> Function();
 
-/// Estado selado de uma carga assíncrona (pattern matching exaustivo).
+/// Sealed state of an async load (exhaustive pattern matching).
 sealed class IKortexAsyncState<T> {
-  /// Base selada (só `Loading`, `Data` e `Error` estendem).
+  /// Sealed base (only `Loading`, `Data` and `Error` extend it).
   const IKortexAsyncState();
 
-  /// Verdadeiro durante `KortexAsyncLoading`.
+  /// True while in `KortexAsyncLoading`.
   bool get isLoading => this is KortexAsyncLoading<T>;
 
-  /// `Loading` com valor anterior preservado (atualização, não 1a carga).
+  /// `Loading` with the previous value preserved (a refresh, not a first load).
   bool get isRefreshing {
     final self = this;
     return self is KortexAsyncLoading<T> && self.previousValue != null;
   }
 
-  /// Valor disponível (`Data` ou `previousValue`), ou `null`.
+  /// Available value (`Data` or `previousValue`), or `null`.
   T? get valueOrNull => switch (this) {
     KortexAsyncData(value: final value) => value,
     KortexAsyncLoading(previousValue: final previous) => previous,
@@ -39,40 +39,41 @@ sealed class IKortexAsyncState<T> {
   };
 }
 
-/// Carga em andamento, com o último valor conhecido (se houver).
+/// Load in progress, with the last known value (when there is one).
 final class KortexAsyncLoading<T> extends IKortexAsyncState<T> {
-  /// Cria o estado de carga com [previousValue] opcional.
+  /// Creates the loading state with an optional [previousValue].
   const KortexAsyncLoading({this.previousValue});
 
-  /// Último valor conhecido antes deste carregamento.
+  /// Last known value before this load.
   final T? previousValue;
 }
 
-/// Carga concluída com [value].
+/// Load completed with [value].
 final class KortexAsyncData<T> extends IKortexAsyncState<T> {
-  /// Cria o estado de dados com [value].
+  /// Creates the data state with [value].
   const KortexAsyncData(this.value);
 
-  /// Valor carregado.
+  /// Loaded value.
   final T value;
 }
 
-/// Carga falha com [error] (e [stackTrace] opcional).
+/// Load failed with [error] (and an optional [stackTrace]).
 final class KortexAsyncError<T> extends IKortexAsyncState<T> {
-  /// Cria o estado de erro com [error] e [stackTrace] opcional.
+  /// Creates the error state with [error] and an optional [stackTrace].
   const KortexAsyncError(this.error, [this.stackTrace]);
 
-  /// Falha capturada do carregador.
+  /// Failure captured from the loader.
   final Object error;
 
-  /// Rastro da falha, quando disponível.
+  /// Stack trace of the failure, when available.
   final StackTrace? stackTrace;
 }
 
-/// Controlador de leitura assíncrona com proteção contra condição de
-/// corrida: só a carga mais recente publica; tardias são descartadas.
+/// Async read controller with race-condition protection: only the most
+/// recent load publishes; stale ones are discarded.
 class KortexResource<T> implements IKortexDisposable {
-  /// Cria o recurso; com [immediate] dispara a 1a carga no construtor.
+  /// Creates the resource; with [immediate] the first load starts in the
+  /// constructor.
   KortexResource(KortexAsyncLoader<T> loader, {bool immediate = true})
     : _loader = loader,
       _state = KortexSignal<IKortexAsyncState<T>>(KortexAsyncLoading<T>()) {
@@ -81,20 +82,20 @@ class KortexResource<T> implements IKortexDisposable {
     }
   }
 
-  static const _disposedMessage = 'KortexResource usado após dispose()';
+  static const _disposedMessage = 'KortexResource used after dispose()';
 
   final KortexAsyncLoader<T> _loader;
   final KortexSignal<IKortexAsyncState<T>> _state;
   var _loadId = 0;
   var _isDisposed = false;
 
-  /// Indica se o recurso foi descartado.
+  /// Whether the resource has been disposed.
   bool get isDisposed => _isDisposed;
 
-  /// Sinal somente-leitura do estado atual.
+  /// Read-only signal of the current state.
   IKortexReadonlySignal<IKortexAsyncState<T>> get state => _state.readonly;
 
-  /// Inicia uma carga preservando o valor anterior; tardias caem fora.
+  /// Starts a load, preserving the previous value; stale results are dropped.
   Future<void> refresh() {
     _requireAlive();
     final id = ++_loadId;
@@ -136,7 +137,7 @@ class KortexResource<T> implements IKortexDisposable {
   }
 }
 
-/// Atalho ergonômico para `KortexResource(...)`.
+/// Ergonomic shortcut for `KortexResource(...)`.
 KortexResource<T> kortexResource<T>(
   KortexAsyncLoader<T> loader, {
   bool immediate = true,

@@ -1,28 +1,28 @@
-/// Escopo de dependências atrelado à árvore de widgets (`KortexScope`).
+/// Dependency scope bound to the widget tree (`KortexScope`).
 ///
-/// SRP: materializar `KortexProvider`s (eager/`lazy`/`.value`), resolver
-/// entre irmãos e ancestrais com detecção de ciclo, e descartar em LIFO ao
-/// desmontar ou trocar providers. NÃO faz: reatividade de sinais, UI ou
-/// roteamento.
+/// SRP: materialize `KortexProvider`s (eager/`lazy`/`.value`), resolve among
+/// siblings and ancestors with cycle detection, and dispose in LIFO order on
+/// unmount or when providers change. It does NOT do signal reactivity, UI or
+/// routing.
 ///
-/// Patterns: Service Locator escopado (sempre via `BuildContext`) +
-/// `InheritedWidget` versionado para `watch` + LIFO determinístico.
-/// Dependências: `package:flutter/widgets.dart` + camadas internas.
+/// Patterns: Scoped Service Locator (always through `BuildContext`) +
+/// versioned `InheritedWidget` for `watch` + deterministic LIFO disposal.
+/// Dependencies: `package:flutter/widgets.dart` + internal layers.
 library;
 
 import 'package:flutter/widgets.dart';
 
 import 'kortex_provider.dart';
 
-/// Escopo que provisiona dependências para a subárvore.
+/// Scope providing dependencies to the subtree.
 ///
-/// Resolução (`read`/`watch`) sempre via `BuildContext`, nunca global.
-/// Instâncias sobrevivem a rebuilds do pai enquanto os objetos provider
-/// forem os mesmos; trocá-los descarta tudo e recria do zero.
+/// Resolution (`read`/`watch`) always goes through `BuildContext`, never
+/// globally. Instances survive parent rebuilds while the provider objects
+/// are the same; replacing them disposes everything and recreates it.
 class KortexScope extends StatefulWidget {
-  /// Cria o escopo com [providers], [overrides] e a subárvore [child].
+  /// Creates the scope with [providers], [overrides] and the subtree [child].
   ///
-  /// [overrides] substitui providers do mesmo `Type` (fakes em testes).
+  /// [overrides] replace providers of the same `Type` (fakes in tests).
   const KortexScope({
     super.key,
     required this.providers,
@@ -30,19 +30,19 @@ class KortexScope extends StatefulWidget {
     required this.child,
   });
 
-  /// Definições de criação (ordem preservada; irmãos resolvem entre si).
+  /// Creation definitions (order preserved; siblings resolve each other).
   final List<KortexProvider<dynamic>> providers;
 
-  /// Substituições por `Type` (prevalecem sobre [providers]).
+  /// Replacements by `Type` (they take precedence over [providers]).
   final List<KortexProvider<dynamic>> overrides;
 
-  /// Subárvore com acesso às instâncias.
+  /// Subtree with access to the instances.
   final Widget child;
 
-  /// Resolve [T] no escopo ancestral mais próximo que o possuir.
+  /// Resolves [T] in the closest ancestor scope that owns it.
   ///
-  /// Com `listen: true`, reconstrói o chamador quando qualquer escopo
-  /// ancestral atualizar seus providers.
+  /// With `listen: true`, rebuilds the caller whenever any ancestor scope
+  /// updates its providers.
   static T resolveKortexDependency<T>(
     BuildContext context, {
     required bool listen,
@@ -59,14 +59,14 @@ class KortexScope extends StatefulWidget {
   }
 
   static String _noScopeMessage<T>() =>
-      'KortexScope: nenhum KortexScope ancestral para resolver $T. '
-      'Envolva a subárvore num KortexScope com KortexProvider<$T>.';
+      'KortexScope: no ancestor KortexScope to resolve $T. '
+      'Wrap the subtree in a KortexScope with KortexProvider<$T>.';
 
-  /// Captura as instâncias visíveis acima de [context] para `Overlay`.
+  /// Captures the instances visible above [context] for an `Overlay`.
   ///
-  /// Usado em `showDialog`/`showModalBottomSheet`: monta um `KortexScope`
-  /// com `KortexProvider.value` (sem transferir a posse do `dispose`).
-  /// Apenas instâncias já materializadas são capturadas.
+  /// Used in `showDialog`/`showModalBottomSheet`: builds a `KortexScope` with
+  /// `KortexProvider.value` (without transferring `dispose` ownership).
+  /// Only already materialized instances are captured.
   static KortexScope capture({
     required BuildContext context,
     required Widget child,
@@ -92,7 +92,7 @@ class KortexScope extends StatefulWidget {
   State<KortexScope> createState() => _KortexScopeState();
 }
 
-/// Leitor que delega ao estado do escopo dono.
+/// Reader delegating to the owning scope state.
 class _ScopeReader implements IKortexScopeReader {
   _ScopeReader(this._state);
 
@@ -102,7 +102,7 @@ class _ScopeReader implements IKortexScopeReader {
   T read<T>() => _state._resolve<T>();
 }
 
-/// Marcador versionado: `watch` reconstrói quando o número muda.
+/// Versioned marker: `watch` rebuilds when the number changes.
 class _KortexInherited extends InheritedWidget {
   const _KortexInherited({required this.version, required super.child});
 
@@ -113,10 +113,11 @@ class _KortexInherited extends InheritedWidget {
       version != oldWidget.version;
 }
 
-/// Provider de valor capturado com token de tipo explícito.
+/// Captured value provider with an explicit type token.
 ///
-/// `KortexProvider<dynamic>.value` perderia o `Type` (viraria `dynamic`)
-/// e nunca casaria na resolução — aqui o token viaja junto do valor.
+/// `KortexProvider<dynamic>.value` would lose the `Type` (becoming
+/// `dynamic`) and never match on resolution — here the token travels with
+/// the value.
 class _CapturedProvider extends KortexProvider<dynamic> {
   _CapturedProvider(Type type, Object? value)
     : _type = type,
@@ -297,10 +298,10 @@ class _KortexScopeState extends State<KortexScope> {
   }
 
   String _missingProviderMessage<T>() =>
-      'KortexScope: nenhum KortexProvider<$T> encontrado na árvore. '
-      'Registre-o num KortexScope ancestral.';
+      'KortexScope: no KortexProvider<$T> found in the tree. '
+      'Register it in an ancestor KortexScope.';
 
   String _cycleMessage(Type type) =>
-      'KortexScope: dependência circular detectada: '
+      'KortexScope: circular dependency detected: '
       '${[..._resolving, type].join(' -> ')}.';
 }

@@ -1,10 +1,10 @@
-/// Barrel da camada de widgets (`lib/src/widgets/`).
+/// Barrel of the widgets layer (`lib/src/widgets/`).
 ///
-/// SRP: reexportar página, trechos reativos e (na `UC-04.02`) ouvinte,
-/// construtor de recurso e pontes `Listenable` num único import. NÃO faz:
-/// expor coordenadores internos.
+/// SRP: re-export the page, the reactive fragments and (at `UC-04.02`) the
+/// listener, the resource builder and the `Listenable` bridges from a single
+/// import. It does NOT expose internal coordinators.
 ///
-/// Uso: `import 'package:kortex/src/widgets/widgets.dart';`
+/// Usage: `import 'package:kortex/src/widgets/widgets.dart';`
 library;
 
 export 'kortex_listenable_adapter.dart';

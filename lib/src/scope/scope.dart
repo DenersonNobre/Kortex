@@ -1,10 +1,10 @@
-/// Barrel da camada de escopo (`lib/src/scope/`).
+/// Barrel of the scope layer (`lib/src/scope/`).
 ///
-/// SRP: reexportar providers, escopo e extensões de contexto num import.
-/// NÃO faz: expor captura de `Overlay` (papel de `KortexScope.capture`
-/// na `UC-03.02`) nem estado global.
+/// SRP: re-export providers, scope and context extensions from one import.
+/// It does NOT expose the `Overlay` capture (that is `KortexScope.capture`
+/// at `UC-03.02`) nor global state.
 ///
-/// Uso: `import 'package:kortex/src/scope/scope.dart';`
+/// Usage: `import 'package:kortex/src/scope/scope.dart';`
 library;
 
 export 'kortex_context_extensions.dart';

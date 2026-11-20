@@ -1,10 +1,10 @@
-/// Barrel da camada reativa pura (`lib/src/reactive/`).
+/// Barrel of the pure reactive layer (`lib/src/reactive/`).
 ///
-/// SRP: reexportar a API pública da camada num único import. NÃO faz:
-/// esconder coordenadores internos (isso é papel de `lib/kortex.dart`
-/// na `UC-04.03`) nem importar Flutter/`BuildContext`.
+/// SRP: re-export the public API of the layer from a single import. It does
+/// NOT hide internal coordinators (that is the job of `lib/kortex.dart` at
+/// `UC-04.03`) nor import Flutter/`BuildContext`.
 ///
-/// Uso interno e em testes:
+/// Internal and test usage:
 /// `import 'package:kortex/src/reactive/reactive.dart';`
 library;
 

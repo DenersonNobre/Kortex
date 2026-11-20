@@ -1,11 +1,11 @@
-/// Reconstrução filtrada por igualdade (`KortexSelector`).
+/// Rebuild filtered by equality (`KortexSelector`).
 ///
-/// SRP: rebuildar só quando o valor de [selector] mudar segundo [equals],
-/// delegando a observação a um `KortexComputed` + `KortexWatch` interno.
-/// NÃO faz: efeitos colaterais nem leitura não rastreada.
+/// SRP: rebuild only when the value of [selector] changes according to
+/// [equals], delegating observation to an internal `KortexComputed` +
+/// `KortexWatch`. It does NOT run side effects nor untracked reads.
 ///
-/// Patterns: Composite (derivado observável + trecho observável).
-/// Dependências: Flutter + camadas `reactive` (sem estado global).
+/// Patterns: Composite (observable derived value + observable fragment).
+/// Dependencies: Flutter + the `reactive` layers (no global state).
 library;
 
 import 'package:flutter/widgets.dart';
@@ -13,16 +13,16 @@ import 'package:flutter/widgets.dart';
 import '../reactive/reactive.dart';
 import 'kortex_watch.dart';
 
-/// Constrói UI a partir da seleção, rebuildando só quando ela mudar.
+/// Builds UI from the selection, rebuilding only when it changes.
 typedef KortexSelectorBuilder<T> = Widget Function(
   BuildContext context,
   T value,
   Widget? child,
 );
 
-/// Trecho que observa `selector()` e reconstrói apenas em mudança real.
+/// Fragment observing `selector()` and rebuilding only on a real change.
 class KortexSelector<T> extends StatefulWidget {
-  /// Cria o seletor com [selector], [builder], [equals] e [child].
+  /// Creates the selector with [selector], [builder], [equals] and [child].
   const KortexSelector({
     super.key,
     required this.selector,
@@ -31,16 +31,16 @@ class KortexSelector<T> extends StatefulWidget {
     this.child,
   });
 
-  /// Extrai o valor observado (lido de forma rastreada).
+  /// Extracts the observed value (read in a tracked way).
   final T Function() selector;
 
-  /// Constrói a UI com o valor selecionado e o [child] intacto.
+  /// Builds the UI with the selected value and the untouched [child].
   final KortexSelectorBuilder<T> builder;
 
-  /// Igualdade da seleção (padrão `==`).
+  /// Equality of the selection (defaults to `==`).
   final KortexEquals<T>? equals;
 
-  /// Subárvore imutável repassada intacta a cada rebuild.
+  /// Immutable subtree passed back unchanged on every rebuild.
   final Widget? child;
 
   @override

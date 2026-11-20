@@ -1,7 +1,7 @@
-/// Página do contador do exemplo mínimo (`StatelessWidget`).
+/// Counter page of the minimal example (`StatelessWidget`).
 ///
-/// SRP: compor `KortexWatch`/`KortexSelector`/`KortexListener` sobre o
-/// `CounterController` resolvido no escopo. NÃO faz: gerenciar estado.
+/// SRP: compose `KortexWatch`/`KortexSelector`/`KortexListener` over the
+/// `CounterController` resolved in the scope. It does NOT manage state.
 library;
 
 import 'package:flutter/material.dart';
@@ -9,21 +9,21 @@ import 'package:kortex/kortex.dart';
 
 import 'counter_controller.dart';
 
-/// Tela única do exemplo: contador, par/ímpar e salvamento com aviso.
+/// Single screen of the example: counter, even/odd and save with a notice.
 class CounterPage extends IKortexPage<CounterController> {
-  /// Cria a página do contador.
+  /// Creates the counter page.
   const CounterPage({super.key});
 
   @override
   Widget buildPage(BuildContext context, CounterController controller) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Kortex — exemplo mínimo')),
+      appBar: AppBar(title: const Text('Kortex — minimal example')),
       body: KortexListener<IKortexAsyncState<int>?>(
         watch: () => controller.save.state.value,
         listener: (listenerContext, state) {
           if (state case KortexAsyncData(value: final total)) {
             ScaffoldMessenger.of(listenerContext)
-                .showSnackBar(SnackBar(content: Text('Salvo: $total')));
+                .showSnackBar(SnackBar(content: Text('Saved: $total')));
           }
         },
         child: Center(
@@ -32,11 +32,11 @@ class CounterPage extends IKortexPage<CounterController> {
             children: [
               KortexWatch(
                 builder: (context, child) =>
-                    Text('Cliques: ${controller.count.value}'),
+                    Text('Clicks: ${controller.count.value}'),
               ),
               KortexSelector<bool>(
                 selector: () => controller.count.value.isEven,
-                builder: (context, even, child) => Text(even ? 'par' : 'ímpar'),
+                builder: (context, even, child) => Text(even ? 'even' : 'odd'),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
@@ -60,7 +60,7 @@ class CounterPage extends IKortexPage<CounterController> {
                   }
                   return ElevatedButton(
                     onPressed: () => controller.save.execute(null),
-                    child: const Text('Salvar'),
+                    child: const Text('Save'),
                   );
                 },
               ),

@@ -1,7 +1,7 @@
-/// Entrada do exemplo mínimo do `kortex` (aba Example do pub.dev).
+/// Entry point of the minimal `kortex` example (pub.dev Example tab).
 ///
-/// SRP: compor o `KortexScope` raiz e rodar o `MaterialApp`.
-/// NÃO faz: regra de negócio (vive no `CounterController`).
+/// SRP: compose the root `KortexScope` and run the `MaterialApp`. It does
+/// NOT hold business rules (those live in the `CounterController`).
 library;
 
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:kortex/kortex.dart';
 import 'counter_controller.dart';
 import 'counter_page.dart';
 
-/// Monta o app com o escopo raiz do contador.
+/// Builds the app with the root counter scope.
 Widget createApp() => KortexScope(
   providers: [
     KortexProvider<CounterController>(create: (_) => CounterController()),
@@ -18,5 +18,5 @@ Widget createApp() => KortexScope(
   child: const MaterialApp(home: CounterPage()),
 );
 
-/// Entrada do app de exemplo.
+/// Entry point of the example app.
 void main() => runApp(createApp());

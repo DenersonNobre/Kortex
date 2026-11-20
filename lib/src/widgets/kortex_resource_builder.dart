@@ -1,11 +1,11 @@
-/// Renderização exaustiva de `IKortexAsyncState` (`KortexResourceBuilder`).
+/// Exhaustive rendering of `IKortexAsyncState` (`KortexResourceBuilder`).
 ///
-/// SRP: mapear `Loading`/`Data`/`Error` para widgets via `switch` do Dart 3,
-/// observando o `resource` com um `KortexWatch` interno. NÃO faz: carregar
-/// dados, retry automático ou guardar estado.
+/// SRP: map `Loading`/`Data`/`Error` to widgets through a Dart 3 `switch`,
+/// observing the `resource` with an internal `KortexWatch`. It does NOT load
+/// data, retry automatically nor hold state.
 ///
-/// Patterns: Composite (observação delegada) + Pattern Matching exaustivo.
-/// Dependências: Flutter + camadas `reactive` (sem estado global).
+/// Patterns: Composite (delegated observation) + exhaustive pattern matching.
+/// Dependencies: Flutter + the `reactive` layers (no global state).
 library;
 
 import 'package:flutter/widgets.dart';
@@ -13,22 +13,22 @@ import 'package:flutter/widgets.dart';
 import '../reactive/reactive.dart';
 import 'kortex_watch.dart';
 
-/// Constrói o widget de erro com [error] e [stackTrace] opcional.
+/// Builds the error widget with [error] and an optional [stackTrace].
 typedef KortexErrorWidgetBuilder = Widget Function(
   BuildContext context,
   Object error,
   StackTrace? stackTrace,
 );
 
-/// Constrói o widget de dados com [value].
+/// Builds the data widget with [value].
 typedef KortexDataWidgetBuilder<T> = Widget Function(
   BuildContext context,
   T value,
 );
 
-/// Renderiza cada estado de [resource] com o construtor correspondente.
+/// Renders each state of [resource] with the matching builder.
 class KortexResourceBuilder<T> extends StatelessWidget {
-  /// Cria o construtor com os 3 ramos de `IKortexAsyncState`.
+  /// Creates the builder with the 3 branches of `IKortexAsyncState`.
   const KortexResourceBuilder({
     super.key,
     required this.resource,
@@ -37,16 +37,16 @@ class KortexResourceBuilder<T> extends StatelessWidget {
     required this.data,
   });
 
-  /// Recurso observado (rebuild a cada transição de estado).
+  /// Observed resource (rebuilds on every state transition).
   final KortexResource<T> resource;
 
-  /// Ramo de carregamento (`Loading`, com ou sem `previousValue`).
+  /// Loading branch (`Loading`, with or without `previousValue`).
   final WidgetBuilder loading;
 
-  /// Ramo de falha (`Error`).
+  /// Error branch (`Error`).
   final KortexErrorWidgetBuilder error;
 
-  /// Ramo de sucesso (`Data`).
+  /// Success branch (`Data`).
   final KortexDataWidgetBuilder<T> data;
 
   @override

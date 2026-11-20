@@ -1,11 +1,11 @@
-/// Reconstrução granular com `child` estático (`KortexWatch`).
+/// Granular rebuild with a static `child` (`KortexWatch`).
 ///
-/// SRP: rebuildar só este trecho quando sinais lidos mudarem, preservando
-/// o [child] imutável. NÃO faz: filtrar por igualdade (papel do
-/// `KortexSelector`) nem efeitos colaterais (papel do `KortexListener`).
+/// SRP: rebuild only this fragment when the signals it reads change,
+/// preserving the immutable [child]. It does NOT filter by equality (that
+/// is `KortexSelector`) nor run side effects (that is `KortexListener`).
 ///
-/// Patterns: Observer com coleta em `build` + `setState` fora de fase.
-/// Dependências: Flutter (`widgets`, `scheduler`) + camada reativa.
+/// Patterns: Observer collecting in `build` + `setState` outside the build phase.
+/// Dependencies: Flutter (`widgets`, `scheduler`) + the reactive layer.
 library;
 
 import 'package:flutter/scheduler.dart';
@@ -13,21 +13,22 @@ import 'package:flutter/widgets.dart';
 
 import '../reactive/reactive.dart';
 
-/// Constrói UI reativa com `child` opcional preservado entre rebuilds.
+/// Builds reactive UI with an optional `child` preserved across rebuilds.
 typedef KortexWatchBuilder = Widget Function(
   BuildContext context,
   Widget? child,
 );
 
-/// Trecho que reconstrói quando qualquer sinal lido em [builder] mudar.
+/// Fragment that rebuilds when any signal read in [builder] changes.
 class KortexWatch extends StatefulWidget {
-  /// Cria o trecho observável com [builder] e [child] estático opcional.
+  /// Creates the observable fragment with [builder] and an optional static
+  /// [child].
   const KortexWatch({super.key, required this.builder, this.child});
 
-  /// Leitura rastreada; `child` repassado intacto a cada rebuild.
+  /// Tracked read; the `child` is passed back unchanged on every rebuild.
   final KortexWatchBuilder builder;
 
-  /// Subárvore imutável preservada entre reconstruções.
+  /// Immutable subtree preserved between rebuilds.
   final Widget? child;
 
   @override
