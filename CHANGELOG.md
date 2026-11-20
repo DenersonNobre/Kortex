@@ -11,6 +11,10 @@ Versionamento: [SemVer](https://semver.org/lang/pt-BR/). Categorias: `Added`, `C
 
 ## [Não publicado]
 
+### Added
+
+- POC do `example/` (EPIC05): `Result<T>` selado, `Task` imutável + VO `TaskTitle`, port `TaskRepository` e adapter `InMemoryTaskRepository` (`UC-05.01`).
+
 ## [0.1.0] - 2026-11-20
 
 ### Added

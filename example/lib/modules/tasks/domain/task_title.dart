@@ -1,0 +1,40 @@
+/// Valor validado do título (`TaskTitle`).
+///
+/// SRP: garantir invariante (não-vazio, até `maxLength`, normalizado com
+/// trim) na fronteira de criação. NÃO faz: persistência nem UI.
+///
+/// Patterns: Value Object com fábrica que devolve `Result`.
+/// Dependências: `shared/result.dart` + `task_failures.dart` (puro).
+library;
+
+import '../../../shared/result.dart';
+import 'task_failures.dart';
+
+/// Título de task sempre válido (construção só via `create`).
+final class TaskTitle {
+  const TaskTitle._(this.value);
+
+  /// Tamanho máximo aceito.
+  static const int maxLength = 120;
+
+  /// Valor normalizado (sem espaços nas bordas).
+  final String value;
+
+  /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
+  static Result<TaskTitle> create(String raw) {
+    final trimmed = raw.trim();
+    if (trimmed.isEmpty) {
+      return const Fail(
+        TaskFailureCodes.emptyTitle,
+        'Título não pode ser vazio.',
+      );
+    }
+    if (trimmed.length > maxLength) {
+      return const Fail(
+        TaskFailureCodes.titleTooLong,
+        'Título com mais de 120 caracteres.',
+      );
+    }
+    return Ok(TaskTitle._(trimmed));
+  }
+}

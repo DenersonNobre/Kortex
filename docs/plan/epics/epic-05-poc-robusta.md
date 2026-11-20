@@ -26,7 +26,7 @@ Evoluir o `example/` de app mínimo para POC robusta que demonstra, em código e
 
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
-| **UC-05.01** | Domínio, `Result`, Port e Adapter InMemory | Nenhuma | `Pendente` |
+| **UC-05.01** | Domínio, `Result`, Port e Adapter InMemory | Nenhuma | `Concluído` |
 | **UC-05.02** | Commands e fachada `TaskUseCases` | `UC-05.01` | `Pendente` |
 | **UC-05.03** | Controller, Page e fluxo de widget | `UC-05.02` | `Pendente` |
 
@@ -46,7 +46,7 @@ Evoluir o `example/` de app mínimo para POC robusta que demonstra, em código e
 ### Caso de Uso UC-05.01 — Domínio, `Result`, Port e Adapter
 
 - **Identificador**: `UC-05.01`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 

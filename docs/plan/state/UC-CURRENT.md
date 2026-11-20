@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: `EPIC05` (`UC-05.01` — Domínio, `Result`, Port e Adapter)
+- **Épico ativo**: `EPIC05` (`UC-05.02` — Commands e fachada `TaskUseCases`)
 - **Status**: `Pronto para TDD Red-Before-Green`
-- **Último passo concluído**: `v0.1.0` entregue (todos os épicos `EPIC00`–`EPIC04` concluídos, tag nos dois remotos).
-- **Próximo passo**: Escrever testes Red para `UC-05.01` e implementar `Result`, `Task`/`TaskTitle`, `TaskRepository` e `InMemoryTaskRepository` no `example/`.
+- **Último passo concluído**: `UC-05.01` concluído (`Result` selado, `Task`/`TaskTitle`, port + `InMemoryTaskRepository`; suíte do `example/` verde + `analyze` limpo).
+- **Próximo passo**: Escrever testes Red para `UC-05.02` e implementar os commands e a fachada `TaskUseCases` no `example/`.
