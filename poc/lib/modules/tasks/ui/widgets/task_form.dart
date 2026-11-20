@@ -47,7 +47,7 @@ class _TaskFormState extends State<TaskForm> {
               final categories = controller.categories.value;
               return DropdownButtonFormField<int?>(
                 key: const Key('task-category'),
-                value: controller.draft.categoryId,
+                initialValue: controller.draft.categoryId,
                 decoration: const InputDecoration(labelText: 'Categoria'),
                 items: [
                   const DropdownMenuItem<int?>(
