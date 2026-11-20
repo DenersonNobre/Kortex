@@ -1,22 +1,14 @@
-import 'package:poc/main.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poc/main.dart' as app;
 
 void main() {
-  testWidgets('exemplo: contador, mensagem e salvamento', (tester) async {
-    await tester.pumpWidget(createApp());
-
-    expect(find.text('Cliques: 0'), findsOneWidget);
-
-    await tester.tap(find.byTooltip('increment'));
+  testWidgets('entrada do app abre a tela de visitas', (tester) async {
+    // Exercita o `main()` real do app (composição + seed de demonstração).
+    app.main();
     await tester.pump();
-    expect(find.text('Cliques: 1'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 3));
 
-    await tester.pumpAndSettle();
-    expect(find.text('Total: 42'), findsOneWidget);
-
-    await tester.tap(find.text('Salvar'));
-    await tester.pump(const Duration(milliseconds: 500));
-
-    expect(find.textContaining('Salvo'), findsOneWidget);
+    expect(find.text('Visitas técnicas'), findsOneWidget);
+    expect(find.text('Nenhuma visita'), findsOneWidget);
   });
 }

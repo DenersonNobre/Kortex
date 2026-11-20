@@ -49,6 +49,10 @@ class VisitsPage extends IKortexPage<VisitsController> {
           _clearLater(controller);
         },
         child: Column(
+          // Stretch: os filhos ocupam a largura toda, independentemente do
+          // estado do corpo (sem isso a linha de filtros centraliza enquanto
+          // carrega e "salta" para a esquerda quando os dados chegam).
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _StatusFilter(controller: controller),
             Expanded(child: _VisitsBody(controller: controller)),
@@ -125,6 +129,9 @@ class _StatusFilter extends StatelessWidget {
                     key: Key('visits-filter-${option.wire}'),
                     label: Text(option.label),
                     selected: active == option.wire,
+                    // Sem checkmark o chip selecionado mantem a largura,
+                    // evitando o reflow que desloca a linha ao filtrar.
+                    showCheckmark: false,
                     onSelected: (_) =>
                         controller.applyStatusFilter(option.wire),
                   ),

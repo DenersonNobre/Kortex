@@ -6,6 +6,13 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-20 — Filtro "pula" ao selecionar: duas causas medidas (chip e Column)
+
+- **Sintoma (relatado na UI):** ao clicar numa opção do filtro, ela "centraliza e volta para a esquerda".
+- **Causa 1 — `ChoiceChip` cresce ao selecionar:** ele exibe `checkmark` por padrao; medido, o chip ia de **160,9 px para 180,9 px** e o layout refluia. Fix: `showCheckmark: false` (largura estavel).
+- **Causa 2 — linha centralizada durante o `Loading`:** o `Column` usa `crossAxisAlignment.center` por padrao e, com o corpo em spinner, nada forcava a largura — a linha de filtros **encolhia e centralizava** (x=50,2) e voltava para a esquerda (x=0) quando os dados chegavam. Fix: `crossAxisAlignment: CrossAxisAlignment.stretch` no `Column`.
+- **Prova e prevencao:** teste de regressao mede `tester.getRect(chip)` em varios frames da troca de filtro e exige retangulo identico — o bug e' de layout, entao a assercao e' geometrica, nunca "olhar a tela".
+
 ## 2026-11-20 — `Navigator.pop` assíncrono: a rota só some no frame seguinte
 
 - **Sintoma:** o dialog de nova visita não fechava no teste mesmo com `pop()` comprovadamente chamado (`print` mostrou `canPop=true` e a chamada executada) — e o dado tinha sido salvo.
