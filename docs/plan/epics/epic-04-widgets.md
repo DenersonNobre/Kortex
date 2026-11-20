@@ -27,7 +27,7 @@ Implementar `lib/src/widgets/`, o barrel público `lib/kortex.dart` e o app de e
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-04.01** | `IKortexPage`, `KortexWatch` (`child`) e `KortexSelector<T>` | Nenhuma | `Concluído` |
-| **UC-04.02** | `KortexListener<T>`, `KortexResourceBuilder<T>` e `KortexListenableAdapter` | `UC-04.01` | `Pendente` |
+| **UC-04.02** | `KortexListener<T>`, `KortexResourceBuilder<T>` e `KortexListenableAdapter` | `UC-04.01` | `Concluído` |
 | **UC-04.03** | Barrel `lib/kortex.dart` e app de exemplo em `example/` | `UC-04.02` | `Pendente` |
 | **UC-04.04** | Pipeline CI remota (Gitea + GitHub) e release `v0.1.0` | `UC-04.03` | `Pendente` |
 
@@ -83,7 +83,7 @@ Esquema do Cenário: Rebuild granular em KortexWatch e KortexSelector
 ### Caso de Uso UC-04.02 — `KortexListener<T>`, `KortexResourceBuilder<T>` e Pontes `Listenable`
 
 - **Identificador**: `UC-04.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 

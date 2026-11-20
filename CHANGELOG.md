@@ -22,6 +22,7 @@ Versionamento: [SemVer](https://semver.org/lang/pt-BR/). Categorias: `Added`, `C
 - `KortexProvider`, `KortexScope` (irmãos, ciclo com cadeia, `lazy`, LIFO, preservação em rebuild) e `readKortex`/`watchKortex` (`UC-03.01`).
 - `KortexScope.capture` (token de tipo explícito), `overrides` e resolução em árvore (`UC-03.02`, `EPIC03` concluída).
 - `IKortexPage`, `KortexWatch` (child estático, `setState` fora de fase) e `KortexSelector` (derivado interno + `Watch` interno, rebuild só em mudança) (`UC-04.01`).
+- `KortexListener` (watch separado, `fireImmediately`, deferral pós-frame), `KortexResourceBuilder` (switch exaustivo) e pontes `Listenable`/`ValueListenable`/`toListenable` (`UC-04.02`).
 
 - Esqueleto inicial do pacote Flutter `kortex` (`pubspec.yaml`, `analysis_options.yaml`, `lib/kortex.dart`, `test/kortex_test.dart`).
 - Documentação de produto e arquitetura da `v0.1.0` em `docs/product/PRD.md` e `docs/architecture/SPEC.md` (reatividade em Dart puro, `KortexScope`, `IKortexPage` `StatelessWidget`-first, pontes `Stream`/`ValueListenable`/`Listenable`, guardrails Anti-GetX e convenção `I-`).

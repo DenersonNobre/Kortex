@@ -7,6 +7,9 @@
 /// Uso: `import 'package:kortex/src/widgets/widgets.dart';`
 library;
 
+export 'kortex_listenable_adapter.dart';
+export 'kortex_listener.dart';
 export 'kortex_page.dart';
+export 'kortex_resource_builder.dart';
 export 'kortex_selector.dart';
 export 'kortex_watch.dart';

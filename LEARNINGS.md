@@ -18,6 +18,12 @@
 - **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
 - **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
+## 2026-11-20 — Testes async de widget: aguardar o `Future`, não o `pump`
+
+- **Sintoma:** 3 testes quebraram sem defeito na lib: `complete()` + 1 `pump()` não garantia a continuação do `Future`; `showSnackBar` insere overlay que só constrói no frame seguinte; `TextEditingController.value` tipa `TextEditingValue`, não `String`.
+- **Causa:** `pump()` não ordena microtasks do `Future` do recurso; overlay precisa de frame extra; tipo do `ValueListenable` é o do `value`, não o do texto.
+- **Fix:** aguardar o `Future` do `refresh()` antes do `pump` (determinístico); `pump` duplo pós-`showSnackBar`; separar teste `ValueNotifier<String>` (fluxo) de `TextEditingController` (posse pós-dispose).
+
 ## 2026-11-20 — `KortexSelector` compõe `Computed` + `Watch` em vez de observar direto
 
 - **Sintoma:** seletor precisava de coleta de deps, comparação por `equals`, agenda fora de fase e ciclo de vida — tudo já testado em `KortexComputed`/`KortexWatch`.
