@@ -6,7 +6,7 @@ issue_tracker: https://github.com/DenersonNobre/Kortex/issues
 
 environment:
   sdk: ^3.13.5
-  flutter: ">=1.17.0"
+  flutter: ">=3.47.6"
 
 dependencies:
   flutter:
