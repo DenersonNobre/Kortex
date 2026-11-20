@@ -1,0 +1,38 @@
+# CI do Kortex no Gitea Actions (runner self-hosted `gitlan-runner`).
+#
+# O label `ubuntu-latest` resolve para `node:20-bullseye` (sem Flutter),
+# por isso o SDK é instalado no job, pinado na revisão validada em
+# desenvolvimento (3.50.0). Mesmos comandos do DoD local: format, analyze,
+# test — qualquer exit != 0 reprova o job (prova negativa versionada em
+# test/ci_negative_proof_test.dart, removida após o vermelho).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: System deps (curl/unzip/git para o setup do Flutter)
+        run: |
+          command -v curl unzip git || (apt-get update && apt-get install -y curl unzip git)
+
+      - name: Install Flutter 3.50.0 (pinado, mesma do dev)
+        run: |
+          git clone --depth 1 --branch 3.50.0 https://github.com/flutter/flutter.git "$HOME/flutter-sdk"
+          ln -sf "$HOME/flutter-sdk/bin/flutter" /usr/local/bin/flutter
+          ln -sf "$HOME/flutter-sdk/bin/dart" /usr/local/bin/dart
+          flutter --version
+
+      - name: Format check (igual ao gate local)
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze (zero warnings)
+        run: flutter analyze
+
+      - name: Test (suite completa)
+        run: flutter test

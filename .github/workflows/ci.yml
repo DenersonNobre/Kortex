@@ -1,0 +1,29 @@
+# CI do Kortex no GitHub Actions (espelho do `.gitea/workflows/ci.yml`).
+#
+# Flutter pinado na 3.50.0 (mesma validada em desenvolvimento). Mesmos
+# comandos do DoD local: format, analyze, test — qualquer exit != 0
+# reprova o job.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.50.0'
+
+      - name: Format check (igual ao gate local)
+        run: dart format --output=none --set-exit-if-changed lib test
+
+      - name: Analyze (zero warnings)
+        run: flutter analyze
+
+      - name: Test (suite completa)
+        run: flutter test
