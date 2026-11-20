@@ -1,8 +1,8 @@
 # CI do Kortex no GitHub Actions (espelho do `.gitea/workflows/ci.yml`).
 #
-# Flutter pinado na 3.50.0 (mesma validada em desenvolvimento). Mesmos
-# comandos do DoD local: format, analyze, test — qualquer exit != 0
-# reprova o job.
+# Flutter pinado na 3.47.6 (a 3.50.0 deprecia `material.dart`, o que
+# conflita com o RNF-01 zero-deps; ver LEARNINGS). Mesmos comandos do DoD
+# local: format, analyze, test — qualquer exit != 0 reprova o job.
 name: CI
 
 on:
@@ -17,7 +17,7 @@ jobs:
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.50.0'
+          flutter-version: '3.47.6'
 
       - name: Format check (igual ao gate local)
         run: dart format --output=none --set-exit-if-changed lib test

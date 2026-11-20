@@ -18,6 +18,12 @@
 - **Causa:** `onRead` serve a dois momentos (coleta vs. notificação); `Computed`/`Effect` distinguem com `_isCollecting`, mas ponte folha não precisa de coleta.
 - **Fix:** `_SignalStream._attach` assina direto via `node.addObserver(bridge)` — sem moldura de tracker; `onRead` passa a disparar só em mudança real, e o `cancel` remove o observador.
 
+## 2026-11-20 — CI pinada na 3.47.6: 3.50.0 deprecia `material.dart`
+
+- **Sintoma:** CI verde local (env padrão 3.47.6) e vermelha no GitHub com 7 infos `deprecated_member_use` pedindo `package:material_ui` — que não existe no SDK (só como pacote externo).
+- **Causa:** `flutter analyze` sai com exit != 0 para qualquer nível, inclusive `info`; migrar quebraria o RNF-01 (zero dependências externas).
+- **Fix:** workflows pinados na 3.47.6 (última sem a depreciação; mesma de todos os verdes locais). Revisitar quando o RNF-01 permitir ou o `material_ui` vier no SDK.
+
 ## 2026-11-20 — Testes async de widget: aguardar o `Future`, não o `pump`
 
 - **Sintoma:** 3 testes quebraram sem defeito na lib: `complete()` + 1 `pump()` não garantia a continuação do `Future`; `showSnackBar` insere overlay que só constrói no frame seguinte; `TextEditingController.value` tipa `TextEditingValue`, não `String`.
