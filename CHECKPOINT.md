@@ -8,16 +8,16 @@
 
 ## Contexto
 
-Pacote Flutter/Dart `kortex` (`v0.1.0` tagueada; `EPIC00`–`EPIC04` concluídos).
+Pacote Flutter/Dart `kortex` (`v0.1.1`; `EPIC00`–`EPIC09` concluídos).
 
-## Estado real (verificado em 2026-11-20)
+## Estado real (verificado em 2026-11-22)
 
-- Tag `v0.1.0` nos remotos Gitea e GitHub; CI dupla verde + prova negativa vermelha nos gates certos.
-- Baselines medidos: `flutter analyze` (`No issues found!`) e `flutter test` (raiz 80/80, `example/` 1/1).
+- `EPIC09` (`UC-09.01` `KortexList` e `UC-09.02` `KortexMap`) concluído e exportado pelo barrel público.
+- Baselines medidos: `flutter analyze` (`No issues found!`) e `flutter test` (`91` testes passando).
 
 ## Próximo passo acionável
 
-1. Próximo ciclo sob demanda (nova `EPIC05+` ou manutenção via `support/vX.Y`).
+1. Próximo ciclo sob demanda (validar coleções reativas na `poc/` ou preparar `v0.2.0` para `pub.dev`).
 
 ## Travas vivas
 

@@ -36,7 +36,7 @@ flowchart LR
 | `EPIC06` | App de Visitas Técnicas | `EPIC05` | Alta | `Concluído` | [epic-06-app-visitas.md](epics/epic-06-app-visitas.md) |
 | `EPIC07` | Clientes & Agenda | `EPIC06` | Alta | `Concluído` | [epic-07-clientes-agenda.md](epics/epic-07-clientes-agenda.md) |
 | `EPIC08` | Módulos de Clientes & Sessão | `EPIC07` | Alta | `Concluído` | [epic-08-modulos-apoio.md](epics/epic-08-modulos-apoio.md) |
-| `EPIC09` | Coleções Reativas (`KortexList` & `KortexMap`) | `EPIC04` | Alta | `Pendente` | [epic-09-colecoes-reativas.md](epics/epic-09-colecoes-reativas.md) |
+| `EPIC09` | Coleções Reativas (`KortexList` & `KortexMap`) | `EPIC04` | Alta | `Concluído` | [epic-09-colecoes-reativas.md](epics/epic-09-colecoes-reativas.md) |
 ---
 
 ## 3. Definition of Ready (DoR) & Definition of Done (DoD)

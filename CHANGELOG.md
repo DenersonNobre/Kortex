@@ -21,6 +21,7 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 - Controller-lifecycle gate (`test/support/controller_lifecycle.dart`): `LeakTesting` cannot see `IKortexController` (it is not a `ChangeNotifier`), so tests `track` every controller and a global `tearDown` fails the leaking test via `isDisposed`. Applied to the package and to `poc/`.
 - Windows desktop runner for the example app (`example/windows/`), so it can be launched with `flutter run -d windows`.
 - Technical visits app in `poc/` (EPIC08): `clients` and `session` became first-class modules, the technician is the session user (`InMemorySessionProvider`) and `Visit.technicianName` carries the responsible technician as a snapshot.
+- Reactive collections (`KortexList<E>` / `IKortexReadonlyList<E>` and `KortexMap<K, V>` / `IKortexReadonlyMap<K, V>`) in `lib/src/reactive/` with `UnmodifiableListView`/`UnmodifiableMapView` readonly views, no-op suppression, `kortexBatch` consolidation and post-`dispose` `StateError` (`EPIC09`).
 
 ## [0.1.1] - 2026-11-20
 

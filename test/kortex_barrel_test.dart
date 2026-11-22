@@ -18,6 +18,8 @@ void main() {
   test('barrel expõe a API reativa pura', () {
     final bag = KortexDisposeBag();
     final signal = kortexSignal(1);
+    final list = kortexList<int>([1]);
+    final map = kortexMap<String, int>({'a': 1});
     final computed = kortexComputed(() => signal.value * 2);
     final effect = kortexEffect((_) {});
     final resource = kortexResource<int>(() async => 1, immediate: false);
@@ -29,6 +31,8 @@ void main() {
 
     expect(bag.isDisposed, isFalse);
     expect(signal.value, 1);
+    expect(list.readonly.value, [1]);
+    expect(map.readonly.value, {'a': 1});
     expect(computed.value, 2);
     expect(resource.state.value.isLoading, isTrue);
     expect(streamResource.state.value.isLoading, isTrue);
@@ -44,6 +48,8 @@ void main() {
     streamResource.dispose();
     command.dispose();
     computed.dispose();
+    list.dispose();
+    map.dispose();
     signal.dispose();
     bag.dispose();
   });

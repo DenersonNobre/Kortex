@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC04` |
 | **Prioridade** | Alta (Extração `synapx-kortex-extraction.md`) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Pendente` |
+| **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -26,17 +26,17 @@ Implementar `KortexList<E>` (`IKortexReadonlyList<E>`) e `KortexMap<K, V>` (`IKo
 
 | ID do Caso de Uso | Título do Caso de Uso | Dependências Internas | Status |
 | --- | --- | --- | --- |
-| **UC-09.01** | `IKortexReadonlyList` e `KortexList<E>` | Nenhuma | `Pendente` |
-| **UC-09.02** | `IKortexReadonlyMap`, `KortexMap<K, V>` e exportação pública | `UC-09.01` | `Pendente` |
+| **UC-09.01** | `IKortexReadonlyList` e `KortexList<E>` | Nenhuma | `Concluído` |
+| **UC-09.02** | `IKortexReadonlyMap`, `KortexMap<K, V>` e exportação pública | `UC-09.01` | `Concluído` |
 
 ---
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] `UC-09.01` e `UC-09.02` implementados sob TDD Red-Before-Green.
-- [ ] Zero imports Flutter em `lib/src/reactive/` (`INV-05`).
-- [ ] `flutter analyze` e `flutter test` verdes (exit code 0).
-- [ ] `CHANGELOG.md`, `docs/plan/README.md` e status do épico atualizados no mesmo commit.
+- [x] `UC-09.01` e `UC-09.02` implementados sob TDD Red-Before-Green.
+- [x] Zero imports Flutter em `lib/src/reactive/` (`INV-05`).
+- [x] `flutter analyze` e `flutter test` verdes (exit code 0).
+- [x] `CHANGELOG.md`, `docs/plan/README.md` e status do épico atualizados no mesmo commit.
 
 ---
 
