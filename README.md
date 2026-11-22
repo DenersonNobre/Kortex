@@ -59,6 +59,24 @@ KortexScope(
 
 ---
 
+## Roadmap
+
+Planned improvements that preserve Kortex's core constraints (zero third-party dependencies, pure-Dart reactivity, and explicit widget-tree scoping):
+
+- **`v0.2.0` (Ergonomics & SDK reach)**:
+  - Lower the minimum Dart/Flutter SDK constraint in `pubspec.yaml` after CI matrix verification.
+  - `KortexSet<E>` (`IKortexReadonlySet<E>`) to complete the reactive collection trio alongside `KortexList` and `KortexMap`.
+  - `canExecute` reactive guard on `KortexCommand`.
+  - `KortexEffect.once` (auto-disposing single-shot effect) and `throttle` option alongside `debounce`.
+  - `runIfActive` guard on `IKortexController` for ad-hoc async methods.
+- **`v0.3.0` (Observability & DX)**:
+  - Opt-in scope lifecycle hook for debug inspection (without global singletons).
+  - Native `dart:developer` service extensions for Flutter DevTools inspection.
+- **Separate companion packages** (keeping `kortex` dependency-free):
+  - Optional static-analysis lints (e.g. detecting signals created without `autoDispose`) and optional signal persistence adapters.
+
+---
+
 ## Canonical Documentation
 
 - **Product Requirements**: [docs/product/PRD.md](docs/product/PRD.md)

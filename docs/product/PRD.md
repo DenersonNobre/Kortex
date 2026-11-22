@@ -130,3 +130,21 @@ Para assegurar previsibilidade, minimalismo e isolamento explícito na árvore d
 | **Dependências Externas (`dependencies`)** | Pacotes de terceiros | **0 dependências externas (apenas `sdk: flutter`)** |
 | **Cobertura de Cenários Críticos em Testes** | 0% | **100% dos cenários críticos cobertos**: `Signal` (`equals`, `peek`), `Computed`, `Effect` (`onCleanup`, `debounce`), `Batch`, `Untracked`, `Resource` (`previousValue`, race condition/erro), `StreamResource` (emissão/cancelamento), `Command` (reentrância), `DisposeBag`, `IKortexController`, `Scope` (aninhado, irmãos, ciclo, `lazy`, `.value`, `capture`, `overrides`, `dispose`), `IKortexPage`, `Watch` (`child`), `Selector`, `Listener`, `ResourceBuilder` e pontes `toKortexSignal()` / `toListenable()` |
 | **Exemplo Funcional** | N/A | **App de exemplo com `StatelessWidget` (`IKortexPage`), `IKortexController`, repository/datasource registrados em `KortexScope`, `KortexCommand`, `KortexResource` e `KortexListener` sem dependências externas** |
+
+---
+
+## 7. Roadmap Pós-MVP (`v0.2.0+`)
+
+Evoluções planejadas mantendo os pilares de zero dependências externas, camada reativa em Dart puro e escopo explícito:
+
+- **`v0.2.0` (Ergonomia & Alcance de SDK)**:
+  - Reduzir o piso mínimo de SDK Dart/Flutter no `pubspec.yaml` após validação em matriz de CI.
+  - `KortexSet<E>` (`IKortexReadonlySet<E>`) completando o trio com `KortexList` e `KortexMap`.
+  - Guarda reativa `canExecute` em `KortexCommand`.
+  - `KortexEffect.once` (auto-`dispose` após primeira execução) e opção `throttle` complementar ao `debounce`.
+  - Guarda `runIfActive` em `IKortexController` para fluxos assíncronos livres pós-`await`.
+- **`v0.3.0` (Observabilidade & DX)**:
+  - Hook opt-in por `KortexScope` para inspeção de ciclo de vida em debug (sem singletons globais).
+  - Extensões nativas via `dart:developer` para inspeção no Flutter DevTools.
+- **Pacotes irmãos opcionais** (sem acoplar ao núcleo `kortex`):
+  - Lints estáticos opcionais (ex.: sinal criado sem `autoDispose`) e adaptadores opcionais de persistência.
