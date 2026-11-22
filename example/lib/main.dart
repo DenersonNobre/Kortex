@@ -33,7 +33,7 @@ class CounterController extends IKortexController {
   }
 
   // Keep the mutable signal private so widgets cannot mutate state directly.
-  final KortexSignal<int> _count = KortexSignal(0);
+  final _count = 0.kortex;
 
   /// Read-only reactive view exposed to the UI.
   IKortexReadonlySignal<int> get count => _count.readonly;

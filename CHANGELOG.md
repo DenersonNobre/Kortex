@@ -11,6 +11,12 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ## [Unpublished]
 
+## [0.2.1] - 2026-11-22
+
+### Added
+
+- Ergonomic creation extensions `.kortex` (`KortexSignalExtension<T extends Object>` — blocking `null.kortex` at compile time while supporting primitives, enums and domain objects), `.kortexList` (`KortexListExtension<E>`) and `.kortexMap` (`KortexMapExtension<K, V>`).
+
 ## [0.2.0] - 2026-11-22
 
 ### Fixed

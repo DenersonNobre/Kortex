@@ -146,5 +146,24 @@ void main() {
       expect(() => map['a'] = 2, throwsStateError);
       expect(() => map.clear(), throwsStateError);
     });
+
+    test('extensões .kortexList e .kortexMap criam coleções reativas', () {
+      final list = [1, 2].kortexList;
+      final map = {'a': 1}.kortexMap;
+      final listSignal = [1, 2].kortex;
+
+      expect(list, isA<KortexList<int>>());
+      expect(map, isA<KortexMap<String, int>>());
+      expect(listSignal, isA<KortexSignal<List<int>>>());
+
+      list.add(3);
+      map['b'] = 2;
+      expect(list.peek(), [1, 2, 3]);
+      expect(map.peek(), {'a': 1, 'b': 2});
+
+      list.dispose();
+      map.dispose();
+      listSignal.dispose();
+    });
   });
 }

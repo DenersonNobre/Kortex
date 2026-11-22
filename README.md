@@ -2,7 +2,7 @@
 
 Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutter`) for fine-grained signal reactivity, explicit dependency scoping in the widget tree (`KortexScope`), and UI built primarily with `StatelessWidget` (`IKortexPage`).
 
-> **Status**: `v0.2.0` — reactive core, reactive collections (`KortexList`, `KortexMap`), scoped dependency injection, and widget layer are implemented and tested.
+> **Status**: `v0.2.1` — reactive core, reactive collections (`KortexList`, `KortexMap`), scoped dependency injection, and widget layer are implemented and tested.
 
 ---
 
@@ -29,12 +29,13 @@ Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutt
 ```dart
 class CounterController extends IKortexController {
   CounterController() {
-    autoDispose(count);
+    autoDispose(_count);
   }
 
-  final KortexSignal<int> count = KortexSignal(0);
+  final _count = 0.kortex;
+  IKortexReadonlySignal<int> get count => _count.readonly;
 
-  void increment() => count.update((value) => value + 1);
+  void increment() => _count.update((value) => value + 1);
 }
 
 class CounterPage extends IKortexPage<CounterController> {

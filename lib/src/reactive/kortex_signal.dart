@@ -102,3 +102,13 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
 /// Ergonomic shortcut for `KortexSignal(...)`.
 KortexSignal<T> kortexSignal<T>(T initialValue, {KortexEquals<T>? equals}) =>
     KortexSignal(initialValue, equals: equals);
+
+/// Ergonomic `.kortex` shortcut for non-nullable objects (`0.kortex`,
+/// `User().kortex`, `Status.idle.kortex`).
+///
+/// Restricted to `T extends Object` so `null.kortex` fails at compile time
+/// (use `kortexSignal<T?>(null)` for nullable signals).
+extension KortexSignalExtension<T extends Object> on T {
+  /// Wraps this value in a new [KortexSignal].
+  KortexSignal<T> get kortex => KortexSignal<T>(this);
+}

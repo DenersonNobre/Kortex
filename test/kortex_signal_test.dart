@@ -17,6 +17,13 @@ void _subscribe(_Probe probe, IKortexReadonlySignal<int> signal) {
   probe.reads = 0;
 }
 
+enum _SampleStatus { idle, active }
+
+class _SampleUser {
+  const _SampleUser(this.name);
+  final String name;
+}
+
 void main() {
   group('KortexSignal', () {
     test('atribuir o mesmo valor não notifica (equals padrão)', () {
@@ -131,6 +138,55 @@ void main() {
       expect(view.value, 42);
       expect(view.peek(), 42);
       expect(view.isDisposed, isFalse);
+    });
+
+    test(
+      'extensão .kortex cria KortexSignal para primitivos, enum e objetos',
+      () {
+        final count = 0.kortex;
+        final label = 'ok'.kortex;
+        final flag = false.kortex;
+        final status = _SampleStatus.idle.kortex;
+        final user = const _SampleUser('Ana').kortex;
+
+        expect(count, isA<KortexSignal<int>>());
+        expect(label, isA<KortexSignal<String>>());
+        expect(flag, isA<KortexSignal<bool>>());
+        expect(status, isA<KortexSignal<_SampleStatus>>());
+      status.value = _SampleStatus.active;
+      expect(status.value, _SampleStatus.active);
+        expect(user, isA<KortexSignal<_SampleUser>>());
+        expect(user.value.name, 'Ana');
+
+        count.dispose();
+        label.dispose();
+        flag.dispose();
+        status.dispose();
+        user.dispose();
+      },
+    );
+
+    test('extensão .kortex cria KortexSignal para primitivos, enum e objetos', () {
+      final count = 0.kortex;
+      final label = 'ok'.kortex;
+      final flag = false.kortex;
+      final status = _SampleStatus.idle.kortex;
+      final user = const _SampleUser('Ana').kortex;
+
+      expect(count, isA<KortexSignal<int>>());
+      expect(label, isA<KortexSignal<String>>());
+      expect(flag, isA<KortexSignal<bool>>());
+      expect(status, isA<KortexSignal<_SampleStatus>>());
+      status.value = _SampleStatus.active;
+      expect(status.value, _SampleStatus.active);
+      expect(user, isA<KortexSignal<_SampleUser>>());
+      expect(user.value.name, 'Ana');
+
+      count.dispose();
+      label.dispose();
+      flag.dispose();
+      status.dispose();
+      user.dispose();
     });
   });
 }

@@ -216,3 +216,9 @@ class KortexMap<K, V> extends MapBase<K, V>
 /// Ergonomic shortcut for `KortexMap(...)`.
 KortexMap<K, V> kortexMap<K, V>([Map<K, V>? initial]) =>
     KortexMap<K, V>(initial);
+
+/// Ergonomic `.kortexMap` shortcut for creating a [KortexMap] from a [Map].
+extension KortexMapExtension<K, V> on Map<K, V> {
+  /// Creates a reactive [KortexMap] copied from this map.
+  KortexMap<K, V> get kortexMap => KortexMap<K, V>(this);
+}

@@ -302,6 +302,9 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
   - `KortexErrorWidgetBuilder = Widget Function(BuildContext context, Object error, StackTrace? stackTrace)`
   - `KortexDataWidgetBuilder<T> = Widget Function(BuildContext context, T value)`
 - **Extensions (`reactive/` e `widgets/`)**:
+  - `KortexSignalExtension<T extends Object>` on `T`: `KortexSignal<T> get kortex` (bloqueia `null.kortex` em compilação; aceita primitivos, enums e objetos de domínio)
+  - `KortexListExtension<E>` on `List<E>`: `KortexList<E> get kortexList`
+  - `KortexMapExtension<K, V>` on `Map<K, V>`: `KortexMap<K, V> get kortexMap`
   - `KortexDisposableExtension` on `T extends IKortexDisposable`: `T addTo(KortexDisposeBag bag)`
   - `KortexBoolSignalExtension` on `KortexSignal<bool>`: `void toggle()`
   - `KortexIntSignalExtension` on `KortexSignal<int>`: `void increment([int by = 1])`, `void decrement([int by = 1])`

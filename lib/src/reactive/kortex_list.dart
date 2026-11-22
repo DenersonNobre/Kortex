@@ -234,3 +234,9 @@ class KortexList<E> extends ListBase<E> implements IKortexReadonlyList<E> {
 /// Ergonomic shortcut for `KortexList(...)`.
 KortexList<E> kortexList<E>([Iterable<E> initial = const []]) =>
     KortexList<E>(initial);
+
+/// Ergonomic `.kortexList` shortcut for creating a [KortexList] from a [List].
+extension KortexListExtension<E> on List<E> {
+  /// Creates a reactive [KortexList] copied from this list.
+  KortexList<E> get kortexList => KortexList<E>(this);
+}
