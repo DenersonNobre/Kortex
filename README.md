@@ -2,7 +2,7 @@
 
 Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutter`) for fine-grained signal reactivity, explicit dependency scoping in the widget tree (`KortexScope`), and UI built primarily with `StatelessWidget` (`IKortexPage`).
 
-> **Status**: `v0.1.1` (`[Unpublished]` includes reactive collections `KortexList` & `KortexMap`) — reactive core, scoped dependency injection, and widget layer are implemented and tested.
+> **Status**: `v0.2.0` — reactive core, reactive collections (`KortexList`, `KortexMap`), scoped dependency injection, and widget layer are implemented and tested.
 
 ---
 

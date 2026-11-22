@@ -11,6 +11,8 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ## [Unpublished]
 
+## [0.2.0] - 2026-11-22
+
 ### Fixed
 
 - `KortexScope` no longer leaks its state when a provider's `create` throws during eager creation. The eager creation moved from `initState` to the first `build`, so the scope element mounts normally and is disposed by the framework instead of being left alive.

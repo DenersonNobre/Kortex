@@ -1,6 +1,6 @@
 name: kortex
 description: Fine-grained signal reactivity and explicit widget-tree scoping for Flutter, with zero third-party dependencies.
-version: 0.1.1
+version: 0.2.0
 repository: https://github.com/DenersonNobre/Kortex
 issue_tracker: https://github.com/DenersonNobre/Kortex/issues
 
