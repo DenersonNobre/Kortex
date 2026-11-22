@@ -14,6 +14,7 @@
 | `RN-04` | `Resource` preserva `previousValue` / descarta tardias; `StreamResource` cancela assinatura; `Command` bloqueia reentrância | `refresh()` concorrente / evento de `Stream` / `execute()` com `isExecuting == true` | `Resource` mantém `previousValue` em `Loading` durante `refresh` e ignora resultado antigo; `StreamResource` cancela `StreamSubscription` no `dispose()`; `Command` ignora disparo concorrente | `StateError` se chamado após `dispose()` | `INV-02, RF-04` |
 | `RN-05` | Resolução hierárquica e entre irmãos em `KortexScope` | `readKortex<T>()` / `watchKortex<T>()` ou leitura entre providers irmãos | Instância `T` (com `override` aplicado se houver; inicializa se `lazy`) | `StateError` se `T` ausente ou dependência circular detectada | `INV-03, INV-06, INV-07, RF-06` |
 | `RN-06` | `IKortexPage`, `KortexWatch`, `KortexSelector` e `KortexListener` respeitam ciclo de vida | Mudança de sinal lido/selecionado vs widget desmontado | `IKortexPage` resolve `TController` via `BuildContext`; `Watch` reconstrói (mantendo `child`); `Selector` só reconstrói se seleção mudar; `Listener` avalia `watch` em `initState` e dispara `listener` fora do `build` apenas quando `watch` muda e `mounted == true` | Nenhuma chamada a `setState` ou `listener` após `!mounted` | `INV-04, RF-07` |
+| `RN-07` | Coleções reativas (`KortexList`, `KortexMap`) respeitam no-op, batch e encapsulamento | Mutação no-op (`remove` ausente, `clear()` vazio, `map[k] = mesmoValor`) vs mutação efetiva | No-op não notifica; mutações compostas (`addAll`, `removeWhere`) notificam 1x via `kortexBatch`; `readonly` expõe visão imutável | `StateError` em leitura/escrita após `dispose()` | `INV-01, INV-04, INV-05` |
 
 ---
 
@@ -39,6 +40,8 @@ kortex/
 │       │   ├── kortex_signal.dart
 │       │   ├── kortex_computed.dart
 │       │   ├── kortex_effect.dart
+│       │   ├── kortex_list.dart
+│       │   ├── kortex_map.dart
 │       │   ├── kortex_resource.dart
 │       │   ├── kortex_stream_resource.dart
 │       │   └── kortex_command.dart
@@ -165,6 +168,30 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
 - Construtor: `KortexEffect(KortexEffectCallback effect, {Duration? debounce})`.
 - Helper: `KortexEffect kortexEffect(KortexEffectCallback effect, {Duration? debounce})`.
 - Executa na criação sob `KortexTracker.runWithObserver`, suporta `onCleanup`, `debounce` via `Timer` (`dart:async`) e `dispose()` explícito; mantém guarda `_isRunning` para ignorar auto-notificações disparadas durante sua própria execução síncrona.
+
+#### `IKortexReadonlyList<E>` e `KortexList<E>` (`kortex_list.dart`)
+
+- `abstract interface class IKortexReadonlyList<E> implements IKortexReadonlySignal<List<E>>`:
+  - Expõe `List<E> get value` e `List<E> peek()` retornando `UnmodifiableListView<E>` (impede mutação externa pela UI).
+  - Expõe leituras rastreadas (`int get length`, `bool get isEmpty`, `bool get isNotEmpty`, `E operator [](int index)`).
+- `class KortexList<E> extends ListBase<E> implements IKortexReadonlyList<E>`:
+  - Construtor: `KortexList([Iterable<E> initial = const []])` e helper `KortexList<E> kortexList<E>([Iterable<E> initial = const []])`.
+  - Expõe `IKortexReadonlyList<E> get readonly`.
+  - No-op em `clear()` com lista vazia, `remove()` de item ausente e `this[i] = v` quando `this[i] == v`.
+  - Operações em lote (`addAll`, `insertAll`, `removeWhere`, `retainWhere`, `sort`, `replaceAll`) executam sob `kortexBatch` para notificar uma única vez.
+  - Leitura/escrita após `dispose()` lança `StateError` (`INV-01`).
+
+#### `IKortexReadonlyMap<K, V>` e `KortexMap<K, V>` (`kortex_map.dart`)
+
+- `abstract interface class IKortexReadonlyMap<K, V> implements IKortexReadonlySignal<Map<K, V>>`:
+  - Expõe `Map<K, V> get value` e `Map<K, V> peek()` retornando `UnmodifiableMapView<K, V>` (impede mutação externa pela UI).
+  - Expõe leituras rastreadas (`int get length`, `bool get isEmpty`, `bool get isNotEmpty`, `bool containsKey(Object? key)`, `V? operator [](Object? key)`).
+- `class KortexMap<K, V> extends MapBase<K, V> implements IKortexReadonlyMap<K, V>`:
+  - Construtor: `KortexMap([Map<K, V>? initial])` e helper `KortexMap<K, V> kortexMap<K, V>([Map<K, V>? initial])`.
+  - Expõe `IKortexReadonlyMap<K, V> get readonly`.
+  - No-op em `this[k] = v` quando `containsKey(k) && this[k] == v`, `remove(k)` de chave ausente e `clear()` com mapa vazio.
+  - Operações em lote (`addAll`, `addEntries`, `removeWhere`, `updateAll`, `replaceAll`) executam sob `kortexBatch` para notificar uma única vez.
+  - Leitura/escrita após `dispose()` lança `StateError` (`INV-01`).
 
 #### `IKortexAsyncState<T>` e `KortexResource<T>` (`kortex_resource.dart`)
 
