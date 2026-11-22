@@ -7,7 +7,7 @@
 - **Antes de qualquer trabalho**: leia `CHECKPOINT.md` e `docs/architecture/SPEC.md` (e `docs/plan/state/UC-CURRENT.md` quando existir).
 - **Zero dependências externas**: `pubspec.yaml` aceita exclusivamente `flutter` (`sdk: flutter`) em `dependencies`; nunca adicione pacotes de terceiros.
 - **Pureza da camada reativa (`INV-05`)**: `lib/src/reactive/` é Dart puro; nunca importe `package:flutter/widgets.dart` nem use `BuildContext` nessa pasta.
-- **Anti-GetX (`INV-06`)**: nunca crie Service Locator global (`put`/`find`), EventBus global, roteador próprio, helpers sem `BuildContext` ou `onInit` mágico.
+- **Escopo explícito (`INV-06`)**: nunca crie Service Locator global (`put`/`find`), EventBus global, roteador próprio, helpers sem `BuildContext` ou `onInit` mágico.
 - **Bloqueio pós-dispose e respostas tardias (`INV-01`/`INV-02`)**: lance `StateError` em acesso pós-`dispose()`; descarte silenciosamente resultados assíncronos superados por `refresh()`/`dispose()`.
 
 ## 2. Comandos Essenciais

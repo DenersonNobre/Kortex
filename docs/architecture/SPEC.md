@@ -20,7 +20,7 @@
 
 ## 1. Visão Geral & Bounded Context
 
-- **Propósito do Sistema**: Fornecer primitivas reativas granulares e contratos de arquitetura em Dart puro (`reactive/`), provisão escopada com ciclo de vida determinístico atrelado à árvore de widgets (`scope/`) e widgets reativos `StatelessWidget`-first (`widgets/`), sem dependências externas e sem as armadilhas de estado global do GetX.
+- **Propósito do Sistema**: Fornecer primitivas reativas granulares e contratos de arquitetura em Dart puro (`reactive/`), provisão escopada com ciclo de vida determinístico atrelado à árvore de widgets (`scope/`) e widgets reativos `StatelessWidget`-first (`widgets/`), sem dependências externas e sem estado global implícito.
 - **Fronteiras & Limites**:
   - **DENTRO do escopo**: `KortexSignal<T>`, `IKortexReadonlySignal<T>`, `KortexComputed<T>`, `KortexEffect`, `kortexBatch`, `kortexUntracked`, `KortexResource<T>`, `KortexStreamResource<T>`, `IKortexAsyncState<T>`, `KortexCommand<TParam, TResult>`, `IKortexDisposable`, `KortexDisposeBag`, `IKortexController`, `KortexProvider<T>`, `KortexScope`, extensões de `BuildContext`, `IKortexPage<TController>`, `KortexWatch`, `KortexSelector<T>`, `KortexListener`, `KortexResourceBuilder<T>` e pontes `Listenable`.
   - **FORA do escopo**: Service Locator global, EventBus global, roteador próprio, helpers sem `BuildContext` (`dialog`/`snackbar`/`theme`), HTTP, persistência, i18n, logger global estático, abstrações cerimoniais de `Repository`/`DataSource` e code generation.
@@ -104,7 +104,7 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
 - **INV-03 (Falha Explícita em Escopo Ausente)**: `readKortex<T>()` e `watchKortex<T>()` devem lançar `StateError` indicando o tipo `T` ausente na árvore ancestral.
 - **INV-04 (Limpeza Determinística de Assinaturas)**: Todo observador (`KortexComputed`, `KortexEffect`, `KortexWatch`, `KortexSelector`, `KortexListener`) deve limpar vínculos antigos antes de reavaliar dependências e no próprio `dispose()`.
 - **INV-05 (Pureza da Camada Reativa)**: Nenhum arquivo em `lib/src/reactive/` pode importar `package:flutter/widgets.dart` ou depender de `BuildContext`.
-- **INV-06 (Anti-GetX — Zero Estado Global / Zero Mágica)**: Nenhuma resolução ocorre fora de `KortexScope` + `BuildContext`; nenhum `dispose` automático ocorre por reflexão ou convenção implícita (apenas callback explícito ou contrato tipado `IKortexDisposable`).
+- **INV-06 (Zero Estado Global / Zero Mágica)**: Nenhuma resolução ocorre fora de `KortexScope` + `BuildContext`; nenhum `dispose` automático ocorre por reflexão ou convenção implícita (apenas callback explícito ou contrato tipado `IKortexDisposable`).
 - **INV-07 (Detecção de Dependência Circular)**: Se um `KortexProvider<A>` depender de `B` e `B` depender de `A` no mesmo `KortexScope`, a inicialização deve falhar imediatamente com `StateError` descritivo (em vez de `StackOverflowError`).
 - **INV-08 (Convenção `I-`)**: Toda interface, classe abstrata ou `sealed` pública do pacote inicia com prefixo `I`.
 
@@ -236,7 +236,7 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
 #### `KortexScope` (`kortex_scope.dart`)
 
 - `StatefulWidget` recebendo `providers`, `overrides = const []` e `child`.
-- **Resolução entre irmãos + Detecção de Ciclo (`INV-07`)**, suporte a **`lazy`**, **`KortexScope.capture({required BuildContext context, required Widget child})`** (para `showDialog` / `showModalBottomSheet` no `Overlay`), compatibilidade nativa com `Navigator` e `ShellRoute` (`go_router`), preservação das instâncias entre rebuilds do widget pai (usando `Key` quando reinicialização explícita for desejada) e `resolveKortexDependency<T>(BuildContext context, {required bool listen})`.
+- **Resolução entre irmãos + Detecção de Ciclo (`INV-07`)**, suporte a **`lazy`**, **`KortexScope.capture({required BuildContext context, required Widget child})`** (para `showDialog` / `showModalBottomSheet` no `Overlay`), compatibilidade nativa com `Navigator` e rotas em shell, preservação das instâncias entre rebuilds do widget pai (usando `Key` quando reinicialização explícita for desejada) e `resolveKortexDependency<T>(BuildContext context, {required bool listen})`.
 
 #### `KortexContextExtensions` (`kortex_context_extensions.dart`)
 
@@ -252,7 +252,7 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
   - `TController controllerOf(BuildContext context) => context.readKortex<TController>();`
   - `Widget buildPage(BuildContext context, TController controller);`
   - `@override Widget build(BuildContext context) => buildPage(context, controllerOf(context));`
-- Permite que telas sejam escritas prioritariamente como `StatelessWidget` sem Service Locator global (`GetView`), mantendo resolução estrita via `BuildContext` e `KortexScope`.
+- Permite que telas sejam escritas prioritariamente como `StatelessWidget` sem Service Locator global, mantendo resolução estrita via `BuildContext` e `KortexScope`.
 
 #### `KortexWatch` (`kortex_watch.dart`)
 
@@ -280,7 +280,7 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
 
 - Extensão em `ValueListenable<T>`: `KortexListenableSignal<T> toKortexSignal()` (implementa `IKortexReadonlySignal<T>` e `IKortexDisposable`; seu `dispose()` apenas remove o listener, preservando a posse e o ciclo de vida do `ValueListenable<T>` original).
 - Extensão em `Listenable` (cobrindo `ChangeNotifier`, `ScrollController`, `TabController`, etc.): `KortexListenableSignal<T> toKortexSignalWith<T>(T Function() read)` (nome distinto para evitar conflito de extensão com `ValueListenable<T>`; lê `read()` a cada notificação e remove o listener no `dispose()` sem descartar o `Listenable` original).
-- Extensão em `IKortexReadonlySignal<T>`: `KortexSignalListenable toListenable()` (implementa `Listenable` e `IKortexDisposable`), ideal para `refreshListenable` do `go_router`.
+- Extensão em `IKortexReadonlySignal<T>`: `KortexSignalListenable toListenable()` (implementa `Listenable` e `IKortexDisposable`), ideal para `refreshListenable` de roteadores declarativos.
 
 ### 4.4 Typedefs e Extensions Ergonômicos
 

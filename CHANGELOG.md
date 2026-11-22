@@ -57,4 +57,4 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 - `KortexListener` (separate `watch`, `fireImmediately`, post-frame deferral), `KortexResourceBuilder` (exhaustive `switch`) and `Listenable`/`ValueListenable`/`toListenable` bridges (`UC-04.02`).
 - Public barrel `lib/kortex.dart` (hides `KortexTracker`) and the `example/` app with `CounterPage`, sibling `KortexScope` and smoke test (`UC-04.03`).
 - Initial Flutter package skeleton for `kortex` (`pubspec.yaml`, `analysis_options.yaml`, `lib/kortex.dart`).
-- Product and architecture documentation for `v0.1.0` in `docs/product/PRD.md` and `docs/architecture/SPEC.md` (pure-Dart reactivity, `KortexScope`, `StatelessWidget`-first `IKortexPage`, `Stream`/`ValueListenable`/`Listenable` bridges, Anti-GetX guardrails and the `I-` naming convention).
+- Product and architecture documentation for `v0.1.0` in `docs/product/PRD.md` and `docs/architecture/SPEC.md` (pure-Dart reactivity, `KortexScope`, `StatelessWidget`-first `IKortexPage`, `Stream`/`ValueListenable`/`Listenable` bridges, explicit-scope guardrails and the `I-` naming convention).

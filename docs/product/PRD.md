@@ -12,7 +12,7 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 
 ### 1.1 Declaração do Problema (Problem Statement)
 
-- **Cenário Atual**: Aplicações Flutter frequentemente oscilam entre frameworks monolíticos "tudo-em-um" (como GetX, com Service Locator global, navegação sem `BuildContext` e estado mutável exposto sem fronteira) ou pilhas fragmentadas de múltiplos pacotes acoplados.
+- **Cenário Atual**: Aplicações Flutter frequentemente oscilam entre frameworks monolíticos "tudo-em-um" (com Service Locator global, navegação sem `BuildContext` e estado mutável exposto sem fronteira) ou pilhas fragmentadas de múltiplos pacotes acoplados.
 - **Pontos de Fricção (Pain Points)**:
   - *Fricção 1*: Conflitos de versão no `pubspec.yaml` e lock-in de pacotes externos de terceiros.
   - *Fricção 2*: Service Locator global estático (`put`/`find` sem contexto) e ciclo de vida "mágico" dificultam testes isolados e favorecem vazamento de estado entre telas e fluxos.
@@ -21,11 +21,11 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 ### 1.2 Proposta de Valor & Diferencial Competitivo
 
 - **Para**: Desenvolvedores Flutter e equipes construindo aplicações modulares / por feature.
-- **Que buscam**: Reatividade granular completa, encapsulamento de estado, UI prioritariamente `StatelessWidget`, escopo explícito na árvore de widgets e segurança assíncrona — sem cair nas armadilhas do GetX.
+- **Que buscam**: Reatividade granular completa, encapsulamento de estado, UI prioritariamente `StatelessWidget`, escopo explícito na árvore de widgets e segurança assíncrona — sem estado global implícito nem acoplamento monolítico.
 - **O Kortex é**: Uma biblioteca Dart/Flutter minimalista de reatividade por sinais e escopo de dependências vinculado à árvore de widgets.
 - **Que entrega**:
   - **Zero dependências de terceiros**: elimina conflitos de versão no `pubspec.yaml` e lock-in de pacotes externos.
-  - **Anti-GetX por construção**: zero Service Locator global, zero `BuildContext` implícito, zero classe base mágica de controller e zero acoplamento a roteador/HTTP/storage.
+  - **Escopo explícito por construção**: zero Service Locator global, zero `BuildContext` implícito, zero classe base mágica de controller e zero acoplamento a roteador/HTTP/storage.
   - **UI prioritariamente `StatelessWidget`**: `IKortexPage<TController>` + `KortexWatch` / `KortexSelector` / `KortexListener` eliminam a necessidade de `StatefulWidget` na maior parte das telas.
   - **Escopo explícito e testável**: dependências (controllers, serviços, repositories e datasources) resolvidas na árvore via `BuildContext` com `overrides` fáceis para testes de widget e `dispose` determinístico.
   - **Encapsulamento real**: `IKortexReadonlySignal<T>` permite que controllers exponham leitura reativa sem expor mutação para a UI.
@@ -81,7 +81,7 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 - **Widgets de UI (`StatelessWidget`-first) e Ponte com SDK Flutter (`widgets/`)**:
   - `IKortexPage<TController extends IKortexController>` (`StatelessWidget` com resolução explícita via `BuildContext`).
   - `KortexWatch` (com `child` estático opcional), `KortexSelector<T>`, `KortexListener` e `KortexResourceBuilder<T>`.
-  - Pontes bidirecionais com `Listenable` do Flutter e `Stream`: `toKortexSignal()` em `ValueListenable<T>` (`TextEditingController`, `ValueNotifier`), `toKortexSignalWith<T>(read)` em `Listenable` (`ChangeNotifier`, `ScrollController`), `toListenable()` e `toStream()` em `IKortexReadonlySignal<T>` (para `refreshListenable` do `go_router` e consumidores de `Stream<T>`), sem violar a pureza de `reactive/`.
+  - Pontes bidirecionais com `Listenable` do Flutter e `Stream`: `toKortexSignal()` em `ValueListenable<T>` (`TextEditingController`, `ValueNotifier`), `toKortexSignalWith<T>(read)` em `Listenable` (`ChangeNotifier`, `ScrollController`), `toListenable()` e `toStream()` em `IKortexReadonlySignal<T>` (para `refreshListenable` de roteadores declarativos e consumidores de `Stream<T>`), sem violar a pureza de `reactive/`.
 - **Ergonomia por Typedefs e Extensions**:
   - `typedef`s semânticos para assinaturas de callbacks (`KortexEquals<T>`, `KortexUpdater<T>`, `KortexCreate<T>`, `KortexWatchBuilder`, etc.) e `extension`s fluentes (`addTo(bag)`, `toggle()`, `increment()`, `decrement()`, `toKortexSignal()`, `toListenable()`) mantendo uma única forma idiomática (`.value` e `switch` nativo do Dart 3) sem mágica global.
 - **Qualidade & Exemplo**:
@@ -95,11 +95,11 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 - **RF-04 (Recurso, Stream e Comando Assíncronos)**: Gerenciar fluxos de leitura em `KortexResource<T>` (`loading` com `previousValue` opcional durante `refresh()`, `data`, `error`) descartando respostas superadas por `refresh()` ou `dispose()`; suportar streams em `KortexStreamResource<T>` com cancelamento automático de `StreamSubscription` no `dispose()`; gerenciar ações/mutações em `KortexCommand<TParam, TResult>` com `isExecuting`, trava contra reentrância/duplo disparo e estado reativo seguro pós-`dispose`.
 - **RF-05 (Descarte Composto e Controllers)**: Fornecer `IKortexDisposable`, `KortexDisposeBag` e `IKortexController` (sem `onInit` mágico — inicialização no construtor) para agrupar e descartar múltiplas primitivas reativas de forma determinística. Repositories, datasources e serviços do app são registrados diretamente no `KortexScope` e implementam `IKortexDisposable` apenas quando precisam liberar recursos.
 - **RF-06 (Escopo, Lazy, Irmãos, Capture e Overrides)**: Instanciar dependências registradas no `KortexScope` (eager ou `lazy`), suportar `KortexProvider.value` sem posse de ciclo de vida, resolver dependências entre providers do mesmo escopo com detecção explícita de ciclo, capturar escopos ancestrais para `Overlay`/`showDialog`/`showModalBottomSheet` via `KortexScope.capture`, suportar `overrides` para testes e executar `dispose` ao desmontar ou atualizar o escopo.
-- **RF-07 (UI Stateless-First, Seleção, Efeitos e Ponte SDK)**: Permitir páginas `StatelessWidget` via `IKortexPage<TController>` usando `BuildContext`; reconstruir apenas o `KortexWatch` (preservando `child` estático) ou `KortexSelector<T>` afetado; executar efeitos imperativos com `BuildContext` real fora da fase de `build` via `KortexListener` (inclusive para navegação); renderizar `IKortexAsyncState<T>` exaustivamente via `KortexResourceBuilder<T>`; e fornecer pontes `toKortexSignal()` / `toListenable()` para integração com `ValueListenable<T>` e `refreshListenable` de roteadores como `go_router`.
+- **RF-07 (UI Stateless-First, Seleção, Efeitos e Ponte SDK)**: Permitir páginas `StatelessWidget` via `IKortexPage<TController>` usando `BuildContext`; reconstruir apenas o `KortexWatch` (preservando `child` estático) ou `KortexSelector<T>` afetado; executar efeitos imperativos com `BuildContext` real fora da fase de `build` via `KortexListener` (inclusive para navegação); renderizar `IKortexAsyncState<T>` exaustivamente via `KortexResourceBuilder<T>`; e fornecer pontes `toKortexSignal()` / `toListenable()` para integração com `ValueListenable<T>` e `refreshListenable` de roteadores declarativos.
 
 ---
 
-## 4. Requisitos Não Funcionais (RNF) & Restrições Anti-GetX
+## 4. Requisitos Não Funcionais (RNF) & Restrições de Isolamento
 
 - **RNF-01 (Zero Dependências Externas)**: `pubspec.yaml` contém apenas `flutter` (`sdk: flutter`) em `dependencies`.
 - **RNF-02 (Pureza da Camada Reativa)**: `lib/src/reactive/` não importa `package:flutter/widgets.dart` nem depende de `BuildContext`.
@@ -111,12 +111,12 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 
 ## 5. Limites do Produto & Fora de Escopo (Explicit Non-Goals)
 
-Para assegurar previsibilidade, minimalismo e proteção contra o inchaço do GetX, os seguintes itens estão **expressamente fora do escopo**:
+Para assegurar previsibilidade, minimalismo e isolamento explícito na árvore de widgets, os seguintes itens estão **expressamente fora do escopo**:
 
 1. **Service Locator global estático** (`Kortex.put` / `Kortex.find` sem `BuildContext`/escopo).
 2. **EventBus global** (`emit` / `on`).
-3. **Roteador próprio ou abstração de navegação** (funciona com `Navigator`, `go_router`, etc.).
-4. **Helpers sem `BuildContext`** para diálogos, snackbars, temas ou mídia (`Get.dialog`, `Get.snackbar`, `Get.theme`).
+3. **Roteador próprio ou abstração de navegação** (funciona com `Navigator` ou qualquer roteador declarativo externo).
+4. **Helpers sem `BuildContext`** para diálogos, snackbars, temas ou mídia.
 5. **Cliente HTTP, persistência local, serialização JSON, i18n, logger global estático ou abstrações cerimoniais de `Repository`/`DataSource`**.
 6. **Code generation (`build_runner`) ou CLI (`kortex_cli`)**.
 

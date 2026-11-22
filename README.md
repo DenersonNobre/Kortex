@@ -9,7 +9,7 @@ Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutt
 ## Why Kortex?
 
 - **Zero third-party dependencies**: only `flutter` (`sdk: flutter`) in `dependencies`.
-- **Anti-GetX by construction**: no global Service Locator (`put`/`find`), no global `EventBus`, no custom router, no context-free helpers, no magic `onInit`.
+- **Explicit & scoped by construction**: no global Service Locator (`put`/`find`), no global `EventBus`, no custom router, no context-free helpers, no magic `onInit`.
 - **Real encapsulation**: `IKortexReadonlySignal<T>` exposes reactive reads to the UI while `KortexSignal<T>` stays private inside the controller.
 - **`StatelessWidget`-first UI**: `IKortexPage<TController>`, `KortexWatch`, `KortexSelector<T>`, `KortexListener<T>` and `KortexResourceBuilder<T>` encapsulate their `StatefulWidget`s internally.
 - **Deterministic lifecycle**: instances registered in `KortexScope` are disposed in reverse order when the subtree unmounts.

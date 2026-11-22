@@ -6,7 +6,7 @@
 | --- | --- |
 | **Identificador** | `EPIC03` |
 | **Dependências Diretas** | `EPIC01` |
-| **Prioridade** | Crítica (Injeção Escopada & Anti-GetX) |
+| **Prioridade** | Crítica (Injeção Escopada & Isolamento Explícito) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
 | **Status Atual** | `Concluído` |
 | **Referência da SPEC** | [SPEC.md](../../architecture/SPEC.md) |
