@@ -70,7 +70,7 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 ### 3.1 Escopo Incluído
 
 - **Núcleo Reativo e Contratos em Dart puro (`reactive/`)**:
-  - Primitivas de estado e derivação: `KortexSignal<T>`, `IKortexReadonlySignal<T>`, `KortexComputed<T>`.
+  - Primitivas de estado e derivação: `KortexSignal<T>`, `IKortexReadonlySignal<T>`, `KortexComputed<T>`, `KortexList<E>` (`IKortexReadonlyList<E>`) e `KortexMap<K, V>` (`IKortexReadonlyMap<K, V>`).
   - Efeitos, transações e leitura não rastreada: `KortexEffect` (com `debounce` opcional via `dart:async`), `kortexBatch`, `kortexUntracked` (e `peek()`).
   - Assincronia para leitura e escrita: `KortexResource<T>` (com preservação de `previousValue` durante `refresh()`), `KortexStreamResource<T>` (ponte para `Stream<T>` com cancelamento automático), `IKortexAsyncState<T>` e `KortexCommand<TParam, TResult>`.
   - Ciclo de vida e controllers: `IKortexDisposable`, `KortexDisposeBag` e `IKortexController` (inicialização no construtor e descarte via `disposeBag`/`onDispose`).
@@ -89,7 +89,7 @@ Kortex é um pacote Dart/Flutter minimalista e de zero dependências externas (`
 
 ### 3.2 Requisitos Funcionais (RF)
 
-- **RF-01 (Sinal Mutável e Visão Somente-Leitura)**: Permitir leitura, escrita, atualização condicional (`update`), igualdade customizada (`equals`) e leitura sem assinatura (`peek()`); expor visão `IKortexReadonlySignal<T>` para encapsulamento; notificar observadores apenas quando houver mudança; bloquear acesso/mutação após `dispose()`.
+- **RF-01 (Sinal Mutável, Coleções Reativas e Visão Somente-Leitura)**: Permitir leitura, escrita, atualização condicional (`update`), igualdade customizada (`equals`) e leitura sem assinatura (`peek()`); fornecer coleções reativas (`KortexList<E>`, `KortexMap<K, V>`) com no-op, consolidação em lote e visão somente-leitura (`IKortexReadonlySignal<T>`, `IKortexReadonlyList<E>`, `IKortexReadonlyMap<K, V>`) para encapsulamento; notificar observadores apenas quando houver mudança; bloquear acesso/mutação após `dispose()`.
 - **RF-02 (Valor Computado)**: Derivar valores de forma preguiçosa (`lazy`) com cache, implementando `IKortexReadonlySignal<T>`; recalcular apenas quando dependências mudarem e liberar assinaturas no `dispose()`.
 - **RF-03 (Efeito, Lote Transacional e Leitura Não Rastreada)**: Permitir execução de efeitos colaterais em Dart puro via `KortexEffect` com callback de limpeza (`onCleanup`), `debounce` opcional e `dispose()` explícito; agrupar múltiplas mutações sem glitches via `kortexBatch`; permitir leituras sem registro de dependência via `kortexUntracked`.
 - **RF-04 (Recurso, Stream e Comando Assíncronos)**: Gerenciar fluxos de leitura em `KortexResource<T>` (`loading` com `previousValue` opcional durante `refresh()`, `data`, `error`) descartando respostas superadas por `refresh()` ou `dispose()`; suportar streams em `KortexStreamResource<T>` com cancelamento automático de `StreamSubscription` no `dispose()`; gerenciar ações/mutações em `KortexCommand<TParam, TResult>` com `isExecuting`, trava contra reentrância/duplo disparo e estado reativo seguro pós-`dispose`.
