@@ -60,6 +60,17 @@ KortexScope(
 
 ---
 
+## Recommended Linting
+
+To catch missing `autoDispose(...)` registrations and reactive primitives created inside `build()`, enable [`kortex_lint`](https://pub.dev/packages/kortex_lint) in your `analysis_options.yaml`:
+
+```yaml
+plugins:
+  kortex_lint: ^0.1.1
+```
+
+---
+
 ## Roadmap
 
 Planned improvements that preserve Kortex's core constraints (zero third-party dependencies, pure-Dart reactivity, and explicit widget-tree scoping):
@@ -73,7 +84,7 @@ Planned improvements that preserve Kortex's core constraints (zero third-party d
   - Opt-in scope lifecycle hook for debug inspection (without global singletons).
   - Native `dart:developer` service extensions for Flutter DevTools inspection.
 - **Separate companion packages** (keeping `kortex` dependency-free):
-  - Optional static-analysis lints (e.g. detecting signals created without `autoDispose`) and optional signal persistence adapters.
+  - Optional signal persistence adapters (static-analysis lints are now available via [`kortex_lint`](https://pub.dev/packages/kortex_lint)).
 
 ---
 

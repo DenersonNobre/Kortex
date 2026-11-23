@@ -9,6 +9,9 @@ saving with a double-trigger lock, using only the public API
 The richer proof of concept used during development (full VSA layout, two
 aggregates, `Result`, use-case facade) lives in [`../poc/`](../poc/README.md).
 
+For static analysis guardrails (detecting missing `autoDispose` or signals
+created inside `build()`), see [`kortex_lint`](https://pub.dev/packages/kortex_lint).
+
 ```sh
 flutter pub get
 flutter analyze
