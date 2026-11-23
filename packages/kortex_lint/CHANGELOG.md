@@ -1,5 +1,11 @@
 # Changelog — kortex_lint
 
+## [0.1.1] - 2026-11-22
+
+### Added
+
+- Added `example/` demonstrating `kortex_lint` configuration and compliant Kortex usage.
+
 ## [0.1.0] - 2026-11-22
 
 ### Added

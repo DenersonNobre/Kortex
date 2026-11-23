@@ -1,0 +1,16 @@
+name: kortex_lint_example
+description: Example demonstrating kortex_lint rules.
+publish_to: none
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kortex:
+    path: ../../kortex_state
+
+dev_dependencies:
+  kortex_lint:
+    path: ../
