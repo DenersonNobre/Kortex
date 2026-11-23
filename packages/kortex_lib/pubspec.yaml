@@ -1,6 +1,6 @@
 name: kortex_lib
 description: "Utility toolkit for Kortex apps: Brazilian validators/formatters, core patterns, REST and SQLite helpers, and reusable widgets."
-version: 0.1.0
+version: 0.1.1
 repository: https://github.com/DenersonNobre/Kortex
 issue_tracker: https://github.com/DenersonNobre/Kortex/issues
 topics:

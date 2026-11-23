@@ -8,4 +8,10 @@ class PhoneBrValidator {
     final digits = normalize(source, allowLetters: false);
     return digits != null && (digits.length == 10 || digits.length == 11);
   }
+
+  /// Retorna `null` quando válido ou [message] quando inválido.
+  static String? validate(
+    String? source, [
+    String message = 'Telefone inválido',
+  ]) => hasValidShape(source) ? null : message;
 }

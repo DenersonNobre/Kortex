@@ -34,4 +34,8 @@ class UfValidator {
 
   static bool isValid(String? source) =>
       source != null && _ufs.contains(source.trim().toUpperCase());
+
+  /// Retorna `null` quando válido ou [message] quando inválido.
+  static String? validate(String? source, [String message = 'UF inválida']) =>
+      isValid(source) ? null : message;
 }

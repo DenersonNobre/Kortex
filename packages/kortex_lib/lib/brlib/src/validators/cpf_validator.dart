@@ -18,4 +18,8 @@ class CpfValidator {
     final second = cpfDigit(digits.substring(0, 10));
     return second == int.parse(digits[10]);
   }
+
+  /// Retorna `null` quando válido ou [message] quando inválido (compatível com `KortexField` e `TextFormField`).
+  static String? validate(String? source, [String message = 'CPF inválido']) =>
+      isValid(source) ? null : message;
 }

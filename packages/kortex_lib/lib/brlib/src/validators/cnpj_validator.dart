@@ -37,4 +37,8 @@ class CnpjValidator {
 
   // A especificação da Receita Federal usa o código ASCII menos 48.
   static int _cnpjValue(int codeUnit) => codeUnit - 48;
+
+  /// Retorna `null` quando válido ou [message] quando inválido.
+  static String? validate(String? source, [String message = 'CNPJ inválido']) =>
+      isValid(source) ? null : message;
 }
