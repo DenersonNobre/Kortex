@@ -11,6 +11,12 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ## [Unpublished]
 
+## [0.2.2] - 2026-11-22
+
+### Changed
+
+- Updated `README.md` and `example/README.md` to recommend [`kortex_lint`](https://pub.dev/packages/kortex_lint) for static analysis guardrails.
+
 ## [0.2.1] - 2026-11-22
 
 ### Added
