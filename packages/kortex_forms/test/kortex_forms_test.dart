@@ -106,6 +106,41 @@ void main() {
       expect(tagsRule([]), 'Select at least one item');
       expect(tagsRule(['a', 'b']), isNull);
       expect(tagsRule(['a', 'b', 'c']), 'Select at most 2 items');
+
+      final alphaRule = kortexValidator<String>().alphanumeric().build();
+      expect(alphaRule('abc123'), isNull);
+      expect(alphaRule('abc-123'), 'Must be alphanumeric');
+
+      final numRule = kortexValidator<num>().min(5).max(10).positive().build();
+      expect(numRule(4), 'Must be at least 5');
+      expect(numRule(11), 'Must be at most 10');
+      expect(numRule(7), isNull);
+    });
+
+    test('supports conditional when() and nullable notNull() rules', () {
+      var requireTaxId = false;
+      final taxIdRule = kortexValidator<String>()
+          .when(() => requireTaxId, (r) => r.required().exactLength(11))
+          .build();
+
+      expect(taxIdRule(''), isNull);
+      requireTaxId = true;
+      expect(taxIdRule(''), 'Required field');
+      expect(taxIdRule('123'), 'Must be 11 characters');
+      expect(taxIdRule('12345678901'), isNull);
+
+      final dateField = kortexField<DateTime?>(
+        null,
+        validators: [
+          kortexValidator<DateTime?>().notNull('Pick a date').build(),
+        ],
+      );
+      expect(dateField.validate(), isFalse);
+      expect(dateField.error.value, 'Pick a date');
+
+      dateField.value = DateTime(2026, 11, 23);
+      expect(dateField.isValid, isTrue);
+      dateField.dispose();
     });
   });
 }

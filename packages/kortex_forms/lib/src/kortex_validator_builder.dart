@@ -19,6 +19,18 @@ class KortexValidatorBuilder<T> {
     return this;
   }
 
+  /// Applies rules built by [configure] only when [condition] returns `true`.
+  KortexValidatorBuilder<T> when(
+    bool Function() condition,
+    void Function(KortexValidatorBuilder<T> rules) configure,
+  ) {
+    final nested = KortexValidatorBuilder<T>();
+    configure(nested);
+    final compiled = nested.build();
+    _rules.add((value) => condition() ? compiled(value) : null);
+    return this;
+  }
+
   /// Builds a single [KortexValidator] running all rules in registration order.
   KortexValidator<T> build() {
     final snapshot = List<KortexValidator<T>>.unmodifiable(_rules);
@@ -127,6 +139,14 @@ extension KortexIterableValidatorBuilder<E, T extends Iterable<E>>
   /// Fails when `value.length > max`.
   KortexValidatorBuilder<T> maxItems(int max, [String? message]) =>
       must((v) => v.length <= max, message ?? 'Select at most $max items');
+}
+
+/// Nullable fluent validation helpers for [KortexValidatorBuilder].
+extension KortexNullableValidatorBuilder<E extends Object>
+    on KortexValidatorBuilder<E?> {
+  /// Fails when `value == null`.
+  KortexValidatorBuilder<E?> notNull([String message = 'Required field']) =>
+      must((v) => v != null, message);
 }
 
 /// Creates a fluent [KortexValidatorBuilder] for type [T].
