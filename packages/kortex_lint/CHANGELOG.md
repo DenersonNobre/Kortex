@@ -1,5 +1,11 @@
 # Changelog — kortex_lint
 
+## [0.1.2] - 2026-11-23
+
+### Changed
+
+- Added pub.dev `topics` metadata and didactic `BAD` vs `GOOD` examples.
+
 ## [0.1.1] - 2026-11-22
 
 ### Added

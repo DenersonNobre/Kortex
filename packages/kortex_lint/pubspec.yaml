@@ -1,6 +1,6 @@
 name: kortex_lint
 description: Static analysis lints for Kortex (detecting undisposed signals/controllers and reactive anti-patterns).
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/DenersonNobre/Kortex
 issue_tracker: https://github.com/DenersonNobre/Kortex/issues
 topics:

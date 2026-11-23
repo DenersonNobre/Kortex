@@ -11,6 +11,12 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ## [Unpublished]
 
+## [0.2.3] - 2026-11-23
+
+### Changed
+
+- Added pub.dev `topics` metadata for package discovery.
+
 ## [0.2.2] - 2026-11-22
 
 ### Changed
