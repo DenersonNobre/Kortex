@@ -56,5 +56,24 @@ void main() {
       form.dispose();
       expect(() => name.value, throwsStateError);
     });
+
+    test('kortexValidator builds reusable fluent validators', () {
+      final validateEmail = kortexValidator<String>()
+          .required('Email required')
+          .email('Invalid email')
+          .build();
+
+      expect(validateEmail(''), 'Email required');
+      expect(validateEmail('abc'), 'Invalid email');
+      expect(validateEmail('dev@bonusoft.com.br'), isNull);
+
+      final field = kortexField<String>('', validators: [validateEmail]);
+      expect(field.validate(), isFalse);
+      expect(field.error.value, 'Email required');
+
+      field.value = 'dev@bonusoft.com.br';
+      expect(field.isValid, isTrue);
+      field.dispose();
+    });
   });
 }

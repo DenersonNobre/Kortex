@@ -1,5 +1,11 @@
 # Changelog — kortex_forms
 
+## [0.1.1] - 2026-11-23
+
+### Added
+
+- `KortexValidatorBuilder<T>` / `kortexValidator<T>()` with fluent string rules (`required`, `minLength`, `maxLength`, `email`, `pattern`, `must`, `use`, `build`).
+
 ## [0.1.0] - 2026-11-23
 
 ### Added
