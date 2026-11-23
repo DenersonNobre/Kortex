@@ -1,0 +1,20 @@
+# Build/cache/IDE artifacts (repeat here because .pubignore overrides .gitignore)
+.dart_tool/
+build/
+.idea/
+*.iml
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+*.log
+
+# Internal docs and governance (not for pub.dev package archive)
+docs/
+AGENTS.md
+CHECKPOINT.md
+LEARNINGS.md
+.vscode/
+.gitattributes
+example/windows/
+test/

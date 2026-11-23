@@ -1,9 +1,9 @@
 library;
 
-/// Módulo base da biblioteca dnolib.
+/// Base module of kortex_lib.
 ///
-/// Este pacote deve manter abstrações, utilitários e padrões que sejam
-/// neutros e reutilizáveis por qualquer projeto Flutter/Dart.
+/// This package provides abstractions, utilities, and patterns that are
+/// neutral and reusable across Flutter/Dart projects.
 
 export 'helpers/key_value.dart';
 export 'helpers/loading_state.dart';
