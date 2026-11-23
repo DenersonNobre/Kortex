@@ -36,7 +36,7 @@ class CounterController extends IKortexController {
   final _count = 0.kortex;
 
   /// Read-only reactive view exposed to the UI.
-  IKortexReadonlySignal<int> get count => _count.readonly;
+  IKortex<int> get count => _count.readonly;
 
   /// Cached derived state indicating whether [count] is even.
   late final KortexComputed<bool> isEven;

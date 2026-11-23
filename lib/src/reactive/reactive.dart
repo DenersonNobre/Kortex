@@ -17,5 +17,6 @@ export 'kortex_list.dart';
 export 'kortex_map.dart';
 export 'kortex_observer.dart';
 export 'kortex_resource.dart';
+export 'kortex_set.dart';
 export 'kortex_signal.dart';
 export 'kortex_stream_resource.dart';

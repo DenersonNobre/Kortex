@@ -32,6 +32,9 @@ abstract interface class IKortexReadonlyMap<K, V>
   V? operator [](Object? key);
 }
 
+/// Short alias for [IKortexReadonlyMap].
+typedef IKortexMap<K, V> = IKortexReadonlyMap<K, V>;
+
 /// Mutable reactive map with no-op suppression, batching and post-dispose guard.
 class KortexMap<K, V> extends MapBase<K, V>
     implements IKortexReadonlyMap<K, V> {

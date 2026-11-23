@@ -29,6 +29,9 @@ abstract interface class IKortexReadonlyList<E>
   E operator [](int index);
 }
 
+/// Short alias for [IKortexReadonlyList].
+typedef IKortexList<E> = IKortexReadonlyList<E>;
+
 /// Mutable reactive list with no-op suppression, batching and post-dispose guard.
 class KortexList<E> extends ListBase<E> implements IKortexReadonlyList<E> {
   /// Creates a reactive list copied from [initial].

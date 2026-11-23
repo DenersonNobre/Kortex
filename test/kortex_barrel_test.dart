@@ -20,6 +20,7 @@ void main() {
     final signal = kortexSignal(1);
     final list = kortexList<int>([1]);
     final map = kortexMap<String, int>({'a': 1});
+    final set = kortexSet<int>([1]);
     final computed = kortexComputed(() => signal.value * 2);
     final effect = kortexEffect((_) {});
     final resource = kortexResource<int>(() async => 1, immediate: false);
@@ -33,6 +34,18 @@ void main() {
     expect(signal.value, 1);
     expect(list.readonly.value, [1]);
     expect(map.readonly.value, {'a': 1});
+    expect(set.readonly.value, {1});
+
+    final Kortex<int?> nullableSignal = Kortex<int?>(null);
+    final IKortex<int?> nullableReadonly = nullableSignal.readonly;
+    final IKortexList<int> roList = list.readonly;
+    final IKortexMap<String, int> roMap = map.readonly;
+    final IKortexSet<int> roSet = set.readonly;
+    expect(nullableReadonly.value, isNull);
+    expect(roList.value, [1]);
+    expect(roMap.value, {'a': 1});
+    expect(roSet.value, {1});
+    nullableSignal.dispose();
     expect(computed.value, 2);
     expect(resource.state.value.isLoading, isTrue);
     expect(streamResource.state.value.isLoading, isTrue);
@@ -50,6 +63,7 @@ void main() {
     computed.dispose();
     list.dispose();
     map.dispose();
+    set.dispose();
     signal.dispose();
     bag.dispose();
   });

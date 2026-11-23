@@ -15,7 +15,9 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 
 ### Added
 
-- Ergonomic creation extensions `.kortex` (`KortexSignalExtension<T extends Object>` — blocking `null.kortex` at compile time while supporting primitives, enums and domain objects), `.kortexList` (`KortexListExtension<E>`) and `.kortexMap` (`KortexMapExtension<K, V>`).
+- Ergonomic creation extensions `.kortex` (`KortexSignalExtension<T extends Object>` — blocking `null.kortex` at compile time while supporting primitives, enums and domain objects), `.kortexList` (`KortexListExtension<E>`), `.kortexMap` (`KortexMapExtension<K, V>`) and `.kortexSet` (`KortexSetExtension<E>`).
+- `KortexSet<E>` (`IKortexReadonlySet<E>`, `kortexSet<E>()`) with `UnmodifiableSetView`, no-op suppression, batching and post-`dispose` `StateError`.
+- Short type aliases `Kortex<T>`, `IKortex<T>`, `IKortexList<E>`, `IKortexMap<K, V>` and `IKortexSet<E>`.
 
 ## [0.2.0] - 2026-11-22
 

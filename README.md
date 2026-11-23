@@ -18,7 +18,7 @@ Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutt
 
 ## Layered Architecture
 
-- **`lib/src/reactive/` (pure Dart)**: `KortexSignal`, `IKortexReadonlySignal`, `KortexComputed`, `KortexEffect`, `KortexList`, `IKortexReadonlyList`, `KortexMap`, `IKortexReadonlyMap`, `kortexBatch`, `kortexUntracked`, `KortexResource`, `KortexStreamResource`, `KortexCommand`, `IKortexDisposable`, `KortexDisposeBag`, `IKortexController` — no `package:flutter/widgets.dart` import anywhere.
+- **`lib/src/reactive/` (pure Dart)**: `KortexSignal` (`Kortex`), `IKortexReadonlySignal` (`IKortex`), `KortexComputed`, `KortexEffect`, `KortexList` (`IKortexList`), `KortexMap` (`IKortexMap`), `KortexSet` (`IKortexSet`), `kortexBatch`, `kortexUntracked`, `KortexResource`, `KortexStreamResource`, `KortexCommand`, `IKortexDisposable`, `KortexDisposeBag`, `IKortexController` — no `package:flutter/widgets.dart` import anywhere.
 - **`lib/src/scope/` (Flutter SDK)**: `KortexProvider<T>` (`eager`, `lazy`, `.value`), `KortexScope` (hierarchical and sibling resolution with cycle detection, `overrides` for tests, and `KortexScope.capture` for modals/dialogs in the `Overlay`) plus `readKortex<T>()` / `watchKortex<T>()` extensions on `BuildContext`.
 - **`lib/src/widgets/` (Flutter SDK)**: `IKortexPage<TController>`, `KortexWatch`, `KortexSelector<T>`, `KortexListener<T>`, `KortexResourceBuilder<T>` and bridges to `Listenable` / `ValueListenable<T>` (`toKortexSignal()`, `toKortexSignalWith()`, `toListenable()`).
 
@@ -33,7 +33,7 @@ class CounterController extends IKortexController {
   }
 
   final _count = 0.kortex;
-  IKortexReadonlySignal<int> get count => _count.readonly;
+  IKortex<int> get count => _count.readonly;
 
   void increment() => _count.update((value) => value + 1);
 }

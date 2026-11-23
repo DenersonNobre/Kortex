@@ -99,6 +99,12 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
   }
 }
 
+/// Short alias for [KortexSignal].
+typedef Kortex<T> = KortexSignal<T>;
+
+/// Short alias for [IKortexReadonlySignal].
+typedef IKortex<T> = IKortexReadonlySignal<T>;
+
 /// Ergonomic shortcut for `KortexSignal(...)`.
 KortexSignal<T> kortexSignal<T>(T initialValue, {KortexEquals<T>? equals}) =>
     KortexSignal(initialValue, equals: equals);

@@ -305,6 +305,8 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
   - `KortexSignalExtension<T extends Object>` on `T`: `KortexSignal<T> get kortex` (bloqueia `null.kortex` em compilação; aceita primitivos, enums e objetos de domínio)
   - `KortexListExtension<E>` on `List<E>`: `KortexList<E> get kortexList`
   - `KortexMapExtension<K, V>` on `Map<K, V>`: `KortexMap<K, V> get kortexMap`
+  - `KortexSetExtension<E>` on `Set<E>`: `KortexSet<E> get kortexSet`
+  - Aliases curtos: `Kortex<T> = KortexSignal<T>`, `IKortex<T> = IKortexReadonlySignal<T>`, `IKortexList<E> = IKortexReadonlyList<E>`, `IKortexMap<K, V> = IKortexReadonlyMap<K, V>`, `IKortexSet<E> = IKortexReadonlySet<E>`
   - `KortexDisposableExtension` on `T extends IKortexDisposable`: `T addTo(KortexDisposeBag bag)`
   - `KortexBoolSignalExtension` on `KortexSignal<bool>`: `void toggle()`
   - `KortexIntSignalExtension` on `KortexSignal<int>`: `void increment([int by = 1])`, `void decrement([int by = 1])`
