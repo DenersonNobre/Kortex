@@ -8,20 +8,20 @@
 
 ## Contexto
 
-Monorepo Dart Pub Workspace (`pubspec.yaml` raiz) com `packages/kortex_state` (`kortex 0.2.3`), `packages/kortex_lint` (`0.1.2`), `packages/kortex_persist` (`0.1.0`), `packages/kortex_lib` (`publish_to: none`, migrado da `dnolib` sem `synapx` e podado) e `poc/`.
+Monorepo Dart Pub Workspace (`pubspec.yaml` raiz) com 5 pacotes publicados no `pub.dev`: `kortex` (`0.2.3`), `kortex_lint` (`0.1.2`), `kortex_persist` (`0.1.0`), `kortex_lib` (`0.1.0`) e `kortex_forms` (`0.1.0`), além da `poc/`.
 
 ## Estado real (verificado em 2026-11-23)
 
-- Publicados no `pub.dev`: `kortex 0.2.3`, `kortex_lint 0.1.2` e `kortex_persist 0.1.0` (todos com `topics:` e `example/`).
-- `packages/kortex_lib` validado (`302` testes) e `poc/` validado (`105` testes).
+- Todos os 5 pacotes publicados no `pub.dev` com `topics:` e `example/`.
+- `kortex_lib` podado (sem `synapx`/reativos duplicados); `kortex_forms` mantém validações genéricas e `kortex_lib/brlib/` mantém especializações `pt-BR`.
 
 ## Próximo passo acionável
 
-1. Próximo ciclo sob demanda (integrar `kortex`/`kortex_lint`/`kortex_lib` no `service_track` ou avançar no roadmap `v0.2.x`).
+1. Validar o ecossistema Kortex em app real (`service_track`) ou avançar no roadmap `v0.2.x` de `kortex`.
 
 ## Travas vivas
 
-- Nenhuma trava bloqueante; `gitea.lan` retornou `502` em push anterior (`origin` está sincronizado).
+- Nenhuma trava bloqueante.
 
 ## Regras (não apagar ao instanciar)
 
