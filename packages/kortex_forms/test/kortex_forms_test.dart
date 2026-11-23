@@ -75,5 +75,37 @@ void main() {
       expect(field.isValid, isTrue);
       field.dispose();
     });
+
+    test('supports everyday string, numeric, and collection rules', () {
+      final urlRule = kortexValidator<String>().url().build();
+      expect(urlRule('https://bonusoft.com.br'), isNull);
+      expect(urlRule('not-a-url'), 'Invalid URL');
+
+      final codeRule = kortexValidator<String>()
+          .numeric()
+          .exactLength(6)
+          .build();
+      expect(codeRule('123456'), isNull);
+      expect(codeRule('12ab56'), 'Must contain only digits');
+
+      var password = 'secret';
+      final confirmRule = kortexValidator<String>()
+          .equals(() => password, 'Passwords do not match')
+          .build();
+      expect(confirmRule('other'), 'Passwords do not match');
+      expect(confirmRule('secret'), isNull);
+
+      final ageRule = kortexValidator<int>().range(18, 120).build();
+      expect(ageRule(17), 'Must be between 18 and 120');
+      expect(ageRule(30), isNull);
+
+      final tagsRule = kortexValidator<List<String>>()
+          .notEmpty()
+          .maxItems(2)
+          .build();
+      expect(tagsRule([]), 'Select at least one item');
+      expect(tagsRule(['a', 'b']), isNull);
+      expect(tagsRule(['a', 'b', 'c']), 'Select at most 2 items');
+    });
   });
 }
