@@ -1,0 +1,18 @@
+name: kortex_lint
+description: Static analysis lints for Kortex (detecting undisposed signals/controllers and reactive anti-patterns).
+version: 0.1.0
+repository: https://github.com/DenersonNobre/Kortex
+issue_tracker: https://github.com/DenersonNobre/Kortex/issues
+
+environment:
+  sdk: ^3.13.5
+
+resolution: workspace
+
+dependencies:
+  analysis_server_plugin: ^0.3.0
+  analyzer: ^13.0.0
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  test: ^1.25.0
