@@ -21,7 +21,7 @@ jobs:
         run: |
           command -v curl unzip git || (apt-get update && apt-get install -y curl unzip git)
 
-      - name: Install Flutter 3.50.0 (pinado, mesma do dev)
+      - name: Install Flutter 3.47.6 (pinado, mesma do dev)
         run: |
           git clone --depth 1 --branch 3.47.6 https://github.com/flutter/flutter.git "$HOME/flutter-sdk"
           ln -sf "$HOME/flutter-sdk/bin/flutter" /usr/local/bin/flutter
@@ -29,24 +29,26 @@ jobs:
           flutter --version
 
       - name: Format check (igual ao gate local)
-        run: dart format --output=none --set-exit-if-changed lib test example/lib example/test poc/lib poc/test
+        run: dart format --output=none --set-exit-if-changed packages/kortex/lib packages/kortex/test packages/kortex/example/lib packages/kortex/example/test poc/lib poc/test
 
-      - name: Analyze raiz (zero warnings)
-        run: flutter analyze
+      - name: Workspace pub get
+        run: flutter pub get
 
-      - name: Test raiz (suite completa)
-        run: flutter test
+      - name: Kortex (analyze + test)
+        working-directory: packages/kortex
+        run: |
+          flutter analyze
+          flutter test
 
       - name: Example (pub get + analyze + test)
-        working-directory: example
+        working-directory: packages/kortex/example
         run: |
           flutter pub get
           flutter analyze
           flutter test
 
-      - name: POC (pub get + analyze + test)
+      - name: POC (analyze + test)
         working-directory: poc
         run: |
-          flutter pub get
           flutter analyze
           flutter test

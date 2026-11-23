@@ -5,8 +5,8 @@
 ## 1. Mandato & Não-Negociáveis
 
 - **Antes de qualquer trabalho**: leia `CHECKPOINT.md` e `docs/architecture/SPEC.md` (e `docs/plan/state/UC-CURRENT.md` quando existir).
-- **Zero dependências externas**: `pubspec.yaml` aceita exclusivamente `flutter` (`sdk: flutter`) em `dependencies`; nunca adicione pacotes de terceiros.
-- **Pureza da camada reativa (`INV-05`)**: `lib/src/reactive/` é Dart puro; nunca importe `package:flutter/widgets.dart` nem use `BuildContext` nessa pasta.
+- **Zero dependências externas**: `packages/kortex/pubspec.yaml` aceita exclusivamente `flutter` (`sdk: flutter`) em `dependencies`; nunca adicione pacotes de terceiros.
+- **Pureza da camada reativa (`INV-05`)**: `packages/kortex/lib/src/reactive/` é Dart puro; nunca importe `package:flutter/widgets.dart` nem use `BuildContext` nessa pasta.
 - **Escopo explícito (`INV-06`)**: nunca crie Service Locator global (`put`/`find`), EventBus global, roteador próprio, helpers sem `BuildContext` ou `onInit` mágico.
 - **Bloqueio pós-dispose e respostas tardias (`INV-01`/`INV-02`)**: lance `StateError` em acesso pós-`dispose()`; descarte silenciosamente resultados assíncronos superados por `refresh()`/`dispose()`.
 
@@ -15,14 +15,14 @@
 - **Dependências**: `flutter pub get` — resolve o SDK Flutter sem dependências externas.
 - **Análise estática**: `flutter analyze` — deve encerrar com `No issues found!` (zero warnings sob `flutter_lints`).
 - **Testes (suíte completa)**: `flutter test` — executa testes unitários e de widget em `test/` (exit 0 = verde).
-- **Teste de arquivo único**: `flutter test test/kortex_test.dart` — validação rápida de fatia.
+- **Teste de arquivo único**: `flutter test test/kortex_test.dart` (em `packages/kortex/`) — validação rápida de fatia.
 
 ## 3. Onde Está O Que
 
 - **Produto**: `docs/product/PRD.md` (escopo, requisitos `RF-01`..`RF-07`, `RNF-01`..`RNF-05`, não-objetivos).
 - **Verdade do domínio**: `docs/architecture/SPEC.md` (regras `RN-01`..`RN-06`, invariantes `INV-01`..`INV-08`, contratos).
 - **Continuidade e diário**: `CHECKPOINT.md` (≤ 60 linhas) e `LEARNINGS.md`.
-- **Layout de código**: `lib/kortex.dart` (barrel público) e `lib/src/{reactive,scope,widgets}/`, `test/`.
+- **Layout de código**: monorepo com workspace na raiz (`pubspec.yaml`) e pacote principal em `packages/kortex/` (`lib/kortex.dart`, `lib/src/{reactive,scope,widgets}/`, `test/`, `example/`).
 
 ## 4. Convenções & Testes
 
