@@ -2,29 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 import 'package:kortex_forms/kortex_forms.dart';
 
+/// Reusable domain rules built with `kortexValidator` (works in UI & domain).
+final KortexRule<String> _emailRule = kortexValidator<String>()
+    .required('Email is required')
+    .email('Enter a valid email')
+    .build();
+
+final KortexRule<String> _passwordRule = kortexValidator<String>()
+    .required('Password is required')
+    .minLength(6, 'Minimum 6 characters')
+    .must((v) => !v.contains(' '), 'Spaces are not allowed')
+    .build();
+
 /// Example: reactive form validation without `GlobalKey<FormState>`.
-///
-/// Field state, `touched`/`dirty` flags, and validation live in pure Dart
-/// inside [LoginController], making form rules unit-testable without widgets.
 class LoginController extends IKortexController {
   LoginController() {
     autoDispose(form);
   }
 
-  final email = kortexField<String>(
-    '',
-    validators: [
-      (v) => v.trim().isEmpty ? 'Email is required' : null,
-      (v) => v.contains('@') ? null : 'Enter a valid email',
-    ],
-  );
-
-  final password = kortexField<String>(
-    '',
-    validators: [
-      (v) => v.length < 6 ? 'Minimum 6 characters' : null,
-    ],
-  );
+  final email = kortexField<String>('', validators: [_emailRule]);
+  final password = kortexField<String>('', validators: [_passwordRule]);
 
   late final KortexForm form = kortexForm([email, password]);
 
