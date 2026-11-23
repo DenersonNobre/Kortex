@@ -1,6 +1,7 @@
 library;
 
 export 'package:kortex/kortex.dart';
+export 'package:kortex_forms/kortex_forms.dart';
 
 export 'brlib/brlib.dart';
 export 'core/core.dart';

@@ -1,4 +1,6 @@
-import '../validator/email.dart';
+import 'package:kortex_forms/kortex_forms.dart';
+
+final _emailValidator = kortexValidator<String>().email().build();
 
 /// Value Object de E-mail com validação estrutural e normalização em minúsculas.
 ///
@@ -9,7 +11,7 @@ class Email {
   Email(String entrada) : valor = _validate(entrada.trim().toLowerCase());
 
   static String _validate(String entrada) {
-    if (!isValidEmail(entrada)) {
+    if (_emailValidator(entrada) != null) {
       throw FormatException('Email inválido: $entrada');
     }
     return entrada;
@@ -17,7 +19,7 @@ class Email {
 
   /// Retorna `true` se [entrada] atender ao formato de e-mail válido.
   static bool valido(String entrada) =>
-      isValidEmail(entrada.trim().toLowerCase());
+      _emailValidator(entrada.trim().toLowerCase()) == null;
 
   /// Tenta criar [Email] e retorna `null` se inválido.
   static Email? tryParse(String? entrada) {

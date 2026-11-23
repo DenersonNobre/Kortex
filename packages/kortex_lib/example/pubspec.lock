@@ -118,6 +118,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.3"
+  kortex_forms:
+    dependency: transitive
+    description:
+      name: kortex_forms
+      sha256: "816d0f384c857c7abcb5b3098e95cc07ddde4253c3f6a81151b62d394f3fa3c4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   kortex_lib:
     dependency: "direct main"
     description:
