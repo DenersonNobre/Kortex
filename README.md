@@ -2,7 +2,7 @@
 
 Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutter`) for fine-grained signal reactivity, explicit dependency scoping in the widget tree (`KortexScope`), and UI built primarily with `StatelessWidget` (`IKortexPage`).
 
-> **Status**: `v0.2.1` — reactive core, reactive collections (`KortexList`, `KortexMap`), scoped dependency injection, and widget layer are implemented and tested.
+> **Status**: `v0.2.1` — reactive core, reactive collections (`KortexList`, `KortexMap`, `KortexSet`), ergonomic extensions (`.kortex`, `.kortexList`, `.kortexMap`, `.kortexSet`) & short aliases (`Kortex<T>`, `IKortex<T>`, `IKortexList<E>`, `IKortexMap<K, V>`, `IKortexSet<E>`), scoped dependency injection, and widget layer are implemented and tested.
 
 ---
 
@@ -64,9 +64,8 @@ KortexScope(
 
 Planned improvements that preserve Kortex's core constraints (zero third-party dependencies, pure-Dart reactivity, and explicit widget-tree scoping):
 
-- **`v0.2.0` (Ergonomics & SDK reach)**:
+- **`v0.2.x` (Ergonomics & SDK reach)**:
   - Lower the minimum Dart/Flutter SDK constraint in `pubspec.yaml` after CI matrix verification.
-  - `KortexSet<E>` (`IKortexReadonlySet<E>`) to complete the reactive collection trio alongside `KortexList` and `KortexMap`.
   - `canExecute` reactive guard on `KortexCommand`.
   - `KortexEffect.once` (auto-disposing single-shot effect) and `throttle` option alongside `debounce`.
   - `runIfActive` guard on `IKortexController` for ad-hoc async methods.

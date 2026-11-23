@@ -1,7 +1,7 @@
-# Kortex (`v0.1.0`) — Especificação Técnica de Domínio
+# Kortex (`v0.2.1`) — Especificação Técnica de Domínio
 
 > **Arquiteto (responsável)**: Denerson Nobre  
-> **Versão**: `0.1.0` | **Data**: `2026-11-19`  
+> **Versão**: `0.2.1` | **Data**: `2026-11-22`  
 > **PRD de Referência**: [PRD.md](../product/PRD.md)
 
 ## Regras de Negócio Executáveis (Obrigatório)
@@ -14,7 +14,7 @@
 | `RN-04` | `Resource` preserva `previousValue` / descarta tardias; `StreamResource` cancela assinatura; `Command` bloqueia reentrância | `refresh()` concorrente / evento de `Stream` / `execute()` com `isExecuting == true` | `Resource` mantém `previousValue` em `Loading` durante `refresh` e ignora resultado antigo; `StreamResource` cancela `StreamSubscription` no `dispose()`; `Command` ignora disparo concorrente | `StateError` se chamado após `dispose()` | `INV-02, RF-04` |
 | `RN-05` | Resolução hierárquica e entre irmãos em `KortexScope` | `readKortex<T>()` / `watchKortex<T>()` ou leitura entre providers irmãos | Instância `T` (com `override` aplicado se houver; inicializa se `lazy`) | `StateError` se `T` ausente ou dependência circular detectada | `INV-03, INV-06, INV-07, RF-06` |
 | `RN-06` | `IKortexPage`, `KortexWatch`, `KortexSelector` e `KortexListener` respeitam ciclo de vida | Mudança de sinal lido/selecionado vs widget desmontado | `IKortexPage` resolve `TController` via `BuildContext`; `Watch` reconstrói (mantendo `child`); `Selector` só reconstrói se seleção mudar; `Listener` avalia `watch` em `initState` e dispara `listener` fora do `build` apenas quando `watch` muda e `mounted == true` | Nenhuma chamada a `setState` ou `listener` após `!mounted` | `INV-04, RF-07` |
-| `RN-07` | Coleções reativas (`KortexList`, `KortexMap`) respeitam no-op, batch e encapsulamento | Mutação no-op (`remove` ausente, `clear()` vazio, `map[k] = mesmoValor`) vs mutação efetiva | No-op não notifica; mutações compostas (`addAll`, `removeWhere`) notificam 1x via `kortexBatch`; `readonly` expõe visão imutável | `StateError` em leitura/escrita após `dispose()` | `INV-01, INV-04, INV-05` |
+| `RN-07` | Coleções reativas (`KortexList`, `KortexMap`, `KortexSet`) respeitam no-op, batch e encapsulamento | Mutação no-op (`remove` ausente, `clear()` vazio, `map[k] = mesmoValor`, `set.add` já presente) vs mutação efetiva | No-op não notifica; mutações compostas (`addAll`, `removeWhere`) notificam 1x via `kortexBatch`; `readonly` expõe visão imutável | `StateError` em leitura/escrita após `dispose()` | `INV-01, INV-04, INV-05` |
 
 ---
 
@@ -42,6 +42,7 @@ kortex/
 │       │   ├── kortex_effect.dart
 │       │   ├── kortex_list.dart
 │       │   ├── kortex_map.dart
+│       │   ├── kortex_set.dart
 │       │   ├── kortex_resource.dart
 │       │   ├── kortex_stream_resource.dart
 │       │   └── kortex_command.dart
@@ -193,6 +194,19 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
   - Operações em lote (`addAll`, `addEntries`, `removeWhere`, `updateAll`, `replaceAll`) executam sob `kortexBatch` para notificar uma única vez.
   - Leitura/escrita após `dispose()` lança `StateError` (`INV-01`).
 
+#### `IKortexReadonlySet<E>` e `KortexSet<E>` (`kortex_set.dart`)
+
+- `abstract interface class IKortexReadonlySet<E> implements IKortexReadonlySignal<Set<E>>`:
+  - Expõe `Set<E> get value` e `Set<E> peek()` retornando `UnmodifiableSetView<E>` (impede mutação externa pela UI).
+  - Expõe leituras rastreadas (`int get length`, `bool get isEmpty`, `bool get isNotEmpty`, `bool contains(Object? element)`).
+  - Alias curto: `typedef IKortexSet<E> = IKortexReadonlySet<E>;`.
+- `class KortexSet<E> extends SetBase<E> implements IKortexReadonlySet<E>`:
+  - Construtor: `KortexSet([Iterable<E> initial = const []])` e helper `KortexSet<E> kortexSet<E>([Iterable<E> initial = const []])`.
+  - Expõe `IKortexReadonlySet<E> get readonly`.
+  - No-op em `add(e)` já presente, `remove(e)` ausente e `clear()` com conjunto vazio.
+  - Operações em lote (`addAll`, `removeAll`, `retainAll`, `removeWhere`, `retainWhere`, `replaceAll`) executam sob `kortexBatch` para notificar uma única vez.
+  - Leitura/escrita após `dispose()` lança `StateError` (`INV-01`).
+
 #### `IKortexAsyncState<T>` e `KortexResource<T>` (`kortex_resource.dart`)
 
 - `sealed class IKortexAsyncState<T>`:
@@ -307,9 +321,6 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
   - `KortexMapExtension<K, V>` on `Map<K, V>`: `KortexMap<K, V> get kortexMap`
   - `KortexSetExtension<E>` on `Set<E>`: `KortexSet<E> get kortexSet`
   - Aliases curtos: `Kortex<T> = KortexSignal<T>`, `IKortex<T> = IKortexReadonlySignal<T>`, `IKortexList<E> = IKortexReadonlyList<E>`, `IKortexMap<K, V> = IKortexReadonlyMap<K, V>`, `IKortexSet<E> = IKortexReadonlySet<E>`
-  - `KortexDisposableExtension` on `T extends IKortexDisposable`: `T addTo(KortexDisposeBag bag)`
-  - `KortexBoolSignalExtension` on `KortexSignal<bool>`: `void toggle()`
-  - `KortexIntSignalExtension` on `KortexSignal<int>`: `void increment([int by = 1])`, `void decrement([int by = 1])`
   - *(Nota: leitura de sinais usa exclusivamente `.value` / `.peek()`, e `IKortexAsyncState<T>` usa `switch` exaustivo nativo do Dart 3.)*
 
 ---

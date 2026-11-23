@@ -45,7 +45,7 @@ Implementar `KortexList<E>` (`IKortexReadonlyList<E>`) e `KortexMap<K, V>` (`IKo
 ### Caso de Uso UC-09.01 — `IKortexReadonlyList` e `KortexList<E>`
 
 - **Identificador**: `UC-09.01`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
@@ -79,7 +79,7 @@ Esquema do Cenário: Operações, no-op, batch e pós-dispose em KortexList
 ### Caso de Uso UC-09.02 — `IKortexReadonlyMap`, `KortexMap<K, V>` e Exportação Pública
 
 - **Identificador**: `UC-09.02`
-- **Status**: `Pendente`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 

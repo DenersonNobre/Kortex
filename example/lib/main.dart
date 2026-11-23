@@ -2,7 +2,9 @@
 ///
 /// Demonstrates:
 /// - `IKortexController` with constructor initialization and `autoDispose`;
-/// - Encapsulation via private `KortexSignal` + public `IKortexReadonlySignal`;
+/// - Ergonomic extensions (`.kortex`, `.kortexList`, `.kortexMap`, `.kortexSet`);
+/// - Encapsulation via short readonly aliases (`IKortex`, `IKortexList`,
+///   `IKortexMap`, `IKortexSet`);
 /// - Lazy derivation with `KortexComputed` and async lock via `KortexCommand`;
 /// - `StatelessWidget`-first UI with `IKortexPage`, `KortexWatch`,
 ///   `KortexSelector`, `KortexListener` and `KortexScope`.
@@ -11,7 +13,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
-/// Holds counter state and the simulated async save action.
+/// Holds counter state, reactive collections, and the simulated save action.
 ///
 /// Dependencies and initial resources are set up in the constructor (no magic
 /// `onInit`), and every reactive primitive registered with `autoDispose` is
@@ -19,6 +21,9 @@ import 'package:kortex/kortex.dart';
 class CounterController extends IKortexController {
   CounterController() {
     autoDispose(_count);
+    autoDispose(_history);
+    autoDispose(_bookmarks);
+    autoDispose(_stats);
 
     // Derived lazily and cached; only notifies listeners when parity changes.
     isEven = autoDispose(KortexComputed(() => _count.value.isEven));
@@ -27,16 +32,27 @@ class CounterController extends IKortexController {
     save = autoDispose(
       KortexCommand<void, int>((_) async {
         await Future<void>.delayed(const Duration(milliseconds: 300));
-        return _count.value;
+        final snapshot = _count.value;
+        kortexBatch(() {
+          _history.add(snapshot);
+          _stats['saves'] = (_stats['saves'] ?? 0) + 1;
+        });
+        return snapshot;
       }),
     );
   }
 
-  // Keep the mutable signal private so widgets cannot mutate state directly.
-  final _count = 0.kortex;
+  // Keep mutable reactive primitives private so widgets cannot mutate them.
+  final Kortex<int> _count = 0.kortex;
+  final _history = <int>[].kortexList;
+  final _bookmarks = <int>{}.kortexSet;
+  final _stats = <String, int>{'saves': 0}.kortexMap;
 
-  /// Read-only reactive view exposed to the UI.
+  /// Read-only reactive views exposed to the UI via short aliases.
   IKortex<int> get count => _count.readonly;
+  IKortexList<int> get history => _history.readonly;
+  IKortexSet<int> get bookmarks => _bookmarks.readonly;
+  IKortexMap<String, int> get stats => _stats.readonly;
 
   /// Cached derived state indicating whether [count] is even.
   late final KortexComputed<bool> isEven;
@@ -49,6 +65,14 @@ class CounterController extends IKortexController {
 
   /// Decrements the counter by 1.
   void decrement() => _count.update((value) => value - 1);
+
+  /// Toggles the current counter value in [bookmarks].
+  void toggleBookmark() {
+    final current = _count.value;
+    if (!_bookmarks.add(current)) {
+      _bookmarks.remove(current);
+    }
+  }
 }
 
 /// `StatelessWidget` page that resolves [CounterController] via `BuildContext`.
@@ -97,8 +121,22 @@ class CounterPage extends IKortexPage<CounterController> {
                     icon: const Icon(Icons.add),
                     onPressed: controller.increment,
                   ),
+                  IconButton(
+                    tooltip: 'bookmark',
+                    icon: const Icon(Icons.bookmark_border),
+                    onPressed: controller.toggleBookmark,
+                  ),
                 ],
               ),
+              // Reacts to the reactive collections (`history`, `stats`, `bookmarks`).
+              KortexWatch(
+                builder: (context, child) => Text(
+                  'Saves (${controller.stats['saves'] ?? 0}): '
+                  '${controller.history.value.join(', ')} • '
+                  'Bookmarks: ${controller.bookmarks.length}',
+                ),
+              ),
+              const SizedBox(height: 8),
               // Reacts to the command's `isExecuting` signal to swap UI states.
               KortexWatch(
                 builder: (context, child) {

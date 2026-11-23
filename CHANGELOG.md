@@ -19,6 +19,10 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 - `KortexSet<E>` (`IKortexReadonlySet<E>`, `kortexSet<E>()`) with `UnmodifiableSetView`, no-op suppression, batching and post-`dispose` `StateError`.
 - Short type aliases `Kortex<T>`, `IKortex<T>`, `IKortexList<E>`, `IKortexMap<K, V>` and `IKortexSet<E>`.
 
+### Changed
+
+- Updated `example/` (`CounterController` and `CounterPage`) to showcase `.kortex`, `.kortexList`, `.kortexMap`, `.kortexSet` and the short `Kortex<T>` / `IKortex*` aliases.
+
 ## [0.2.0] - 2026-11-22
 
 ### Fixed

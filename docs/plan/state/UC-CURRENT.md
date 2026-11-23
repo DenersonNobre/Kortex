@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: — (`EPIC00`–`EPIC09` concluídos)
-- **Status**: `EPIC09` (`KortexList<E>` e `KortexMap<K, V>`) concluído e exportado pelo barrel público
-- **Último passo concluído**: `EPIC09` (`UC-09.01` `KortexList` e `UC-09.02` `KortexMap` com `UnmodifiableListView`/`UnmodifiableMapView`, no-op, `kortexBatch` e bloqueio pós-`dispose`; raiz `91` testes, `flutter analyze` limpo).
-- **Próximo passo**: novo ciclo sob demanda (exercitar coleções reativas na `poc/` ou preparar `v0.2.0` para `pub.dev`).
+- **Épico ativo**: — (`EPIC00`–`EPIC09` concluídos; ciclo `v0.2.1` concluído)
+- **Status**: `v0.2.1` (`KortexSet<E>`, extensões `.kortex`/`.kortexList`/`.kortexMap`/`.kortexSet`, aliases `Kortex`/`IKortex*` e `example/` atualizado) concluído e verificado
+- **Último passo concluído**: `KortexSet<E>`, extensões ergonômicas e aliases curtos implementados, documentados e demonstrados no `example/`; `flutter analyze` limpo, `99` testes na raiz + `1` teste no `example/`.
+- **Próximo passo**: atualizar tag `v0.2.1`, push (`origin`/`gitea`) e publicar `0.2.1` no `pub.dev` mediante confirmação do usuário.
