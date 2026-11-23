@@ -153,8 +153,8 @@ void main() {
         expect(label, isA<KortexSignal<String>>());
         expect(flag, isA<KortexSignal<bool>>());
         expect(status, isA<KortexSignal<_SampleStatus>>());
-      status.value = _SampleStatus.active;
-      expect(status.value, _SampleStatus.active);
+        status.value = _SampleStatus.active;
+        expect(status.value, _SampleStatus.active);
         expect(user, isA<KortexSignal<_SampleUser>>());
         expect(user.value.name, 'Ana');
 
@@ -166,27 +166,30 @@ void main() {
       },
     );
 
-    test('extensão .kortex cria KortexSignal para primitivos, enum e objetos', () {
-      final count = 0.kortex;
-      final label = 'ok'.kortex;
-      final flag = false.kortex;
-      final status = _SampleStatus.idle.kortex;
-      final user = const _SampleUser('Ana').kortex;
+    test(
+      'extensão .kortex cria KortexSignal para primitivos, enum e objetos',
+      () {
+        final count = 0.kortex;
+        final label = 'ok'.kortex;
+        final flag = false.kortex;
+        final status = _SampleStatus.idle.kortex;
+        final user = const _SampleUser('Ana').kortex;
 
-      expect(count, isA<KortexSignal<int>>());
-      expect(label, isA<KortexSignal<String>>());
-      expect(flag, isA<KortexSignal<bool>>());
-      expect(status, isA<KortexSignal<_SampleStatus>>());
-      status.value = _SampleStatus.active;
-      expect(status.value, _SampleStatus.active);
-      expect(user, isA<KortexSignal<_SampleUser>>());
-      expect(user.value.name, 'Ana');
+        expect(count, isA<KortexSignal<int>>());
+        expect(label, isA<KortexSignal<String>>());
+        expect(flag, isA<KortexSignal<bool>>());
+        expect(status, isA<KortexSignal<_SampleStatus>>());
+        status.value = _SampleStatus.active;
+        expect(status.value, _SampleStatus.active);
+        expect(user, isA<KortexSignal<_SampleUser>>());
+        expect(user.value.name, 'Ana');
 
-      count.dispose();
-      label.dispose();
-      flag.dispose();
-      status.dispose();
-      user.dispose();
-    });
+        count.dispose();
+        label.dispose();
+        flag.dispose();
+        status.dispose();
+        user.dispose();
+      },
+    );
   });
 }

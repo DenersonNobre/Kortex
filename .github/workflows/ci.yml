@@ -19,11 +19,11 @@ jobs:
         with:
           flutter-version: '3.47.6'
 
-      - name: Format check (igual ao gate local)
-        run: dart format --output=none --set-exit-if-changed packages/kortex_state/lib packages/kortex_state/test packages/kortex_state/example/lib packages/kortex_state/example/test packages/kortex_lib/lib packages/kortex_lib/test packages/kortex_lint/lib packages/kortex_lint/test poc/lib poc/test
-
       - name: Workspace pub get
         run: flutter pub get
+
+      - name: Format check (igual ao gate local)
+        run: dart format --output=none --set-exit-if-changed packages/kortex_state/lib packages/kortex_state/test packages/kortex_state/example/lib packages/kortex_state/example/test packages/kortex_lib/lib packages/kortex_lib/test packages/kortex_lint/lib packages/kortex_lint/test poc/lib poc/test
 
       - name: Kortex (analyze + test)
         working-directory: packages/kortex_state
