@@ -4,10 +4,4 @@
 
 ### Added
 
-- Initial release of `kortex_lib`.
-- `brlib`: Brazilian document, address, money, phone, and input formatter/validator utilities.
-- `core`: helpers, logging, models, patterns (`Result`, `AsyncLock`, `Debouncer`, etc.), security, services, and validators.
-- `rest`: REST client stack with auth, retry, circuit breaker, logging, and datasource helpers.
-- `sqlite`: SQLite datasource, migration, provider, and unit-of-work helpers.
-- `widgets`: reusable UI widgets (alerts, modals, state views, labels, tiles, and more).
-- Re-exports `package:kortex/kortex.dart` for convenience.
+- Initial release bundling `brlib`, `core`, `rest`, `sqlite`, and `widgets` with `package:kortex/kortex.dart` re-exported from `package:kortex_lib/kortex_lib.dart`.
