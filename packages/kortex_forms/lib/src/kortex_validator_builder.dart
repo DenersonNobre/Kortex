@@ -60,3 +60,9 @@ extension KortexStringValidatorBuilder on KortexValidatorBuilder<String> {
 
 /// Creates a fluent [KortexValidatorBuilder] for type [T].
 KortexValidatorBuilder<T> kortexValidator<T>() => KortexValidatorBuilder<T>();
+
+/// Short alias for [KortexValidator].
+typedef KortexRule<T> = KortexValidator<T>;
+
+/// Short alias for [KortexValidatorBuilder].
+typedef KortexRules<T> = KortexValidatorBuilder<T>;
