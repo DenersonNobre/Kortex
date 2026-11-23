@@ -6,4 +6,5 @@ environment:
 
 workspace:
   - packages/kortex
+  - packages/kortex_lib
   - poc

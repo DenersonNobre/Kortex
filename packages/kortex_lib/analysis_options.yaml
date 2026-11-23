@@ -1,0 +1,22 @@
+# Ativa flutter_lints (declarado no pubspec) e acrescenta regras de robustez.
+include: package:flutter_lints/flutter.yaml
+
+formatter:
+  trailing_commas: preserve
+
+analyzer:
+  exclude:
+    - build/**
+
+linter:
+  rules:
+    - always_declare_return_types
+    - avoid_dynamic_calls
+    - directives_ordering
+    - prefer_final_locals
+    - prefer_single_quotes
+    - require_trailing_commas
+    - sort_child_properties_last
+    - unawaited_futures
+    - unnecessary_lambdas
+    - use_super_parameters

@@ -29,13 +29,19 @@ jobs:
           flutter --version
 
       - name: Format check (igual ao gate local)
-        run: dart format --output=none --set-exit-if-changed packages/kortex/lib packages/kortex/test packages/kortex/example/lib packages/kortex/example/test poc/lib poc/test
+        run: dart format --output=none --set-exit-if-changed packages/kortex/lib packages/kortex/test packages/kortex/example/lib packages/kortex/example/test packages/kortex_lib/lib packages/kortex_lib/test poc/lib poc/test
 
       - name: Workspace pub get
         run: flutter pub get
 
       - name: Kortex (analyze + test)
         working-directory: packages/kortex
+        run: |
+          flutter analyze
+          flutter test
+
+      - name: Kortex Lib (analyze + test)
+        working-directory: packages/kortex_lib
         run: |
           flutter analyze
           flutter test
