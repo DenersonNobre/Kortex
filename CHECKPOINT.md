@@ -1,4 +1,4 @@
-# CHECKPOINT — kortex (v0.2.1)
+# CHECKPOINT — kortex (monorepo)
 
 > Ponteiro, nunca espelho (protocolo: `agents/rules/workflow_rules.md` §Continuidade).
 > Backlog/DAG: `docs/plan/README.md` · fatia corrente: `docs/plan/state/UC-CURRENT.md` ·
@@ -8,20 +8,20 @@
 
 ## Contexto
 
-Pacote Flutter/Dart `kortex` (`v0.2.1`; `EPIC00`–`EPIC09` + `KortexSet`, extensões `.kortex*` e aliases `Kortex`/`IKortex*` concluídos).
+Monorepo Dart Pub Workspace (`pubspec.yaml` raiz) com `packages/kortex_state` (`kortex 0.2.3`), `packages/kortex_lint` (`0.1.2`), `packages/kortex_persist` (`0.1.0`), `packages/kortex_lib` (`publish_to: none`, migrado da `dnolib` sem `synapx` e podado) e `poc/`.
 
-## Estado real (verificado em 2026-11-22)
+## Estado real (verificado em 2026-11-23)
 
-- Estrutura monorepo (`Pub Workspace` na raiz + `packages/kortex_state/` + `packages/kortex_lib/` + `poc/`); `packages/kortex_state/lib/src/reactive/` completo com `KortexSignal` (`Kortex`), `IKortexReadonlySignal` (`IKortex`), `KortexList` (`IKortexList`), `KortexMap` (`IKortexMap`), `KortexSet` (`IKortexSet`) e extensões `.kortex`, `.kortexList`, `.kortexMap`, `.kortexSet`.
-- `example/` atualizado para demonstrar todas as extensões e aliases; suíte raiz (`99` testes) e `example/` (`1` teste) verdes; `flutter pub publish --dry-run` com `0` warnings.
+- Publicados no `pub.dev`: `kortex 0.2.3`, `kortex_lint 0.1.2` e `kortex_persist 0.1.0` (todos com `topics:` e `example/`).
+- `packages/kortex_lib` validado (`302` testes) e `poc/` validado (`105` testes).
 
 ## Próximo passo acionável
 
-1. Atualizar tag `v0.2.1`, executar `git push` (`origin` e `gitea`) e publicar `0.2.1` no `pub.dev` após confirmação explícita do usuário.
+1. Próximo ciclo sob demanda (integrar `kortex`/`kortex_lint`/`kortex_lib` no `service_track` ou avançar no roadmap `v0.2.x`).
 
 ## Travas vivas
 
-- Nenhuma trava bloqueante; push e publicação no `pub.dev` somente com pedido explícito do usuário.
+- Nenhuma trava bloqueante; `gitea.lan` retornou `502` em push anterior (`origin` está sincronizado).
 
 ## Regras (não apagar ao instanciar)
 

@@ -6,6 +6,18 @@
 > `topics/devops-docker.md` (`container.network` inexistente mata jobs em 2s).
 > Detalhe de implementação desta sessão: entradas datadas abaixo.
 
+## 2026-11-23 — `dart format` no CI antes do `pub get` falha ao resolver `analysis_options.yaml`
+
+- **Sintoma:** o workflow do GitHub Actions (`45099719485`) falhou no step `Format check` com `Failed to resolve package URI "package:flutter_lints/flutter.yaml"`.
+- **Causa:** `dart format` lê `analysis_options.yaml` de cada pacote, mas rodava **antes** de `flutter pub get` gerar `.dart_tool/package_config.json`.
+- **Fix:** mover `flutter pub get` na raiz do workspace para **antes** do `dart format --output=none --set-exit-if-changed`.
+
+## 2026-11-23 — `example/` fora do workspace não pode misturar `path:` e `hosted` para o mesmo pacote
+
+- **Sintoma:** `flutter pub get` em `packages/kortex_persist/example/` falhou com `version solving failed` (`kortex_persist from path is forbidden`).
+- **Causa:** `kortex_persist` dependia de `kortex: ^0.2.2` (hosted), enquanto `example/` declarava `kortex: path: ../../kortex_state`.
+- **Fix:** manter `kortex: ^0.2.2` (hosted) no `example/pubspec.yaml` quando o exemplo está fora do `workspace:` raiz.
+
 ## 2026-11-20 — `LeakTesting` do `flutter_test` NÃO enxerga controller que não é `ChangeNotifier`
 
 - **Sintoma:** a suíte da POC rodava 103 testes verdes e nenhum deles verificava vazamento. O pacote tinha gate (`test/flutter_test_config.dart` + prova negativa), a POC não.
