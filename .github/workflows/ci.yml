@@ -23,7 +23,7 @@ jobs:
         run: flutter pub get
 
       - name: Format check (igual ao gate local)
-        run: dart format --output=none --set-exit-if-changed packages/kortex_state/lib packages/kortex_state/test packages/kortex_state/example/lib packages/kortex_state/example/test packages/kortex_lib/lib packages/kortex_lib/test packages/kortex_lint/lib packages/kortex_lint/test packages/kortex_persist/lib packages/kortex_persist/test poc/lib poc/test
+        run: dart format --output=none --set-exit-if-changed packages/kortex_state/lib packages/kortex_state/test packages/kortex_state/example/lib packages/kortex_state/example/test packages/kortex_lib/lib packages/kortex_lib/test packages/kortex_lint/lib packages/kortex_lint/test packages/kortex_persist/lib packages/kortex_persist/test packages/kortex_forms/lib packages/kortex_forms/test poc/lib poc/test
 
       - name: Kortex (analyze + test)
         working-directory: packages/kortex_state
@@ -45,6 +45,12 @@ jobs:
 
       - name: Kortex Persist (analyze + test)
         working-directory: packages/kortex_persist
+        run: |
+          flutter analyze
+          flutter test
+
+      - name: Kortex Forms (analyze + test)
+        working-directory: packages/kortex_forms
         run: |
           flutter analyze
           flutter test

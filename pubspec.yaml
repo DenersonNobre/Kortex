@@ -9,4 +9,5 @@ workspace:
   - packages/kortex_lib
   - packages/kortex_lint
   - packages/kortex_persist
+  - packages/kortex_forms
   - poc
