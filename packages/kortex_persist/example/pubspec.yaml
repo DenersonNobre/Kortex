@@ -1,0 +1,17 @@
+name: kortex_persist_example
+description: Example demonstrating kortex_persist with IKortexStorage and KortexPersistedSignal.
+publish_to: none
+
+environment:
+  sdk: ^3.13.5
+  flutter: ">=3.47.6"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kortex: ^0.2.2
+  kortex_persist:
+    path: ../
+
+dev_dependencies:
+  flutter_lints: ^6.0.0

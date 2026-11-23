@@ -8,4 +8,5 @@ workspace:
   - packages/kortex_state
   - packages/kortex_lib
   - packages/kortex_lint
+  - packages/kortex_persist
   - poc

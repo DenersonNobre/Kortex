@@ -1,0 +1,21 @@
+name: kortex_persist
+description: Reactive persistence and hydration adapters for Kortex signals, with pluggable storage.
+version: 0.1.0
+repository: https://github.com/DenersonNobre/Kortex
+issue_tracker: https://github.com/DenersonNobre/Kortex/issues
+
+environment:
+  sdk: ^3.13.5
+  flutter: ">=3.47.6"
+
+resolution: workspace
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kortex: ^0.2.2
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  flutter_test:
+    sdk: flutter
