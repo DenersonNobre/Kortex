@@ -1,5 +1,6 @@
 import 'package:analysis_server_plugin/plugin.dart';
 import 'package:analysis_server_plugin/registry.dart';
+import 'package:kortex_lint/src/rules/avoid_kortex_signal_in_build.dart';
 import 'package:kortex_lint/src/rules/avoid_undisposed_kortex_signal.dart';
 
 /// Entrypoint for the Kortex analyzer plugin.
@@ -13,5 +14,6 @@ class KortexLintPlugin extends Plugin {
   @override
   void register(PluginRegistry registry) {
     registry.registerWarningRule(AvoidUndisposedKortexSignal());
+    registry.registerWarningRule(AvoidKortexSignalInBuild());
   }
 }

@@ -12,16 +12,14 @@ class AvoidUndisposedKortexSignal extends AnalysisRule {
   static const LintCode code = LintCode(
     'avoid_undisposed_kortex_signal',
     "Reactive primitive '{0}' is not registered with autoDispose() or disposeBag.add().",
-    correctionMessage:
-        'Register it in the constructor with autoDispose({0}) to prevent memory leaks.',
+    correctionMessage: 'Register it in the constructor with autoDispose({0}) to prevent memory leaks.',
   );
 
   /// Creates the rule instance.
   AvoidUndisposedKortexSignal()
     : super(
         name: 'avoid_undisposed_kortex_signal',
-        description:
-            'Warn when reactive Kortex fields in IKortexController are not registered for disposal.',
+        description: 'Warn when reactive Kortex fields in IKortexController are not registered for disposal.',
       );
 
   @override
