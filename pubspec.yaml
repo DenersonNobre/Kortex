@@ -5,6 +5,6 @@ environment:
   sdk: ^3.13.5
 
 workspace:
-  - packages/kortex
+  - packages/kortex_state
   - packages/kortex_lib
   - poc

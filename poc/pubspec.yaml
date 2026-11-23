@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   kortex:
-    path: ../packages/kortex
+    path: ../packages/kortex_state
 
 dev_dependencies:
   flutter_test:

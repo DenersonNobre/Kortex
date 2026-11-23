@@ -12,7 +12,7 @@ Pacote Flutter/Dart `kortex` (`v0.2.1`; `EPIC00`–`EPIC09` + `KortexSet`, exten
 
 ## Estado real (verificado em 2026-11-22)
 
-- Estrutura monorepo (`Pub Workspace` na raiz + `packages/kortex/` + `poc/`); `packages/kortex/lib/src/reactive/` completo com `KortexSignal` (`Kortex`), `IKortexReadonlySignal` (`IKortex`), `KortexList` (`IKortexList`), `KortexMap` (`IKortexMap`), `KortexSet` (`IKortexSet`) e extensões `.kortex`, `.kortexList`, `.kortexMap`, `.kortexSet`.
+- Estrutura monorepo (`Pub Workspace` na raiz + `packages/kortex_state/` + `packages/kortex_lib/` + `poc/`); `packages/kortex_state/lib/src/reactive/` completo com `KortexSignal` (`Kortex`), `IKortexReadonlySignal` (`IKortex`), `KortexList` (`IKortexList`), `KortexMap` (`IKortexMap`), `KortexSet` (`IKortexSet`) e extensões `.kortex`, `.kortexList`, `.kortexMap`, `.kortexSet`.
 - `example/` atualizado para demonstrar todas as extensões e aliases; suíte raiz (`99` testes) e `example/` (`1` teste) verdes; `flutter pub publish --dry-run` com `0` warnings.
 
 ## Próximo passo acionável
