@@ -10,6 +10,7 @@ library;
 
 import '../../core/result.dart';
 import 'features/commands/.index.dart';
+import 'features/queries/.index.dart';
 import 'domain/.index.dart';
 import 'task_view.dart';
 
