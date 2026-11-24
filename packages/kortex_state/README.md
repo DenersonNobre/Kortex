@@ -20,7 +20,7 @@ Minimal Dart/Flutter package with **zero third-party dependencies** (`sdk: flutt
 
 - **`lib/src/reactive/` (pure Dart)**: `KortexSignal` (`Kortex`), `IKortexReadonlySignal` (`IKortex`), `KortexComputed`, `KortexEffect`, `KortexList` (`IKortexList`), `KortexMap` (`IKortexMap`), `KortexSet` (`IKortexSet`), `kortexBatch`, `kortexUntracked`, `KortexResource`, `KortexStreamResource`, `KortexCommand`, `IKortexDisposable`, `KortexDisposeBag`, `IKortexController` — no `package:flutter/widgets.dart` import anywhere.
 - **`lib/src/scope/` (Flutter SDK)**: `KortexProvider<T>` (`eager`, `lazy`, `.value`), `KortexScope` (hierarchical and sibling resolution with cycle detection, `overrides` for tests, and `KortexScope.capture` for modals/dialogs in the `Overlay`) plus `readKortex<T>()` / `watchKortex<T>()` extensions on `BuildContext`.
-- **`lib/src/widgets/` (Flutter SDK)**: `IKortexPage<TController>`, `KortexWatch`, `KortexSelector<T>`, `KortexListener<T>`, `KortexResourceBuilder<T>` and bridges to `Listenable` / `ValueListenable<T>` (`toKortexSignal()`, `toKortexSignalWith()`, `toListenable()`).
+- **`lib/src/widgets/` (Flutter SDK)**: `KortexMaterialApp`, `KortexCupertinoApp`, `IKortexPage<TController>`, `KortexWatch`, `KortexSelector<T>`, `KortexListener<T>`, `KortexResourceBuilder<T>` and bridges to `Listenable` / `ValueListenable<T>` (`toKortexSignal()`, `toKortexSignalWith()`, `toListenable()`).
 
 ---
 
@@ -49,12 +49,12 @@ class CounterPage extends IKortexPage<CounterController> {
   }
 }
 
-// Composition root
-KortexScope(
+// Composition root with strictly typed MaterialApp
+KortexMaterialApp(
   providers: [
     KortexProvider<CounterController>(create: (_) => CounterController()),
   ],
-  child: const MaterialApp(home: CounterPage()),
+  app: const MaterialApp(home: CounterPage()),
 );
 ```
 

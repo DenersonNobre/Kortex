@@ -157,12 +157,12 @@ class CounterPage extends IKortexPage<CounterController> {
   }
 }
 
-/// Builds the app with `KortexScope` owning [CounterController]'s lifecycle.
-Widget createApp() => KortexScope(
+/// Builds the app with `KortexMaterialApp` owning [CounterController]'s lifecycle.
+Widget createApp() => KortexMaterialApp(
   providers: [
     KortexProvider<CounterController>(create: (_) => CounterController()),
   ],
-  child: const MaterialApp(home: CounterPage()),
+  app: const MaterialApp(home: CounterPage()),
 );
 
 /// Entry point of the example app.

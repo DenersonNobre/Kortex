@@ -7,6 +7,7 @@
 /// Usage: `import 'package:kortex/src/widgets/widgets.dart';`
 library;
 
+export 'kortex_app.dart';
 export 'kortex_listenable_adapter.dart';
 export 'kortex_listener.dart';
 export 'kortex_page.dart';

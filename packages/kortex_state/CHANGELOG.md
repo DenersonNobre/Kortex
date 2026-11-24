@@ -9,7 +9,13 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 - **When it becomes a release**: promoted to a dated section matching the `vX.Y.Z` tag.
 - **Do not confuse with `LEARNINGS.md`**: that is the technical diary; this is the release line.
 
-## [Unpublished]
+## [0.2.4] - 2026-11-24
+
+### Added
+
+- `KortexMaterialApp`: Strictly typed root application widget wrapping a `MaterialApp` with a root `KortexScope` and providers, maintaining 100% of native `MaterialApp` configuration without property replication or API locking.
+- `KortexCupertinoApp`: Strictly typed root application widget wrapping a `CupertinoApp` with a root `KortexScope` and providers.
+- Updated `example/lib/main.dart` to showcase `KortexMaterialApp`.
 
 ## [0.2.3] - 2026-11-23
 
