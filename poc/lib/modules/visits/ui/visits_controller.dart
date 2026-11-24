@@ -10,6 +10,7 @@
 library;
 
 import 'package:kortex/kortex.dart';
+import 'package:kortex_persist/kortex_persist.dart';
 
 import '../../../core/result.dart';
 import '../../clients/domain/.index.dart';
@@ -44,8 +45,15 @@ class VisitsController extends IKortexController {
   /// Comando de inicio de visita (trava de duplo clique).
   late final KortexCommand<int, IResult<Visit>> startCommand;
 
-  /// Status ativo do filtro (`''` = todos).
-  final KortexSignal<String> statusFilter = KortexSignal('');
+  /// Status ativo do filtro (`''` = todos), hidratado via `kortex_persist`.
+  final KortexPersistedSignal<String> statusFilter =
+      kortexPersistedSignal<String>(
+        key: 'visits_status_filter',
+        initialValue: '',
+        storage: KortexMemoryStorage(),
+        encode: (v) => v,
+        decode: (raw) => raw,
+      );
 
   /// Mensagem de erro da ultima acao.
   final KortexSignal<String> error = KortexSignal('');

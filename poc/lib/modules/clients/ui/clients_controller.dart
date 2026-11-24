@@ -7,7 +7,7 @@
 /// Dependencias: `kortex` + camada `features` do modulo de clientes.
 library;
 
-import 'package:kortex/kortex.dart';
+import 'package:kortex_lib/kortex_lib.dart';
 
 import '../../../../core/result.dart';
 import '../../clients/domain/.index.dart';
@@ -22,9 +22,25 @@ class ClientsController extends IKortexController {
     );
     autoDispose(search);
     autoDispose(error);
+    autoDispose(form);
   }
 
   final IClientUseCases _useCases;
+
+  /// Campo reativo de nome validado via `kortex_forms`.
+  final KortexField<String> nameField = kortexField<String>(
+    '',
+    validators: [kortexValidator<String>().required('Nome obrigatorio').build()],
+  );
+
+  /// Campo reativo de telefone validado via `kortex_lib` (`PhoneBrValidator`).
+  final KortexField<String> phoneField = kortexField<String>(
+    '',
+    validators: [PhoneBrValidator.validate],
+  );
+
+  /// Formulario reativo de cadastro de cliente.
+  late final KortexForm form = kortexForm([nameField, phoneField]);
 
   /// Lista de clientes filtrada por [search].
   late final KortexResource<List<Client>> clients;
