@@ -12,7 +12,7 @@ import 'package:kortex/kortex.dart';
 import '../../../core/result.dart';
 import '../domain/.index.dart';
 import '../features/tasks_features.dart';
-import '../task_view.dart';
+import '../features/queries/task_row.dart';
 import 'task_draft.dart';
 
 /// Controller da `TasksPage`.
@@ -29,7 +29,7 @@ class TasksController extends IKortexController {
   final ITaskUseCases _useCases;
 
   /// Tasks visiveis (respeitam o filtro de categoria ativo).
-  final KortexSignal<List<TaskView>> tasks = KortexSignal(const []);
+  final KortexSignal<List<TaskRow>> tasks = KortexSignal(const []);
 
   /// Categorias cadastradas.
   final KortexSignal<List<Category>> categories = KortexSignal(const []);

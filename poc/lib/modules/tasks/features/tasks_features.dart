@@ -12,15 +12,14 @@ import '../../../core/result.dart';
 import 'commands/.index.dart';
 import 'queries/.index.dart';
 import '../domain/.index.dart';
-import '../task_view.dart';
 
 /// Contrato único consumido pelo controller (1 dependência).
 abstract interface class ITaskUseCases {
   /// Lista todas as tasks com categorias resolvidas.
-  List<TaskView> listAll();
+  List<TaskRow> listAll();
 
   /// Filtra por categoria (`null` = sem categoria).
-  List<TaskView> listByCategory(int? categoryId);
+  List<TaskRow> listByCategory(int? categoryId);
 
   /// Lista as categorias ordenadas por `id`.
   List<Category> listCategories();
@@ -69,10 +68,10 @@ class DefaultTaskUseCases implements ITaskUseCases {
   final DeleteCategoryCommand _deleteCategory;
 
   @override
-  List<TaskView> listAll() => _listQuery.all();
+  List<TaskRow> listAll() => _listQuery.all();
 
   @override
-  List<TaskView> listByCategory(int? categoryId) =>
+  List<TaskRow> listByCategory(int? categoryId) =>
       _listQuery.byCategory(categoryId);
 
   @override

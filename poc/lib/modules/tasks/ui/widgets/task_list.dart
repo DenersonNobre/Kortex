@@ -10,7 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
-import '../../task_view.dart';
+import '../../features/queries/task_row.dart';
 import '../tasks_controller.dart';
 
 /// Lista de tasks com concluir e remover.
@@ -45,7 +45,7 @@ class _TaskRow extends StatelessWidget {
   const _TaskRow({required this.controller, required this.task});
 
   final TasksController controller;
-  final TaskView task;
+  final TaskRow task;
 
   @override
   Widget build(BuildContext context) {

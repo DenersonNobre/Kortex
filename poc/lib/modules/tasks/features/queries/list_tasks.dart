@@ -8,7 +8,7 @@
 library;
 
 import '../../domain/.index.dart';
-import '../../task_view.dart';
+import 'task_row.dart';
 
 /// Query de listagem (`all`) e filtro por categoria (`byCategory`).
 class ListTasksQuery {
@@ -19,20 +19,20 @@ class ListTasksQuery {
   final ICategoryRepository _categories;
 
   /// Lista todas ordenadas por `id`, com nomes resolvidos.
-  List<TaskView> all() => _views(_tasks.findAll());
+  List<TaskRow> all() => _views(_tasks.findAll());
 
   /// Filtra por [categoryId] (`null` = sem categoria).
-  List<TaskView> byCategory(int? categoryId) =>
+  List<TaskRow> byCategory(int? categoryId) =>
       _views(_tasks.findAll().where((task) => task.categoryId == categoryId));
 
-  List<TaskView> _views(Iterable<Task> tasks) {
+  List<TaskRow> _views(Iterable<Task> tasks) {
     final names = <int, String>{
       for (final category in _categories.findAll())
         category.id: category.name.value,
     };
     return [
       for (final task in tasks)
-        TaskView(
+        TaskRow(
           id: task.id,
           title: task.title.value,
           done: task.done,

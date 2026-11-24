@@ -1,4 +1,4 @@
-/// Visão de leitura de task com categoria resolvida (`TaskView`).
+/// Visão de leitura de task com categoria resolvida (`TaskRow`).
 ///
 /// SRP: transportar para a UI o resultado do join task→categoria.
 /// NÃO faz: validar, persistir nem observar.
@@ -8,9 +8,9 @@
 library;
 
 /// Linha da lista de tasks com o nome da categoria (quando houver).
-final class TaskView {
+final class TaskRow {
   /// Cria a view com os campos resolvidos pela query.
-  const TaskView({
+  const TaskRow({
     required this.id,
     required this.title,
     required this.done,
