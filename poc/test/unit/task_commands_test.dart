@@ -1,7 +1,7 @@
 import 'package:poc/core/result.dart';
 import 'package:poc/modules/tasks/data/.index.dart';
 import 'package:poc/modules/tasks/domain/.index.dart';
-import 'package:poc/modules/tasks/task_use_cases.dart';
+import 'package:poc/modules/tasks/features/tasks_features.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Monta a fachada sobre stores em memória.

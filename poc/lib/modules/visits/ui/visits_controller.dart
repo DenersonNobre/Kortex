@@ -16,7 +16,7 @@ import '../../../core/result.dart';
 import '../../clients/domain/.index.dart';
 import '../domain/.index.dart';
 import '../features/list_visits/visit_row.dart';
-import '../features/visit_use_cases.dart';
+import '../features/visits_features.dart';
 
 /// Controller da lista e das acoes de visita.
 class VisitsController extends IKortexController {

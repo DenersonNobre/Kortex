@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
 import '../modules/tasks/data/.index.dart';
-import '../modules/tasks/task_use_cases.dart';
+import '../modules/tasks/features/tasks_features.dart';
 import '../modules/tasks/ui/tasks_controller.dart';
 import '../modules/tasks/ui/tasks_page.dart';
 

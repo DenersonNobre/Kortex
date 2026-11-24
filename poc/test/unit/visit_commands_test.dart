@@ -5,7 +5,7 @@ import 'package:poc/modules/clients/domain/.index.dart';
 import 'package:poc/modules/session/.index.dart';
 import 'package:poc/modules/visits/data/.index.dart';
 import 'package:poc/modules/visits/domain/.index.dart';
-import 'package:poc/modules/visits/features/visit_use_cases.dart';
+import 'package:poc/modules/visits/features/visits_features.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
 T _ok<T>(IResult<T> result) {

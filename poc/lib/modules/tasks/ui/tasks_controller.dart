@@ -11,7 +11,7 @@ import 'package:kortex/kortex.dart';
 
 import '../../../core/result.dart';
 import '../domain/.index.dart';
-import '../task_use_cases.dart';
+import '../features/tasks_features.dart';
 import '../task_view.dart';
 import 'task_draft.dart';
 

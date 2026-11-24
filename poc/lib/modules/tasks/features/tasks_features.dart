@@ -8,11 +8,11 @@
 /// Dependências: commands e queries via barrels (puro, sem UI).
 library;
 
-import '../../core/result.dart';
-import 'features/commands/.index.dart';
-import 'features/queries/.index.dart';
-import 'domain/.index.dart';
-import 'task_view.dart';
+import '../../../core/result.dart';
+import 'commands/.index.dart';
+import 'queries/.index.dart';
+import '../domain/.index.dart';
+import '../task_view.dart';
 
 /// Contrato único consumido pelo controller (1 dependência).
 abstract interface class ITaskUseCases {

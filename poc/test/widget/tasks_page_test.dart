@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poc/app/tasks_app.dart';
 import 'package:poc/modules/tasks/data/.index.dart';
-import 'package:poc/modules/tasks/task_use_cases.dart';
+import 'package:poc/modules/tasks/features/tasks_features.dart';
 import 'package:poc/modules/tasks/ui/tasks_controller.dart';
 
 /// Texto do `SnackBar` de erro que contem [pattern].

@@ -5,7 +5,7 @@ import 'package:poc/modules/clients/data/.index.dart';
 import 'package:poc/modules/clients/domain/.index.dart';
 import 'package:poc/modules/session/.index.dart';
 import 'package:poc/modules/visits/data/.index.dart';
-import 'package:poc/modules/visits/features/visit_use_cases.dart';
+import 'package:poc/modules/visits/features/visits_features.dart';
 import 'package:poc/modules/visits/ui/visits_controller.dart';
 
 import '../support/controller_lifecycle.dart';
