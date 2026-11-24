@@ -7,10 +7,10 @@
 /// Dependencias: ports (visitas/clientes), sessao e dominio (puro).
 library;
 
-import '../../../core/result.dart';
-import '../../clients/domain/.index.dart';
-import '../../session/.index.dart';
-import '../domain/.index.dart';
+import '../../../../core/result.dart';
+import '../../../clients/domain/.index.dart';
+import '../../../session/.index.dart';
+import '../../domain/.index.dart';
 
 /// Agenda uma visita para um cliente existente, atribuida ao usuario da sessao.
 class ScheduleVisitCommand {

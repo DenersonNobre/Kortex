@@ -10,7 +10,7 @@ library;
 import '../../../core/result.dart';
 import '../../clients/domain/.index.dart';
 import '../../session/.index.dart';
-import '../commands/visit_commands.dart';
+import 'commands/visit_commands.dart';
 import '../domain/.index.dart';
 import 'list_visits/list_visits_query.dart';
 import 'list_visits/visit_row.dart';

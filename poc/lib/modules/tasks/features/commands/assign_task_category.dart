@@ -7,8 +7,8 @@
 /// Dependências: ports dos dois agregados (puro).
 library;
 
-import '../../../core/result.dart';
-import '../domain/.index.dart';
+import '../../../../core/result.dart';
+import '../../domain/.index.dart';
 
 /// Vincula/desvincula preservando os demais campos da task.
 class AssignTaskCategoryCommand {

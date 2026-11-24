@@ -9,7 +9,7 @@
 library;
 
 import '../../core/result.dart';
-import 'commands/.index.dart';
+import 'features/commands/.index.dart';
 import 'domain/.index.dart';
 import 'task_view.dart';
 

@@ -7,8 +7,8 @@
 /// Dependências: port de tasks + contrato de falha (puro).
 library;
 
-import '../../../core/result.dart';
-import '../domain/.index.dart';
+import '../../../../core/result.dart';
+import '../../domain/.index.dart';
 
 /// Alterna `done` preservando demais campos.
 class ToggleTaskCommand {

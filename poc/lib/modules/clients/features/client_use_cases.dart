@@ -8,7 +8,7 @@
 library;
 
 import '../../../core/result.dart';
-import '../commands/.index.dart';
+import 'commands/.index.dart';
 import '../domain/.index.dart';
 
 /// Contrato unico consumido pelo controller de clientes.

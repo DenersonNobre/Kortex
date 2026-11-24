@@ -7,8 +7,8 @@
 /// Dependências: ports dos dois agregados (puro).
 library;
 
-import '../domain/.index.dart';
-import '../task_view.dart';
+import '../../domain/.index.dart';
+import '../../task_view.dart';
 
 /// Query de listagem (`all`) e filtro por categoria (`byCategory`).
 class ListTasksQuery {

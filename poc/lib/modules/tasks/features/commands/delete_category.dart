@@ -7,8 +7,8 @@
 /// Dependências: ports dos dois agregados (puro).
 library;
 
-import '../../../core/result.dart';
-import '../domain/.index.dart';
+import '../../../../core/result.dart';
+import '../../domain/.index.dart';
 
 /// Exclui categoria livre, devolvendo a excluída.
 class DeleteCategoryCommand {

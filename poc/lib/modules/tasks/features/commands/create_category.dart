@@ -4,8 +4,8 @@
 /// Dependências: port de categorias (puro).
 library;
 
-import '../../../core/result.dart';
-import '../domain/.index.dart';
+import '../../../../core/result.dart';
+import '../../domain/.index.dart';
 
 /// Cria categorias com VOs validados.
 class CreateCategoryCommand {

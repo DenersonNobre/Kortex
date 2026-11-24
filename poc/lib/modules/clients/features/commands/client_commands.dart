@@ -6,8 +6,8 @@
 /// Dependencias: porta + dominio (puro).
 library;
 
-import '../../../core/result.dart';
-import '../domain/.index.dart';
+import '../../../../core/result.dart';
+import '../../domain/.index.dart';
 
 /// Cria um cliente validado.
 class CreateClientCommand {

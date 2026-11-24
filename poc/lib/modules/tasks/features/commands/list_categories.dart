@@ -4,7 +4,7 @@
 /// Dependências: port do agregado (puro).
 library;
 
-import '../domain/.index.dart';
+import '../../domain/.index.dart';
 
 /// Query de listagem de categorias.
 class ListCategoriesQuery {
