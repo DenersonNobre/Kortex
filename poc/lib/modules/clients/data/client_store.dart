@@ -21,12 +21,24 @@ class InMemoryClientStore implements IClientRepository {
   InMemoryClientStore({
     this.latency = const Duration(milliseconds: 200),
     bool seedDemo = false,
+    bool seedPreview = false,
   }) {
-    if (!seedDemo) return;
-    final result = Client.create(name: 'Cliente Demo', phone: '11988887777');
-    if (result is Success<Client, AppFailure>) {
-      final created = result.value.withId(++_sequence);
-      _store[created.id] = created;
+    if (!seedDemo && !seedPreview) return;
+    final seeds = seedPreview
+        ? const [
+            (name: 'Cliente Demo', phone: '11988887777'),
+            (name: 'Clinica Saude Total', phone: '11977776666'),
+            (name: 'Supermercado Central', phone: '11966665555'),
+            (name: 'Escola Horizonte', phone: '11955554444'),
+            (name: 'Padaria Bom Pao', phone: '11944443333'),
+          ]
+        : const [(name: 'Cliente Demo', phone: '11988887777')];
+    for (final seed in seeds) {
+      final result = Client.create(name: seed.name, phone: seed.phone);
+      if (result is Success<Client, AppFailure>) {
+        final created = result.value.withId(++_sequence);
+        _store[created.id] = created;
+      }
     }
   }
 

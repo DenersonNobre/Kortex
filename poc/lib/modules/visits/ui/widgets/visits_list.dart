@@ -30,10 +30,10 @@ class VisitsList extends StatelessWidget {
         child: Text('Nenhuma visita'),
       );
     }
-    return Column(
-      children: [
-        for (final row in rows) _VisitTile(controller: controller, row: row),
-      ],
+    return ListView.builder(
+      itemCount: rows.length,
+      itemBuilder: (_, index) =>
+          _VisitTile(controller: controller, row: rows[index]),
     );
   }
 }

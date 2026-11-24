@@ -11,4 +11,4 @@ import 'package:flutter/widgets.dart';
 import 'app/visits_app.dart';
 
 /// Ponto de entrada.
-void main() => runApp(createVisitsApp());
+void main() => runApp(createVisitsApp(seedPreview: true));

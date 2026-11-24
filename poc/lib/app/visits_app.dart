@@ -25,13 +25,19 @@ import 'app_shell.dart';
 Widget createVisitsApp({
   List<KortexProvider<dynamic>> overrides = const [],
   bool seedDemo = true,
+  bool seedPreview = false,
 }) => KortexScope(
   overrides: overrides,
   providers: [
     KortexProvider<InMemoryClientStore>(
-      create: (_) => InMemoryClientStore(seedDemo: seedDemo),
+      create: (_) => InMemoryClientStore(
+        seedDemo: seedDemo,
+        seedPreview: seedPreview,
+      ),
     ),
-    KortexProvider<InMemoryVisitStore>(create: (_) => InMemoryVisitStore()),
+    KortexProvider<InMemoryVisitStore>(
+      create: (_) => InMemoryVisitStore(seedDemo: seedPreview),
+    ),
     KortexProvider<ISessionProvider>(
       create: (_) => InMemorySessionProvider.demo(),
     ),

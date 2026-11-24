@@ -9,6 +9,6 @@ void main() {
     await tester.pump(const Duration(seconds: 3));
 
     expect(find.text('Visitas técnicas'), findsOneWidget);
-    expect(find.text('Nenhuma visita'), findsOneWidget);
+    expect(find.text('Manutencao preventiva servidor'), findsOneWidget);
   });
 }
