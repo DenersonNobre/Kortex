@@ -3,7 +3,7 @@
 /// SRP: garantir o formato `#RRGGBB` na fronteira de criação.
 /// NÃO faz: conversão para `Color` do Flutter (papel da presentation).
 ///
-/// Patterns: Value Object com fábrica que devolve `Result`.
+/// Patterns: Value Object com fábrica que devolve `IResult`.
 /// Dependências: `shared/result.dart` + códigos (puro).
 library;
 
@@ -20,7 +20,7 @@ final class CategoryColor {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
-  static Result<CategoryColor> create(String raw) {
+  static IResult<CategoryColor> create(String raw) {
     final trimmed = raw.trim();
     if (!_hex.hasMatch(trimmed)) {
       return const Fail(

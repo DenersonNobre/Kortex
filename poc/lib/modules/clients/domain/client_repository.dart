@@ -10,7 +10,7 @@ library;
 import 'client.dart';
 
 /// Contrato de persistencia usado pelo modulo de clientes e por `visits`.
-abstract interface class ClientRepository {
+abstract interface class IClientRepository {
   /// Lista todos os clientes ordenados por `id`.
   Future<List<Client>> listClients();
 

@@ -35,19 +35,19 @@ Widget createVisitsApp({
     KortexProvider<ISessionProvider>(
       create: (_) => InMemorySessionProvider.demo(),
     ),
-    KortexProvider<VisitUseCases>(
+    KortexProvider<IVisitUseCases>(
       create: (scope) => DefaultVisitUseCases(
         visits: scope.read<InMemoryVisitStore>(),
         clients: scope.read<InMemoryClientStore>(),
         session: scope.read<ISessionProvider>(),
       ),
     ),
-    KortexProvider<ClientUseCases>(
+    KortexProvider<IClientUseCases>(
       create: (scope) =>
           DefaultClientUseCases(clients: scope.read<InMemoryClientStore>()),
     ),
     KortexProvider<VisitsController>(
-      create: (scope) => VisitsController(scope.read<VisitUseCases>())
+      create: (scope) => VisitsController(scope.read<IVisitUseCases>())
         ..loadClients()
         ..refresh(),
     ),

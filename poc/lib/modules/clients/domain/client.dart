@@ -3,7 +3,7 @@
 /// SRP: identificar o site com nome e telefone validos.
 /// NAO faz: agenda, persistencia ou UI.
 ///
-/// Patterns: Entidade imutavel + fabrica que devolve `Result` + `_copy`.
+/// Patterns: Entidade imutavel + fabrica que devolve `IResult` + `_copy`.
 /// Dependencias: `core/result.dart` + codigos (puro).
 library;
 
@@ -35,7 +35,7 @@ final class Client {
   final String address;
 
   /// Valida os campos e devolve `Ok` ou `Fail` com codigo estavel.
-  static Result<Client> create({
+  static IResult<Client> create({
     required String name,
     required String phone,
     String address = '',

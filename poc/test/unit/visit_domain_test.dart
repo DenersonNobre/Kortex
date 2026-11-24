@@ -10,7 +10,7 @@ import 'package:poc/modules/visits/domain/visit_title.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(Result<T> result) {
+T _ok<T>(IResult<T> result) {
   expect(result, isA<Ok<T>>());
   return (result as Ok<T>).value;
 }
@@ -38,28 +38,28 @@ void main() {
     });
   });
 
-  group('VisitStatus', () {
+  group('EVisitStatus', () {
     test('parse valido devolve o status', () {
-      final status = VisitStatus.parse('scheduled');
+      final status = EVisitStatus.parse('scheduled');
 
-      expect(status, isA<Ok<VisitStatus>>());
-      expect((status as Ok<VisitStatus>).value, VisitStatus.scheduled);
+      expect(status, isA<Ok<EVisitStatus>>());
+      expect((status as Ok<EVisitStatus>).value, EVisitStatus.scheduled);
     });
 
     test('status invalido reprova com VISIT_STATUS_INVALID', () {
-      final status = VisitStatus.parse('concluida');
+      final status = EVisitStatus.parse('concluida');
 
-      expect(status, isA<Fail<VisitStatus>>());
+      expect(status, isA<Fail<EVisitStatus>>());
       expect((status as Fail).code, VisitFailureCodes.statusInvalid);
     });
 
     test('transicoes de status sao validas', () {
-      expect(VisitStatus.scheduled.canStart, isTrue);
-      expect(VisitStatus.scheduled.canComplete, isFalse);
-      expect(VisitStatus.inProgress.canStart, isFalse);
-      expect(VisitStatus.inProgress.canComplete, isTrue);
-      expect(VisitStatus.completed.canStart, isFalse);
-      expect(VisitStatus.completed.canComplete, isFalse);
+      expect(EVisitStatus.scheduled.canStart, isTrue);
+      expect(EVisitStatus.scheduled.canComplete, isFalse);
+      expect(EVisitStatus.inProgress.canStart, isFalse);
+      expect(EVisitStatus.inProgress.canComplete, isTrue);
+      expect(EVisitStatus.completed.canStart, isFalse);
+      expect(EVisitStatus.completed.canComplete, isFalse);
     });
   });
 
@@ -92,7 +92,7 @@ void main() {
       expect(draft, isA<Ok<Visit>>());
       final visit = (draft as Ok<Visit>).value;
       expect(visit.id, 0);
-      expect(visit.status, VisitStatus.scheduled);
+      expect(visit.status, EVisitStatus.scheduled);
       expect(visit.checklist, hasLength(1));
     });
 

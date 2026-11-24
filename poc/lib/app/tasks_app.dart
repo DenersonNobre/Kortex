@@ -20,14 +20,14 @@ Widget createTasksApp() => KortexScope(
   providers: [
     KortexProvider<CategoryStore>(create: (_) => CategoryStore()),
     KortexProvider<TaskStore>(create: (_) => TaskStore()),
-    KortexProvider<TaskUseCases>(
+    KortexProvider<ITaskUseCases>(
       create: (scope) => DefaultTaskUseCases(
         tasks: scope.read<TaskStore>(),
         categories: scope.read<CategoryStore>(),
       ),
     ),
     KortexProvider<TasksController>(
-      create: (scope) => TasksController(scope.read<TaskUseCases>())
+      create: (scope) => TasksController(scope.read<ITaskUseCases>())
         ..refreshCategories()
         ..refresh(),
     ),

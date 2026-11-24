@@ -10,7 +10,7 @@ library;
 import 'visit.dart';
 
 /// Contrato de leitura e escrita das visitas.
-abstract interface class VisitRepository {
+abstract interface class IVisitRepository {
   /// Lista todas as visitas (ordenadas por `id`).
   Future<List<Visit>> listVisits();
 

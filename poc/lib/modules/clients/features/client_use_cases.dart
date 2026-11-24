@@ -1,4 +1,4 @@
-/// Fachada de casos de uso do modulo de clientes (`ClientUseCases`).
+/// Fachada de casos de uso do modulo de clientes (`IClientUseCases`).
 ///
 /// SRP: agregar listagem, criacao e edicao num contrato injetavel.
 /// NAO faz: regra de negocio (vive nos commands) nem I/O.
@@ -12,19 +12,19 @@ import '../commands/.index.dart';
 import '../domain/.index.dart';
 
 /// Contrato unico consumido pelo controller de clientes.
-abstract interface class ClientUseCases {
+abstract interface class IClientUseCases {
   /// Lista clientes; [search] filtra por nome (sem diferenciar caixa).
   Future<List<Client>> listClients({String search});
 
   /// Cria um cliente.
-  Future<Result<Client>> createClient({
+  Future<IResult<Client>> createClient({
     required String name,
     required String phone,
     String address,
   });
 
   /// Edita um cliente existente.
-  Future<Result<Client>> updateClient(
+  Future<IResult<Client>> updateClient(
     int id, {
     String? name,
     String? phone,
@@ -33,14 +33,14 @@ abstract interface class ClientUseCases {
 }
 
 /// Implementacao padrao compondo commands e a porta.
-class DefaultClientUseCases implements ClientUseCases {
+class DefaultClientUseCases implements IClientUseCases {
   /// Monta a fachada sobre o repositorio [clients].
-  DefaultClientUseCases({required ClientRepository clients})
+  DefaultClientUseCases({required IClientRepository clients})
     : _clients = clients,
       _create = CreateClientCommand(clients),
       _update = UpdateClientCommand(clients);
 
-  final ClientRepository _clients;
+  final IClientRepository _clients;
   final CreateClientCommand _create;
   final UpdateClientCommand _update;
 
@@ -56,14 +56,14 @@ class DefaultClientUseCases implements ClientUseCases {
   }
 
   @override
-  Future<Result<Client>> createClient({
+  Future<IResult<Client>> createClient({
     required String name,
     required String phone,
     String address = '',
   }) => _create(name: name, phone: phone, address: address);
 
   @override
-  Future<Result<Client>> updateClient(
+  Future<IResult<Client>> updateClient(
     int id, {
     String? name,
     String? phone,

@@ -1,4 +1,4 @@
-/// Fachada de casos de uso do módulo de tasks (`TaskUseCases`).
+/// Fachada de casos de uso do módulo de tasks (`ITaskUseCases`).
 ///
 /// SRP: agregar os casos de uso num único contrato injetável, evitando
 /// over-injection no controller. NÃO faz: regra de negócio (vive nos
@@ -14,7 +14,7 @@ import 'domain/.index.dart';
 import 'task_view.dart';
 
 /// Contrato único consumido pelo controller (1 dependência).
-abstract interface class TaskUseCases {
+abstract interface class ITaskUseCases {
   /// Lista todas as tasks com categorias resolvidas.
   List<TaskView> listAll();
 
@@ -25,30 +25,30 @@ abstract interface class TaskUseCases {
   List<Category> listCategories();
 
   /// Cria task (categoria opcional previamente existente).
-  Result<Task> create(String rawTitle, {int? categoryId});
+  IResult<Task> create(String rawTitle, {int? categoryId});
 
   /// Inverte `done` da task.
-  Result<Task> toggle(int id);
+  IResult<Task> toggle(int id);
 
   /// Remove e devolve a removida.
-  Result<Task> remove(int id);
+  IResult<Task> remove(int id);
 
   /// Vincula (`categoryId`) ou desvincula (`null`) a categoria.
-  Result<Task> assignCategory(int taskId, int? categoryId);
+  IResult<Task> assignCategory(int taskId, int? categoryId);
 
   /// Cria categoria com VOs validados.
-  Result<Category> createCategory(String name, String color);
+  IResult<Category> createCategory(String name, String color);
 
   /// Exclui categoria livre, devolvendo a excluída.
-  Result<Category> deleteCategory(int id);
+  IResult<Category> deleteCategory(int id);
 }
 
 /// Implementação padrão compondo commands e queries.
-class DefaultTaskUseCases implements TaskUseCases {
+class DefaultTaskUseCases implements ITaskUseCases {
   /// Monta a fachada sobre os repositórios [tasks] e [categories].
   DefaultTaskUseCases({
-    required TaskRepository tasks,
-    required CategoryRepository categories,
+    required ITaskRepository tasks,
+    required ICategoryRepository categories,
   }) : _listQuery = ListTasksQuery(tasks, categories),
        _listCategories = ListCategoriesQuery(categories),
        _create = CreateTaskCommand(tasks, categories),
@@ -78,23 +78,23 @@ class DefaultTaskUseCases implements TaskUseCases {
   List<Category> listCategories() => _listCategories();
 
   @override
-  Result<Task> create(String rawTitle, {int? categoryId}) =>
+  IResult<Task> create(String rawTitle, {int? categoryId}) =>
       _create(rawTitle, categoryId: categoryId);
 
   @override
-  Result<Task> toggle(int id) => _toggle(id);
+  IResult<Task> toggle(int id) => _toggle(id);
 
   @override
-  Result<Task> remove(int id) => _remove(id);
+  IResult<Task> remove(int id) => _remove(id);
 
   @override
-  Result<Task> assignCategory(int taskId, int? categoryId) =>
+  IResult<Task> assignCategory(int taskId, int? categoryId) =>
       _assign(taskId, categoryId);
 
   @override
-  Result<Category> createCategory(String name, String color) =>
+  IResult<Category> createCategory(String name, String color) =>
       _createCategory(name, color);
 
   @override
-  Result<Category> deleteCategory(int id) => _deleteCategory(id);
+  IResult<Category> deleteCategory(int id) => _deleteCategory(id);
 }

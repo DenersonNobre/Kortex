@@ -1,4 +1,4 @@
-/// Porta de persistência de tasks (`TaskRepository`).
+/// Porta de persistência de tasks (`ITaskRepository`).
 ///
 /// SRP: contrato mínimo de CRUD síncrono para o agregado `Task`.
 /// NÃO faz: validar regras (domínio), escolher tecnologia nem I/O real.
@@ -10,7 +10,7 @@ library;
 import 'task.dart';
 
 /// Contrato de persistência usado pelos commands e pela query.
-abstract interface class TaskRepository {
+abstract interface class ITaskRepository {
   /// Lista todas ordenadas por `id`.
   List<Task> findAll();
 

@@ -3,7 +3,7 @@
 /// SRP: garantir invariante (não-vazio, até `maxLength`, normalizado com
 /// trim) na fronteira de criação. NÃO faz: persistência nem UI.
 ///
-/// Patterns: Value Object com fábrica que devolve `Result`.
+/// Patterns: Value Object com fábrica que devolve `IResult`.
 /// Dependências: `shared/result.dart` + `task_failures.dart` (puro).
 library;
 
@@ -21,7 +21,7 @@ final class TaskTitle {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
-  static Result<TaskTitle> create(String raw) {
+  static IResult<TaskTitle> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
       return const Fail(

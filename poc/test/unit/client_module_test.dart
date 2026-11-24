@@ -5,19 +5,19 @@ import 'package:poc/modules/clients/domain/.index.dart';
 import 'package:poc/modules/clients/features/.index.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(Result<T> result) {
+T _ok<T>(IResult<T> result) {
   expect(result, isA<Ok<T>>());
   return (result as Ok<T>).value;
 }
 
 /// Codigo de um `Fail` (falha o teste se for `Ok`).
-String _code<T>(Result<T> result) {
+String _code<T>(IResult<T> result) {
   expect(result, isA<Fail<T>>());
   return (result as Fail<T>).code;
 }
 
 /// Fachada sobre store em memoria (sem latencia).
-ClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
+IClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
   clients: store ?? InMemoryClientStore(latency: Duration.zero),
 );
 
@@ -87,7 +87,7 @@ void main() {
     });
   });
 
-  group('ClientUseCases (listagem)', () {
+  group('IClientUseCases (listagem)', () {
     test('busca por nome filtra sem diferenciar caixa', () async {
       final useCases = _useCases();
       await useCases.createClient(name: 'Empresa Alfa', phone: '11988887777');

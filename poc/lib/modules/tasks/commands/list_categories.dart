@@ -11,7 +11,7 @@ class ListCategoriesQuery {
   /// Cria a query sobre [categories].
   const ListCategoriesQuery(this._categories);
 
-  final CategoryRepository _categories;
+  final ICategoryRepository _categories;
 
   /// Lista todas ordenadas por `id`.
   List<Category> call() => _categories.findAll();

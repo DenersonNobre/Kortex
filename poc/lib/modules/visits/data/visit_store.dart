@@ -1,6 +1,6 @@
 /// Store em memoria de visitas, com latencia e falha simuladas.
 ///
-/// SRP: implementar `VisitRepository` sobre um `Map`, simulando I/O de rede
+/// SRP: implementar `IVisitRepository` sobre um `Map`, simulando I/O de rede
 /// (demora e falha). NAO faz: regra de negocio nem persistencia real.
 ///
 /// Patterns: Adapter + injecao de falha (`failNext`).
@@ -13,7 +13,7 @@ import '../domain/visit.dart';
 import '../domain/visit_repository.dart';
 
 /// Store volatil de visitas com latencia simulada.
-class InMemoryVisitStore implements VisitRepository {
+class InMemoryVisitStore implements IVisitRepository {
   /// Cria o store com [latency] de espera por operacao.
   InMemoryVisitStore({this.latency = const Duration(milliseconds: 200)});
 

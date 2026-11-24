@@ -22,7 +22,7 @@ final class SessionUser {
   final String specialty;
 
   /// Valida os campos e devolve `Ok` ou `Fail` com codigo estavel.
-  static Result<SessionUser> create({
+  static IResult<SessionUser> create({
     required String name,
     required String specialty,
   }) {

@@ -1,7 +1,7 @@
 /// Controller reativo da POC de tasks.
 ///
 /// SRP: expor lista filtrada, categorias, rascunho e erro, delegando toda a
-/// regra ao `TaskUseCases`. NAO faz: UI, navegacao ou persistencia direta.
+/// regra ao `ITaskUseCases`. NAO faz: UI, navegacao ou persistencia direta.
 ///
 /// Patterns: `IKortexController` (sinais + `disposeBag`), inicializacao no
 /// construtor. Dependencias: `kortex` + camada `features` da POC.
@@ -26,7 +26,7 @@ class TasksController extends IKortexController {
     autoDispose(showCategoryForm);
   }
 
-  final TaskUseCases _useCases;
+  final ITaskUseCases _useCases;
 
   /// Tasks visiveis (respeitam o filtro de categoria ativo).
   final KortexSignal<List<TaskView>> tasks = KortexSignal(const []);

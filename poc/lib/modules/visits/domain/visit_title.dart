@@ -3,7 +3,7 @@
 /// SRP: garantir o invariante (nao-vazio, ate `maxLength`, normalizado).
 /// NAO faz: persistencia nem UI.
 ///
-/// Patterns: Value Object com fabrica que devolve `Result`.
+/// Patterns: Value Object com fabrica que devolve `IResult`.
 /// Dependencias: `core/result.dart` + codigos (puro).
 library;
 
@@ -21,7 +21,7 @@ final class VisitTitle {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com codigo estavel.
-  static Result<VisitTitle> create(String raw) {
+  static IResult<VisitTitle> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
       return const Fail(

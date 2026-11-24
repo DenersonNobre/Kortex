@@ -15,11 +15,11 @@ class DeleteCategoryCommand {
   /// Cria o command sobre [categories] e [tasks].
   const DeleteCategoryCommand(this._categories, this._tasks);
 
-  final CategoryRepository _categories;
-  final TaskRepository _tasks;
+  final ICategoryRepository _categories;
+  final ITaskRepository _tasks;
 
   /// Exclui, ou `Fail` (`CATEGORY_NOT_FOUND`, `CATEGORY_IN_USE`).
-  Result<Category> call(int id) {
+  IResult<Category> call(int id) {
     final category = _categories.findById(id);
     if (category == null) {
       return const Fail(

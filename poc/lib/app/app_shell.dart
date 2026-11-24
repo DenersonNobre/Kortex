@@ -87,7 +87,7 @@ class _AgendaScopeState extends State<AgendaScope> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final useCases = context.readKortex<VisitUseCases>();
+    final useCases = context.readKortex<IVisitUseCases>();
     _providers ??= [
       KortexProvider<AgendaController>(
         create: (_) => AgendaController(useCases)..refresh(),
@@ -121,7 +121,7 @@ class _ClientsScopeState extends State<ClientsScope> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final useCases = context.readKortex<ClientUseCases>();
+    final useCases = context.readKortex<IClientUseCases>();
     _providers ??= [
       KortexProvider<ClientsController>(
         create: (_) => ClientsController(useCases)..refresh(),

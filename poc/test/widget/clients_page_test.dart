@@ -8,7 +8,7 @@ import 'package:poc/modules/clients/features/.index.dart';
 import '../support/controller_lifecycle.dart';
 
 /// Fachada sobre store em memoria (sem latencia).
-ClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
+IClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
   clients: store ?? InMemoryClientStore(latency: Duration.zero),
 );
 

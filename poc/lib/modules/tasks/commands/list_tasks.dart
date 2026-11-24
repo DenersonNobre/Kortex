@@ -15,8 +15,8 @@ class ListTasksQuery {
   /// Cria a query sobre [tasks] e [categories].
   const ListTasksQuery(this._tasks, this._categories);
 
-  final TaskRepository _tasks;
-  final CategoryRepository _categories;
+  final ITaskRepository _tasks;
+  final ICategoryRepository _categories;
 
   /// Lista todas ordenadas por `id`, com nomes resolvidos.
   List<TaskView> all() => _views(_tasks.findAll());

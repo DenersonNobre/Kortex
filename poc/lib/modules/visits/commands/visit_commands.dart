@@ -1,6 +1,6 @@
 /// Mutacoes da visita tecnica (agendar, iniciar, concluir, checklist).
 ///
-/// SRP: cada command altera um aspecto da visita e devolve `Result`.
+/// SRP: cada command altera um aspecto da visita e devolve `IResult`.
 /// NAO faz: leitura para UI nem decisao de apresentacao.
 ///
 /// Patterns: Command por caso de uso, com guarda de invariante.
@@ -26,13 +26,13 @@ class ScheduleVisitCommand {
     DateTime Function()? now,
   }) : _now = now ?? DateTime.now;
 
-  final VisitRepository _visits;
-  final ClientRepository _clients;
+  final IVisitRepository _visits;
+  final IClientRepository _clients;
   final ISessionProvider _session;
   final DateTime Function() _now;
 
   /// Agenda a visita; falha se o cliente nao existir ou a data for passada.
-  Future<Result<Visit>> call({
+  Future<IResult<Visit>> call({
     required String title,
     required int clientId,
     required DateTime scheduledAt,
@@ -66,10 +66,10 @@ class StartVisitCommand {
   /// Cria o command sobre [visits].
   const StartVisitCommand(this._visits);
 
-  final VisitRepository _visits;
+  final IVisitRepository _visits;
 
   /// Marca a visita como em andamento.
-  Future<Result<Visit>> call(int visitId) async {
+  Future<IResult<Visit>> call(int visitId) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
       return const Fail(
@@ -84,7 +84,7 @@ class StartVisitCommand {
       );
     }
     return Ok(
-      await _visits.saveVisit(visit.withStatus(VisitStatus.inProgress)),
+      await _visits.saveVisit(visit.withStatus(EVisitStatus.inProgress)),
     );
   }
 }
@@ -94,10 +94,10 @@ class CompleteVisitCommand {
   /// Cria o command sobre [visits].
   const CompleteVisitCommand(this._visits);
 
-  final VisitRepository _visits;
+  final IVisitRepository _visits;
 
   /// Conclui a visita e marca todos os itens do checklist.
-  Future<Result<Visit>> call(int visitId) async {
+  Future<IResult<Visit>> call(int visitId) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
       return const Fail(
@@ -112,7 +112,7 @@ class CompleteVisitCommand {
       );
     }
     final completed = visit.completeChecklist().withStatus(
-      VisitStatus.completed,
+      EVisitStatus.completed,
     );
     return Ok(await _visits.saveVisit(completed));
   }
@@ -123,10 +123,10 @@ class ToggleChecklistItemCommand {
   /// Cria o command sobre [visits].
   const ToggleChecklistItemCommand(this._visits);
 
-  final VisitRepository _visits;
+  final IVisitRepository _visits;
 
   /// Inverte o item [index] do checklist da visita.
-  Future<Result<Visit>> call(int visitId, int index) async {
+  Future<IResult<Visit>> call(int visitId, int index) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
       return const Fail(

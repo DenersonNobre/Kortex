@@ -11,13 +11,13 @@ import 'package:poc/modules/visits/ui/visits_controller.dart';
 import '../support/controller_lifecycle.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(Result<T> result) {
+T _ok<T>(IResult<T> result) {
   expect(result, isA<Ok<T>>());
   return (result as Ok<T>).value;
 }
 
 /// Fachada sobre stores em memoria (sem latencia, para teste).
-VisitUseCases _useCases({
+IVisitUseCases _useCases({
   InMemoryVisitStore? visits,
   InMemoryClientStore? clients,
 }) => DefaultVisitUseCases(

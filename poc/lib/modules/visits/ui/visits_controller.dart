@@ -29,20 +29,20 @@ class VisitsController extends IKortexController {
       ),
     );
     startCommand = autoDispose(
-      kortexCommand<int, Result<Visit>>(_useCases.startVisit),
+      kortexCommand<int, IResult<Visit>>(_useCases.startVisit),
     );
     autoDispose(statusFilter);
     autoDispose(error);
     autoDispose(showNewVisitDialog);
   }
 
-  final VisitUseCases _useCases;
+  final IVisitUseCases _useCases;
 
   /// Lista de visitas com cliente, tecnico e progresso.
   late final KortexResource<List<VisitRow>> visits;
 
   /// Comando de inicio de visita (trava de duplo clique).
-  late final KortexCommand<int, Result<Visit>> startCommand;
+  late final KortexCommand<int, IResult<Visit>> startCommand;
 
   /// Status ativo do filtro (`''` = todos).
   final KortexSignal<String> statusFilter = KortexSignal('');
@@ -176,10 +176,10 @@ class VisitsController extends IKortexController {
     error.value = '';
   }
 
-  static VisitStatus? _statusFromWire(String wire) {
+  static EVisitStatus? _statusFromWire(String wire) {
     if (wire.isEmpty) return null;
-    final parsed = VisitStatus.parse(wire);
-    return parsed is Ok<VisitStatus> ? parsed.value : null;
+    final parsed = EVisitStatus.parse(wire);
+    return parsed is Ok<EVisitStatus> ? parsed.value : null;
   }
 
   void _publishError(String message) {

@@ -1,4 +1,4 @@
-/// Porta de persistência de categorias (`CategoryRepository`).
+/// Porta de persistência de categorias (`ICategoryRepository`).
 ///
 /// SRP: contrato mínimo de CRUD síncrono para o agregado `Category`.
 /// NÃO faz: validar regras (domínio) nem I/O real.
@@ -10,7 +10,7 @@ library;
 import 'category.dart';
 
 /// Contrato de persistência usado pelos commands de categoria.
-abstract interface class CategoryRepository {
+abstract interface class ICategoryRepository {
   /// Lista todas ordenadas por `id`.
   List<Category> findAll();
 

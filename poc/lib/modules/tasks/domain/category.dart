@@ -26,7 +26,7 @@ final class Category {
   final CategoryColor color;
 
   /// Valida [rawName]/[rawColor] e devolve a transiente ou o `Fail`.
-  static Result<Category> draft(String rawName, String rawColor) {
+  static IResult<Category> draft(String rawName, String rawColor) {
     final name = CategoryName.create(rawName);
     if (name is Fail<CategoryName>) {
       return Fail<Category>(name.code, name.message);

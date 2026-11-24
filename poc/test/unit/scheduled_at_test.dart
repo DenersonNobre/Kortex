@@ -3,13 +3,13 @@ import 'package:poc/core/result.dart';
 import 'package:poc/modules/visits/domain/.index.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(Result<T> result) {
+T _ok<T>(IResult<T> result) {
   expect(result, isA<Ok<T>>());
   return (result as Ok<T>).value;
 }
 
 /// Codigo de um `Fail` (falha o teste se for `Ok`).
-String _code<T>(Result<T> result) {
+String _code<T>(IResult<T> result) {
   expect(result, isA<Fail<T>>());
   return (result as Fail<T>).code;
 }
@@ -77,7 +77,7 @@ void main() {
         ),
       );
 
-      final moved = visit.withId(7).withStatus(VisitStatus.inProgress);
+      final moved = visit.withId(7).withStatus(EVisitStatus.inProgress);
 
       expect(moved.scheduledAt.value, DateTime(2026, 11, 21, 8, 0));
     });

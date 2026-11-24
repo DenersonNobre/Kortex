@@ -4,7 +4,7 @@
 /// minuto (segundos e milissegundos zerados). NAO faz: formatacao para a UI
 /// nem fuso horario (papel da apresentacao).
 ///
-/// Patterns: Value Object com fabrica que devolve `Result` e `now` injetado
+/// Patterns: Value Object com fabrica que devolve `IResult` e `now` injetado
 /// (dominio deterministico, sem `DateTime.now()`).
 /// Dependencias: `core/result.dart` + codigos (puro).
 library;
@@ -20,7 +20,7 @@ final class ScheduledAt {
   final DateTime value;
 
   /// Valida [raw] contra [now]; devolve `Ok` ou `Fail` com codigo estavel.
-  static Result<ScheduledAt> create(DateTime raw, {required DateTime now}) {
+  static IResult<ScheduledAt> create(DateTime raw, {required DateTime now}) {
     final normalized = DateTime(
       raw.year,
       raw.month,

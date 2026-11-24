@@ -5,23 +5,23 @@ import 'package:poc/modules/tasks/task_use_cases.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Monta a fachada sobre stores em memória.
-TaskUseCases _useCases() =>
+ITaskUseCases _useCases() =>
     DefaultTaskUseCases(tasks: TaskStore(), categories: CategoryStore());
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(Result<T> result) {
+T _ok<T>(IResult<T> result) {
   expect(result, isA<Ok<T>>());
   return (result as Ok<T>).value;
 }
 
 /// Código de um `Fail` (falha o teste se for `Ok`).
-String _code<T>(Result<T> result) {
+String _code<T>(IResult<T> result) {
   expect(result, isA<Fail<T>>());
   return (result as Fail).code;
 }
 
 void main() {
-  group('TaskUseCases (tasks)', () {
+  group('ITaskUseCases (tasks)', () {
     test('create válido persiste e lista', () {
       final useCases = _useCases();
 
@@ -68,7 +68,7 @@ void main() {
     });
   });
 
-  group('TaskUseCases (categories)', () {
+  group('ITaskUseCases (categories)', () {
     test('createCategory valida nome e cor', () {
       final useCases = _useCases();
 
@@ -136,7 +136,7 @@ void main() {
     });
   });
 
-  group('TaskUseCases (queries com join)', () {
+  group('ITaskUseCases (queries com join)', () {
     test('listByCategory filtra e view carrega o nome', () {
       final useCases = _useCases();
       final home = _ok(useCases.createCategory('Casa', '#00ff00'));
@@ -155,7 +155,7 @@ void main() {
     });
   });
 
-  group('TaskUseCases (integridade)', () {
+  group('ITaskUseCases (integridade)', () {
     test('assign preserva título e done', () {
       final useCases = _useCases();
       final task = _ok(useCases.create('Lavar'));

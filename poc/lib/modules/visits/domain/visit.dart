@@ -44,7 +44,7 @@ final class Visit {
   final ScheduledAt scheduledAt;
 
   /// Situacao atual da visita.
-  final VisitStatus status;
+  final EVisitStatus status;
 
   /// Itens do checklist.
   final List<ChecklistItem> checklist;
@@ -60,7 +60,7 @@ final class Visit {
   }
 
   /// Valida os campos e devolve a visita transiente ou o `Fail`.
-  static Result<Visit> draft({
+  static IResult<Visit> draft({
     required String title,
     required int clientId,
     required String technicianName,
@@ -79,7 +79,7 @@ final class Visit {
         clientId: clientId,
         technicianName: technicianName,
         scheduledAt: scheduledAt,
-        status: VisitStatus.scheduled,
+        status: EVisitStatus.scheduled,
         checklist: List.of(checklist),
         notes: notes.trim(),
       ),
@@ -87,7 +87,7 @@ final class Visit {
   }
 
   /// Copia com os campos sobrescritos (unico ponto de reconstrucao).
-  Visit _copy({int? id, VisitStatus? status, List<ChecklistItem>? checklist}) =>
+  Visit _copy({int? id, EVisitStatus? status, List<ChecklistItem>? checklist}) =>
       Visit._(
         id: id ?? this.id,
         title: title,
@@ -103,7 +103,7 @@ final class Visit {
   Visit withId(int id) => _copy(id: id);
 
   /// Devolve copia com [status] aplicado.
-  Visit withStatus(VisitStatus status) => _copy(status: status);
+  Visit withStatus(EVisitStatus status) => _copy(status: status);
 
   /// Devolve copia com o item de checklist [index] invertido.
   Visit toggleChecklist(int index) {

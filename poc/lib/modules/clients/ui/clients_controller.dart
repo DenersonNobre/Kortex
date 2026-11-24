@@ -1,7 +1,7 @@
 /// Controller reativo da area de clientes.
 ///
 /// SRP: expor a lista de clientes (com busca por nome), carregar e cadastrar,
-/// delegando regra ao `ClientUseCases`. NAO faz: UI nem persistencia direta.
+/// delegando regra ao `IClientUseCases`. NAO faz: UI nem persistencia direta.
 ///
 /// Patterns: `IKortexController` + `KortexResource` (carga) + sinal de busca.
 /// Dependencias: `kortex` + camada `features` do modulo de clientes.
@@ -24,7 +24,7 @@ class ClientsController extends IKortexController {
     autoDispose(error);
   }
 
-  final ClientUseCases _useCases;
+  final IClientUseCases _useCases;
 
   /// Lista de clientes filtrada por [search].
   late final KortexResource<List<Client>> clients;

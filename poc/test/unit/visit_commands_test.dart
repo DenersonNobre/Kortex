@@ -8,13 +8,13 @@ import 'package:poc/modules/visits/domain/.index.dart';
 import 'package:poc/modules/visits/features/visit_use_cases.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(Result<T> result) {
+T _ok<T>(IResult<T> result) {
   expect(result, isA<Ok<T>>());
   return (result as Ok<T>).value;
 }
 
 /// Codigo de um `Fail` (falha o teste se for `Ok`).
-String _code<T>(Result<T> result) {
+String _code<T>(IResult<T> result) {
   expect(result, isA<Fail<T>>());
   return (result as Fail<T>).code;
 }
@@ -24,7 +24,7 @@ SessionUser _user(String name) =>
     _ok(SessionUser.create(name: name, specialty: 'Rede'));
 
 /// Monta a fachada sobre stores em memoria (sem latencia).
-VisitUseCases _useCases({
+IVisitUseCases _useCases({
   InMemoryVisitStore? visits,
   InMemoryClientStore? clients,
   SessionUser? user,
@@ -40,7 +40,7 @@ Future<Client> _client(InMemoryClientStore store) async =>
     store.saveClient(_ok(Client.create(name: 'Cliente', phone: '11988887777')));
 
 void main() {
-  group('VisitUseCases (agendamento)', () {
+  group('IVisitUseCases (agendamento)', () {
     test('agenda visita no nome do usuario da sessao', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
@@ -56,7 +56,7 @@ void main() {
       );
 
       expect(visit.id, isNonZero);
-      expect(visit.status, VisitStatus.scheduled);
+      expect(visit.status, EVisitStatus.scheduled);
       expect(visit.technicianName, 'Ana');
       expect((await visits.listVisits()), hasLength(1));
     });
@@ -128,7 +128,7 @@ void main() {
     });
   });
 
-  group('VisitUseCases (ciclo da visita)', () {
+  group('IVisitUseCases (ciclo da visita)', () {
     test('inicia visita agendada', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
@@ -144,7 +144,7 @@ void main() {
 
       final started = _ok(await useCases.startVisit(visit.id));
 
-      expect(started.status, VisitStatus.inProgress);
+      expect(started.status, EVisitStatus.inProgress);
     });
 
     test('iniciar visita ja iniciada falha e mantem o status', () async {
@@ -165,7 +165,7 @@ void main() {
 
       expect(_code(result), VisitFailureCodes.visitAlreadyStarted);
       final stored = await visits.findVisitById(visit.id);
-      expect(stored?.status, VisitStatus.inProgress);
+      expect(stored?.status, EVisitStatus.inProgress);
     });
 
     test('conclui visita em andamento e marca o checklist', () async {
@@ -185,7 +185,7 @@ void main() {
 
       final completed = _ok(await useCases.completeVisit(visit.id));
 
-      expect(completed.status, VisitStatus.completed);
+      expect(completed.status, EVisitStatus.completed);
       expect(completed.checklist.every((item) => item.done), isTrue);
     });
 
@@ -206,7 +206,7 @@ void main() {
 
       expect(_code(result), VisitFailureCodes.visitNotInProgress);
       final stored = await visits.findVisitById(visit.id);
-      expect(stored?.status, VisitStatus.scheduled);
+      expect(stored?.status, EVisitStatus.scheduled);
     });
 
     test('marca item do checklist', () async {
@@ -248,7 +248,7 @@ void main() {
     });
   });
 
-  group('VisitUseCases (queries com join)', () {
+  group('IVisitUseCases (queries com join)', () {
     test('listagem resolve nome do cliente, do tecnico e progresso', () async {
       final visits = InMemoryVisitStore(latency: Duration.zero);
       final clients = InMemoryClientStore(latency: Duration.zero);
@@ -297,10 +297,10 @@ void main() {
       _ok(await useCases.startVisit(scheduled.id));
 
       final scheduledOnly = await useCases.listVisits(
-        status: VisitStatus.scheduled,
+        status: EVisitStatus.scheduled,
       );
       final inProgress = await useCases.listVisits(
-        status: VisitStatus.inProgress,
+        status: EVisitStatus.inProgress,
       );
 
       expect(scheduledOnly.map((v) => v.title), ['B']);

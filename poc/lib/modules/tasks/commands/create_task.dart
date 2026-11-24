@@ -3,7 +3,7 @@
 /// SRP: validar título (+ existência da categoria) e persistir.
 /// NÃO faz: ler para UI nem decidir apresentação do erro.
 ///
-/// Patterns: Command com `Result` (falha esperada sem exceção).
+/// Patterns: Command com `IResult` (falha esperada sem exceção).
 /// Dependências: ports dos dois agregados (puro).
 library;
 
@@ -15,11 +15,11 @@ class CreateTaskCommand {
   /// Cria o command sobre [tasks] e [categories].
   const CreateTaskCommand(this._tasks, this._categories);
 
-  final TaskRepository _tasks;
-  final CategoryRepository _categories;
+  final ITaskRepository _tasks;
+  final ICategoryRepository _categories;
 
   /// Valida e persiste; `Fail` não persiste nada.
-  Result<Task> call(String rawTitle, {int? categoryId}) {
+  IResult<Task> call(String rawTitle, {int? categoryId}) {
     if (categoryId != null && _categories.findById(categoryId) == null) {
       return const Fail(
         CategoryFailureCodes.notFound,

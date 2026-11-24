@@ -25,7 +25,7 @@ class AgendaController extends IKortexController {
     autoDispose(selectedDay);
   }
 
-  final VisitUseCases _useCases;
+  final IVisitUseCases _useCases;
 
   /// Dia selecionado (meia-noite do dia).
   final KortexSignal<DateTime> selectedDay;

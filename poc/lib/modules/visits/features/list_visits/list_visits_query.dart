@@ -16,12 +16,12 @@ class ListVisitsQuery {
   /// Cria a query sobre os repositorios [visits] e [clients].
   const ListVisitsQuery(this._visits, this._clients);
 
-  final VisitRepository _visits;
-  final ClientRepository _clients;
+  final IVisitRepository _visits;
+  final IClientRepository _clients;
 
   /// Lista as visitas resolvendo os nomes; [status] e [day] filtram quando
   /// informados, e o resultado sai ordenado por data agendada.
-  Future<List<VisitRow>> call({VisitStatus? status, DateTime? day}) async {
+  Future<List<VisitRow>> call({EVisitStatus? status, DateTime? day}) async {
     final visits = await _visits.listVisits();
     final clients = await _clients.listClients();
     final clientNames = {for (final client in clients) client.id: client.name};

@@ -1,6 +1,6 @@
 /// Store em memoria de clientes, com latencia e falha simuladas.
 ///
-/// SRP: implementar `ClientRepository` sobre um `Map`, simulando I/O.
+/// SRP: implementar `IClientRepository` sobre um `Map`, simulando I/O.
 /// NAO faz: regra de negocio nem persistencia real.
 ///
 /// Patterns: Adapter + injecao de falha (`failNext`).
@@ -13,7 +13,7 @@ import '../../../core/result.dart';
 import '../domain/.index.dart';
 
 /// Store volatil de clientes com latencia simulada.
-class InMemoryClientStore implements ClientRepository {
+class InMemoryClientStore implements IClientRepository {
   /// Cria o store com [latency] de espera por operacao.
   ///
   /// Com [seedDemo], o "banco" nasce com um cliente de demonstracao —

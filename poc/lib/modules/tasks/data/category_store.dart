@@ -1,4 +1,4 @@
-/// Adapter em memória de `CategoryRepository` (teste e POC).
+/// Adapter em memória de `ICategoryRepository` (teste e POC).
 ///
 /// SRP: implementar o contrato do port com `Map` + sequência monotônica.
 /// NÃO faz: I/O nem validação (papel do domínio).
@@ -11,7 +11,7 @@ import '../domain/category.dart';
 import '../domain/category_repository.dart';
 
 /// Repositório volátil com ids sequenciais a partir de 1.
-class CategoryStore implements CategoryRepository {
+class CategoryStore implements ICategoryRepository {
   final Map<int, Category> _store = {};
   var _sequence = 0;
 

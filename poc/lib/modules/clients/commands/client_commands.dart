@@ -1,8 +1,8 @@
 /// Commands do agregado cliente (criar e editar).
 ///
-/// SRP: mutacoes de cliente devolvendo `Result`. NAO faz: leitura para a UI.
+/// SRP: mutacoes de cliente devolvendo `IResult`. NAO faz: leitura para a UI.
 ///
-/// Patterns: Command com guarda de invariante e `Result`.
+/// Patterns: Command com guarda de invariante e `IResult`.
 /// Dependencias: porta + dominio (puro).
 library;
 
@@ -14,10 +14,10 @@ class CreateClientCommand {
   /// Cria o command sobre [clients].
   const CreateClientCommand(this._clients);
 
-  final ClientRepository _clients;
+  final IClientRepository _clients;
 
   /// Cria e persiste, ou devolve o `Fail` do VO (nada persiste).
-  Future<Result<Client>> call({
+  Future<IResult<Client>> call({
     required String name,
     required String phone,
     String address = '',
@@ -35,10 +35,10 @@ class UpdateClientCommand {
   /// Cria o command sobre [clients].
   const UpdateClientCommand(this._clients);
 
-  final ClientRepository _clients;
+  final IClientRepository _clients;
 
   /// Atualiza os campos informados; campos nulos ficam como estao.
-  Future<Result<Client>> call(
+  Future<IResult<Client>> call(
     int id, {
     String? name,
     String? phone,

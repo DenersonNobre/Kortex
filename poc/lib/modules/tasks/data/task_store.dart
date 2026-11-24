@@ -1,4 +1,4 @@
-/// Adapter em memória de `TaskRepository` (teste e POC).
+/// Adapter em memória de `ITaskRepository` (teste e POC).
 ///
 /// SRP: implementar o contrato do port com `Map` + sequência monotônica.
 /// NÃO faz: I/O, concorrência entre isolates nem migração de schema.
@@ -12,7 +12,7 @@ import '../domain/task.dart';
 import '../domain/task_repository.dart';
 
 /// Repositório volátil com ids sequenciais a partir de 1.
-class TaskStore implements TaskRepository {
+class TaskStore implements ITaskRepository {
   final Map<int, Task> _store = {};
   var _sequence = 0;
 

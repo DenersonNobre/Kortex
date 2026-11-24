@@ -12,10 +12,10 @@ class CreateCategoryCommand {
   /// Cria o command sobre [categories].
   const CreateCategoryCommand(this._categories);
 
-  final CategoryRepository _categories;
+  final ICategoryRepository _categories;
 
   /// Valida e persiste, ou `Fail` do VO (nada persiste).
-  Result<Category> call(String name, String color) {
+  IResult<Category> call(String name, String color) {
     final draft = Category.draft(name, color);
     if (draft is Fail<Category>) {
       return draft;

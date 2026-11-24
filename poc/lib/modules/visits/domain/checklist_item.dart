@@ -3,7 +3,7 @@
 /// SRP: descrever uma tarefa de atendimento e seu estado de conclusao.
 /// NAO faz: persistencia nem regra de transicao da visita.
 ///
-/// Patterns: Entidade imutavel + fabrica que devolve `Result`.
+/// Patterns: Entidade imutavel + fabrica que devolve `IResult`.
 /// Dependencias: `core/result.dart` + codigos (puro).
 library;
 
@@ -28,7 +28,7 @@ final class ChecklistItem {
   final bool done;
 
   /// Valida [description] e devolve `Ok` ou `Fail` com codigo estavel.
-  static Result<ChecklistItem> create({
+  static IResult<ChecklistItem> create({
     required String description,
     int id = 0,
   }) {

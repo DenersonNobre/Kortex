@@ -56,14 +56,14 @@ class _VisitTile extends StatelessWidget {
         children: [
           Text('${(row.progress * 100).round()}%'),
           const SizedBox(width: 8),
-          if (row.status == VisitStatus.scheduled.wire)
+          if (row.status == EVisitStatus.scheduled.wire)
             IconButton(
               key: Key('visit-start-${row.id}'),
               tooltip: 'Iniciar',
               icon: const Icon(Icons.play_arrow),
               onPressed: () => controller.startVisit(row.id),
             ),
-          if (row.status == VisitStatus.inProgress.wire)
+          if (row.status == EVisitStatus.inProgress.wire)
             IconButton(
               key: Key('visit-complete-${row.id}'),
               tooltip: 'Concluir',

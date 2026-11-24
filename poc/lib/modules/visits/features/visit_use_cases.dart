@@ -1,4 +1,4 @@
-/// Fachada de casos de uso do app de visitas (`VisitUseCases`).
+/// Fachada de casos de uso do app de visitas (`IVisitUseCases`).
 ///
 /// SRP: agregar o ciclo da visita e a leitura de clientes num contrato unico
 /// injetavel. NAO faz: regra de negocio (vive nos commands) nem I/O.
@@ -16,12 +16,12 @@ import 'list_visits/list_visits_query.dart';
 import 'list_visits/visit_row.dart';
 
 /// Contrato unico consumido pelo controller de visitas.
-abstract interface class VisitUseCases {
+abstract interface class IVisitUseCases {
   /// Usuario da sessao (tecnico responsavel pelas visitas criadas).
   SessionUser get currentUser;
 
   /// Agenda uma visita no nome do usuario da sessao.
-  Future<Result<Visit>> scheduleVisit({
+  Future<IResult<Visit>> scheduleVisit({
     required String title,
     required int clientId,
     required DateTime scheduledAt,
@@ -30,27 +30,27 @@ abstract interface class VisitUseCases {
   });
 
   /// Inicia uma visita agendada.
-  Future<Result<Visit>> startVisit(int visitId);
+  Future<IResult<Visit>> startVisit(int visitId);
 
   /// Conclui uma visita em andamento.
-  Future<Result<Visit>> completeVisit(int visitId);
+  Future<IResult<Visit>> completeVisit(int visitId);
 
   /// Marca ou desmarca um item do checklist.
-  Future<Result<Visit>> toggleChecklistItem(int visitId, int index);
+  Future<IResult<Visit>> toggleChecklistItem(int visitId, int index);
 
   /// Lista as visitas com cliente, tecnico e progresso.
-  Future<List<VisitRow>> listVisits({VisitStatus? status, DateTime? day});
+  Future<List<VisitRow>> listVisits({EVisitStatus? status, DateTime? day});
 
   /// Lista os clientes (usado pelo formulario de agendamento).
   Future<List<Client>> listClients();
 }
 
 /// Implementacao padrao compondo commands e queries.
-class DefaultVisitUseCases implements VisitUseCases {
+class DefaultVisitUseCases implements IVisitUseCases {
   /// Monta a fachada sobre [visits], [clients] e [session].
   DefaultVisitUseCases({
-    required VisitRepository visits,
-    required ClientRepository clients,
+    required IVisitRepository visits,
+    required IClientRepository clients,
     required ISessionProvider session,
     DateTime Function()? now,
   }) : _listQuery = ListVisitsQuery(visits, clients),
@@ -66,14 +66,14 @@ class DefaultVisitUseCases implements VisitUseCases {
   final StartVisitCommand _start;
   final CompleteVisitCommand _complete;
   final ToggleChecklistItemCommand _toggle;
-  final ClientRepository _clients;
+  final IClientRepository _clients;
   final ISessionProvider _session;
 
   @override
   SessionUser get currentUser => _session.currentUser;
 
   @override
-  Future<Result<Visit>> scheduleVisit({
+  Future<IResult<Visit>> scheduleVisit({
     required String title,
     required int clientId,
     required DateTime scheduledAt,
@@ -88,17 +88,17 @@ class DefaultVisitUseCases implements VisitUseCases {
   );
 
   @override
-  Future<Result<Visit>> startVisit(int visitId) => _start(visitId);
+  Future<IResult<Visit>> startVisit(int visitId) => _start(visitId);
 
   @override
-  Future<Result<Visit>> completeVisit(int visitId) => _complete(visitId);
+  Future<IResult<Visit>> completeVisit(int visitId) => _complete(visitId);
 
   @override
-  Future<Result<Visit>> toggleChecklistItem(int visitId, int index) =>
+  Future<IResult<Visit>> toggleChecklistItem(int visitId, int index) =>
       _toggle(visitId, index);
 
   @override
-  Future<List<VisitRow>> listVisits({VisitStatus? status, DateTime? day}) =>
+  Future<List<VisitRow>> listVisits({EVisitStatus? status, DateTime? day}) =>
       _listQuery(status: status, day: day);
 
   @override

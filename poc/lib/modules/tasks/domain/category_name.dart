@@ -3,7 +3,7 @@
 /// SRP: garantir invariante (não-vazio, até `maxLength`, normalizado).
 /// NÃO faz: persistência nem UI.
 ///
-/// Patterns: Value Object com fábrica que devolve `Result`.
+/// Patterns: Value Object com fábrica que devolve `IResult`.
 /// Dependências: `shared/result.dart` + códigos (puro).
 library;
 
@@ -21,7 +21,7 @@ final class CategoryName {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
-  static Result<CategoryName> create(String raw) {
+  static IResult<CategoryName> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
       return const Fail(
