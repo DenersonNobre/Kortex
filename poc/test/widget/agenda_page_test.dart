@@ -71,6 +71,10 @@ void main() {
         await tester.tap(find.byKey(const Key('agenda-next-month')));
         await tester.pumpAndSettle();
       }
+      expect(
+        find.byKey(Key('agenda-day-badge-${tomorrow.day}')),
+        findsOneWidget,
+      );
       final tomorrowCard = find.byKey(Key('agenda-day-${tomorrow.day}'));
       await tester.drag(find.byType(GridView), const Offset(0, -200));
       await tester.pumpAndSettle();

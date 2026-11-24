@@ -75,6 +75,10 @@ class _MonthScheduleGrid extends StatelessWidget {
         final today = controller.today;
         final daysInMonth = DateUtils.getDaysInMonth(month.year, month.month);
         final scheme = Theme.of(context).colorScheme;
+        final counts = switch (controller.monthCounts.state.value) {
+          KortexAsyncData<Map<int, int>>(value: final map) => map,
+          _ => const <int, int>{},
+        };
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,26 +121,58 @@ class _MonthScheduleGrid extends StatelessWidget {
                   final day = DateTime(month.year, month.month, index + 1);
                   final isToday = DateUtils.isSameDay(day, today);
                   final isSelected = DateUtils.isSameDay(day, selected);
+                  final visitCount = counts[day.day] ?? 0;
+                  final hasVisits = visitCount > 0;
                   return Card(
                     key: Key('agenda-day-${day.day}'),
-                    color: isSelected
+                    elevation: hasVisits ? 3 : 0,
+                    color: hasVisits
+                        ? scheme.tertiaryContainer
+                        : isSelected
                         ? scheme.primaryContainer
                         : isToday
                         ? scheme.secondaryContainer
                         : null,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: hasVisits
+                          ? BorderSide(color: scheme.tertiary, width: 1.5)
+                          : BorderSide.none,
+                    ),
                     clipBehavior: Clip.antiAlias,
                     child: InkWell(
                       onTap: () => controller.selectDay(day),
-                      child: Center(
-                        child: Text(
-                          '${day.day}',
-                          style: Theme.of(context).textTheme.titleMedium
-                              ?.copyWith(
-                                fontWeight: isToday || isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '${day.day}',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontWeight: isToday || isSelected || hasVisits
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                          ),
+                          if (hasVisits)
+                            Container(
+                              key: Key('agenda-day-badge-${day.day}'),
+                              margin: const EdgeInsets.only(top: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 1,
                               ),
-                        ),
+                              decoration: BoxDecoration(
+                                color: scheme.tertiary,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Text(
+                                '$visitCount',
+                                style: Theme.of(context).textTheme.labelSmall
+                                    ?.copyWith(color: scheme.onTertiary),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
                   );
