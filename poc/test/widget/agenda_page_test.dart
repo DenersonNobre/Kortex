@@ -16,10 +16,15 @@ void main() {
 
       final today = DateTime.now();
       final todayCard = find.byKey(Key('agenda-day-${today.day}'));
+      await tester.scrollUntilVisible(
+        todayCard,
+        200,
+        scrollable: find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(Scrollable),
+        ),
+      );
       expect(todayCard, findsOneWidget);
-
-      await tester.drag(find.byType(GridView), const Offset(0, -200));
-      await tester.pumpAndSettle();
       await tester.tap(todayCard);
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));
@@ -28,7 +33,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('agenda-back')));
       await tester.pumpAndSettle();
-      expect(find.byKey(Key('agenda-day-${today.day}')), findsOneWidget);
+      expect(find.byKey(const Key('agenda-day-1')), findsOneWidget);
     });
 
     testWidgets('agenda mostra so a visita do dia agendado', (tester) async {
@@ -54,8 +59,14 @@ void main() {
       // Toca no card de hoje: nao deve ter a visita agendada para amanha.
       final today = DateTime.now();
       final todayCard = find.byKey(Key('agenda-day-${today.day}'));
-      await tester.drag(find.byType(GridView), const Offset(0, -200));
-      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        todayCard,
+        200,
+        scrollable: find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(Scrollable),
+        ),
+      );
       await tester.tap(todayCard);
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));
@@ -71,13 +82,19 @@ void main() {
         await tester.tap(find.byKey(const Key('agenda-next-month')));
         await tester.pumpAndSettle();
       }
+      final tomorrowCard = find.byKey(Key('agenda-day-${tomorrow.day}'));
+      await tester.scrollUntilVisible(
+        tomorrowCard,
+        200,
+        scrollable: find.descendant(
+          of: find.byType(GridView),
+          matching: find.byType(Scrollable),
+        ),
+      );
       expect(
         find.byKey(Key('agenda-day-badge-${tomorrow.day}')),
         findsOneWidget,
       );
-      final tomorrowCard = find.byKey(Key('agenda-day-${tomorrow.day}'));
-      await tester.drag(find.byType(GridView), const Offset(0, -200));
-      await tester.pumpAndSettle();
       await tester.tap(tomorrowCard);
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));

@@ -30,8 +30,11 @@ class AgendaController extends IKortexController {
         immediate: false,
       ),
     );
-    monthCounts = autoDispose(
-      kortexResource<Map<int, int>>(_loadMonthCounts, immediate: true),
+    monthVisits = autoDispose(
+      kortexResource<Map<int, List<VisitRow>>>(
+        _loadMonthVisits,
+        immediate: true,
+      ),
     );
     autoDispose(selectedDay);
     autoDispose(focusedMonth);
@@ -57,12 +60,12 @@ class AgendaController extends IKortexController {
   /// Visitas do dia selecionado.
   late final KortexResource<List<VisitRow>> agenda;
 
-  /// Quantidade de visitas por dia do [focusedMonth].
-  late final KortexResource<Map<int, int>> monthCounts;
+  /// Visitas agrupadas por dia do [focusedMonth].
+  late final KortexResource<Map<int, List<VisitRow>>> monthVisits;
 
-  /// Recarrega as visitas do dia selecionado e os contadores do mes.
+  /// Recarrega as visitas do dia selecionado e os dados do mes.
   Future<void> refresh() async {
-    await Future.wait([agenda.refresh(), monthCounts.refresh()]);
+    await Future.wait([agenda.refresh(), monthVisits.refresh()]);
   }
 
   /// Seleciona [day], abre o detalhe do dia e carrega os compromissos.
@@ -75,34 +78,34 @@ class AgendaController extends IKortexController {
   /// Volta para a grade de cards do mes.
   void backToMonth() {
     showingDayDetail.value = false;
-    monthCounts.refresh();
+    monthVisits.refresh();
   }
 
   /// Navega para o mes anterior.
   void previousMonth() {
     final m = focusedMonth.peek();
     focusedMonth.value = DateTime(m.year, m.month - 1);
-    monthCounts.refresh();
+    monthVisits.refresh();
   }
 
   /// Navega para o proximo mes.
   void nextMonth() {
     final m = focusedMonth.peek();
     focusedMonth.value = DateTime(m.year, m.month + 1);
-    monthCounts.refresh();
+    monthVisits.refresh();
   }
 
-  Future<Map<int, int>> _loadMonthCounts() async {
+  Future<Map<int, List<VisitRow>>> _loadMonthVisits() async {
     final month = focusedMonth.peek();
     final all = await _useCases.listVisits();
-    final counts = <int, int>{};
+    final grouped = <int, List<VisitRow>>{};
     for (final row in all) {
       final d = row.scheduledAt;
       if (d.year == month.year && d.month == month.month) {
-        counts[d.day] = (counts[d.day] ?? 0) + 1;
+        (grouped[d.day] ??= []).add(row);
       }
     }
-    return counts;
+    return grouped;
   }
 
   static DateTime _dayOnly(DateTime date) =>

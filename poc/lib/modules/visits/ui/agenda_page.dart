@@ -75,9 +75,9 @@ class _MonthScheduleGrid extends StatelessWidget {
         final today = controller.today;
         final daysInMonth = DateUtils.getDaysInMonth(month.year, month.month);
         final scheme = Theme.of(context).colorScheme;
-        final counts = switch (controller.monthCounts.state.value) {
-          KortexAsyncData<Map<int, int>>(value: final map) => map,
-          _ => const <int, int>{},
+        final grouped = switch (controller.monthVisits.state.value) {
+          KortexAsyncData<Map<int, List<VisitRow>>>(value: final map) => map,
+          _ => const <int, List<VisitRow>>{},
         };
 
         return Column(
@@ -111,70 +111,22 @@ class _MonthScheduleGrid extends StatelessWidget {
               child: GridView.builder(
                 padding: const EdgeInsets.all(12),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
-                  childAspectRatio: 0.95,
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 10,
+                  crossAxisSpacing: 10,
+                  childAspectRatio: 0.92,
                 ),
                 itemCount: daysInMonth,
                 itemBuilder: (context, index) {
                   final day = DateTime(month.year, month.month, index + 1);
-                  final isToday = DateUtils.isSameDay(day, today);
-                  final isSelected = DateUtils.isSameDay(day, selected);
-                  final visitCount = counts[day.day] ?? 0;
-                  final hasVisits = visitCount > 0;
-                  return Card(
-                    key: Key('agenda-day-${day.day}'),
-                    elevation: hasVisits ? 3 : 0,
-                    color: hasVisits
-                        ? scheme.tertiaryContainer
-                        : isSelected
-                        ? scheme.primaryContainer
-                        : isToday
-                        ? scheme.secondaryContainer
-                        : null,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: hasVisits
-                          ? BorderSide(color: scheme.tertiary, width: 1.5)
-                          : BorderSide.none,
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: InkWell(
-                      onTap: () => controller.selectDay(day),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '${day.day}',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(
-                                  fontWeight: isToday || isSelected || hasVisits
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                ),
-                          ),
-                          if (hasVisits)
-                            Container(
-                              key: Key('agenda-day-badge-${day.day}'),
-                              margin: const EdgeInsets.only(top: 2),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 1,
-                              ),
-                              decoration: BoxDecoration(
-                                color: scheme.tertiary,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Text(
-                                '$visitCount',
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(color: scheme.onTertiary),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
+                  final dayVisits = grouped[day.day] ?? const <VisitRow>[];
+                  return _DayScheduleCard(
+                    day: day,
+                    isToday: DateUtils.isSameDay(day, today),
+                    isSelected: DateUtils.isSameDay(day, selected),
+                    visits: dayVisits,
+                    scheme: scheme,
+                    onTap: () => controller.selectDay(day),
                   );
                 },
               ),
@@ -199,6 +151,172 @@ class _MonthScheduleGrid extends StatelessWidget {
     'Novembro',
     'Dezembro',
   ];
+}
+
+/// Card estilizado de um dia do mes (header, micro-lista e rodape).
+class _DayScheduleCard extends StatelessWidget {
+  const _DayScheduleCard({
+    required this.day,
+    required this.isToday,
+    required this.isSelected,
+    required this.visits,
+    required this.scheme,
+    required this.onTap,
+  });
+
+  final DateTime day;
+  final bool isToday;
+  final bool isSelected;
+  final List<VisitRow> visits;
+  final ColorScheme scheme;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasVisits = visits.isNotEmpty;
+    final headerColor = hasVisits
+        ? scheme.tertiary
+        : isToday
+        ? scheme.primary
+        : isSelected
+        ? scheme.secondary
+        : scheme.surfaceContainerHighest;
+    final headerTextColor = hasVisits
+        ? scheme.onTertiary
+        : isToday
+        ? scheme.onPrimary
+        : isSelected
+        ? scheme.onSecondary
+        : scheme.onSurfaceVariant;
+    final cardColor = hasVisits
+        ? scheme.tertiaryContainer.withValues(alpha: 0.45)
+        : isToday
+        ? scheme.primaryContainer.withValues(alpha: 0.35)
+        : null;
+
+    return Card(
+      key: Key('agenda-day-${day.day}'),
+      elevation: hasVisits ? 3 : 0.5,
+      color: cardColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: hasVisits
+              ? scheme.tertiary
+              : isToday
+              ? scheme.primary
+              : scheme.outlineVariant,
+          width: hasVisits || isToday ? 1.5 : 0.8,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+              color: headerColor,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${day.day} • ${_weekdays[day.weekday - 1]}',
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                      color: headerTextColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Icon(
+                    hasVisits
+                        ? Icons.event_available
+                        : isToday
+                        ? Icons.today
+                        : Icons.calendar_today_outlined,
+                    size: 14,
+                    color: headerTextColor,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(6),
+                child: hasVisits
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (final row in visits.take(2))
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 3),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.build_circle_outlined,
+                                    size: 12,
+                                    color: scheme.tertiary,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      row.title,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.labelSmall,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      )
+                    : Center(
+                        child: Icon(
+                          Icons.event_busy_outlined,
+                          size: 18,
+                          color: scheme.outlineVariant,
+                        ),
+                      ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              color: hasVisits
+                  ? scheme.tertiary.withValues(alpha: 0.14)
+                  : scheme.surfaceContainerLow,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    hasVisits
+                        ? Icons.assignment_turned_in_outlined
+                        : Icons.remove_circle_outline,
+                    size: 12,
+                    color: hasVisits ? scheme.tertiary : scheme.outline,
+                  ),
+                  Text(
+                    hasVisits ? '${visits.length} ativ.' : 'Livre',
+                    key: hasVisits ? Key('agenda-day-badge-${day.day}') : null,
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: hasVisits ? scheme.tertiary : scheme.outline,
+                      fontWeight: hasVisits
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static const _weekdays = ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab', 'Dom'];
 }
 
 /// Lista das visitas do dia selecionado.
