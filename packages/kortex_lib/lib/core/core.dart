@@ -27,6 +27,7 @@ export 'patterns/mediator.dart';
 export 'patterns/result.dart';
 export 'patterns/specification.dart';
 export 'patterns/state_machine.dart';
+export 'patterns/use_case.dart';
 export 'patterns/validation_error.dart';
 export 'security/secret_cipher.dart';
 export 'services/datasource.dart';
