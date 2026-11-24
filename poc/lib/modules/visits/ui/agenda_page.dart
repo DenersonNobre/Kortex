@@ -1,9 +1,10 @@
-/// Pagina de Agenda: visitas do dia selecionado.
+/// Pagina de Agenda: grade mensal de cards e detalhe do dia selecionado.
 ///
-/// SRP: compor o seletor de dias e a lista do dia, reagindo ao controller.
+/// SRP: compor os cards dos dias do mes e, ao clicar em um dia, virar a
+/// pagina para mostrar os compromissos agendados daquele dia.
 /// NAO faz: estado de negocio (papel do controller).
 ///
-/// Patterns: `IKortexPage` + `KortexWatch` + `switch` exaustivo de estado.
+/// Patterns: `IKortexPage` + `KortexWatch` + `AnimatedSwitcher` + `switch`.
 /// Dependencias: Flutter + `kortex`.
 library;
 
@@ -13,29 +14,55 @@ import 'package:kortex/kortex.dart';
 import '../features/.index.dart';
 import 'agenda_controller.dart';
 
-/// Tela de agenda diaria.
+/// Tela de agenda mensal com detalhe diario.
 class AgendaPage extends IKortexPage<AgendaController> {
   /// Cria a pagina de agenda.
   const AgendaPage({super.key});
 
   @override
   Widget buildPage(BuildContext context, AgendaController controller) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Agenda')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _DaySelector(controller: controller),
-          Expanded(child: _AgendaBody(controller: controller)),
-        ],
-      ),
+    return KortexWatch(
+      builder: (context, child) {
+        final showingDetail = controller.showingDayDetail.value;
+        final selected = controller.selectedDay.value;
+        return Scaffold(
+          appBar: AppBar(
+            leading: showingDetail
+                ? IconButton(
+                    key: const Key('agenda-back'),
+                    tooltip: 'Voltar para o mes',
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: controller.backToMonth,
+                  )
+                : null,
+            title: Text(
+              showingDetail ? 'Agenda — ${_formatDay(selected)}' : 'Agenda',
+            ),
+          ),
+          body: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 280),
+            child: showingDetail
+                ? _AgendaBody(
+                    key: const ValueKey('agenda-detail'),
+                    controller: controller,
+                  )
+                : _MonthScheduleGrid(
+                    key: const ValueKey('agenda-month'),
+                    controller: controller,
+                  ),
+          ),
+        );
+      },
     );
   }
+
+  static String _formatDay(DateTime day) =>
+      '${day.day.toString().padLeft(2, '0')}/${day.month.toString().padLeft(2, '0')}/${day.year}';
 }
 
-/// Seletor dos proximos dias (7 dias a partir do dia selecionado).
-class _DaySelector extends StatelessWidget {
-  const _DaySelector({required this.controller});
+/// Grade com os cards dos dias do mes focado.
+class _MonthScheduleGrid extends StatelessWidget {
+  const _MonthScheduleGrid({super.key, required this.controller});
 
   final AgendaController controller;
 
@@ -43,42 +70,104 @@ class _DaySelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return KortexWatch(
       builder: (context, child) {
+        final month = controller.focusedMonth.value;
         final selected = controller.selectedDay.value;
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              for (var offset = 0; offset < 7; offset++)
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: ChoiceChip(
-                    key: Key('agenda-day-${_offset(selected, offset)}'),
-                    label: Text(_label(selected, offset)),
-                    selected: offset == 0,
-                    showCheckmark: false,
-                    onSelected: (_) => controller.selectDay(
-                      selected.add(Duration(days: offset)),
-                    ),
+        final today = controller.today;
+        final daysInMonth = DateUtils.getDaysInMonth(month.year, month.month);
+        final scheme = Theme.of(context).colorScheme;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    key: const Key('agenda-prev-month'),
+                    tooltip: 'Mes anterior',
+                    icon: const Icon(Icons.chevron_left),
+                    onPressed: controller.previousMonth,
                   ),
+                  Text(
+                    '${_monthNames[month.month - 1]} ${month.year}',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  IconButton(
+                    key: const Key('agenda-next-month'),
+                    tooltip: 'Proximo mes',
+                    icon: const Icon(Icons.chevron_right),
+                    onPressed: controller.nextMonth,
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: GridView.builder(
+                padding: const EdgeInsets.all(12),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 7,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  childAspectRatio: 0.95,
                 ),
-            ],
-          ),
+                itemCount: daysInMonth,
+                itemBuilder: (context, index) {
+                  final day = DateTime(month.year, month.month, index + 1);
+                  final isToday = DateUtils.isSameDay(day, today);
+                  final isSelected = DateUtils.isSameDay(day, selected);
+                  return Card(
+                    key: Key('agenda-day-${day.day}'),
+                    color: isSelected
+                        ? scheme.primaryContainer
+                        : isToday
+                        ? scheme.secondaryContainer
+                        : null,
+                    clipBehavior: Clip.antiAlias,
+                    child: InkWell(
+                      onTap: () => controller.selectDay(day),
+                      child: Center(
+                        child: Text(
+                          '${day.day}',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                fontWeight: isToday || isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         );
       },
     );
   }
 
-  static String _offset(DateTime base, int offset) =>
-      '${base.add(Duration(days: offset)).day}';
-
-  static String _label(DateTime base, int offset) =>
-      '${base.add(Duration(days: offset)).day}';
+  static const _monthNames = [
+    'Janeiro',
+    'Fevereiro',
+    'Marco',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ];
 }
 
-/// Lista das visitas do dia.
+/// Lista das visitas do dia selecionado.
 class _AgendaBody extends StatelessWidget {
-  const _AgendaBody({required this.controller});
+  const _AgendaBody({super.key, required this.controller});
 
   final AgendaController controller;
 
@@ -99,7 +188,7 @@ class _AgendaBody extends StatelessWidget {
                 TextButton(
                   key: const Key('agenda-retry'),
                   onPressed: controller.refresh,
-                  child: const Text('Tentar de novo'),
+                  child: const Text('Tentar novamente'),
                 ),
               ],
             ),
@@ -107,20 +196,17 @@ class _AgendaBody extends StatelessWidget {
           KortexAsyncData<List<VisitRow>>(value: final rows) =>
             rows.isEmpty
                 ? const Center(child: Text('Nenhuma visita neste dia'))
-                : ListView.builder(
+                : ListView.separated(
+                    padding: const EdgeInsets.all(12),
                     itemCount: rows.length,
-                    itemBuilder: (context, index) {
+                    separatorBuilder: (_, _) => const SizedBox(height: 8),
+                    itemBuilder: (_, index) {
                       final row = rows[index];
-                      final time = row.scheduledAt;
-                      return ListTile(
-                        key: Key('agenda-visit-${row.id}'),
-                        leading: Text(
-                          '${time.hour.toString().padLeft(2, '0')}:'
-                          '${time.minute.toString().padLeft(2, '0')}',
-                        ),
-                        title: Text(row.title),
-                        subtitle: Text(
-                          '${row.clientName} · ${row.technicianName}',
+                      return Card(
+                        child: ListTile(
+                          leading: const Icon(Icons.event),
+                          title: Text(row.title),
+                          subtitle: Text(row.clientName),
                         ),
                       );
                     },

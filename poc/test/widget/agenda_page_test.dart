@@ -4,7 +4,9 @@ import 'package:poc/app/visits_app.dart';
 
 void main() {
   group('AgendaPage', () {
-    testWidgets('mostra o dia selecionado e o estado vazio', (tester) async {
+    testWidgets('mostra cards do mes e vira para o detalhe do dia vazio', (
+      tester,
+    ) async {
       await tester.pumpWidget(createVisitsApp(seedDemo: false));
       await tester.pump(const Duration(seconds: 2));
 
@@ -12,8 +14,21 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));
 
-      expect(find.text('Agenda'), findsWidgets);
+      final today = DateTime.now();
+      final todayCard = find.byKey(Key('agenda-day-${today.day}'));
+      expect(todayCard, findsOneWidget);
+
+      await tester.drag(find.byType(GridView), const Offset(0, -200));
+      await tester.pumpAndSettle();
+      await tester.tap(todayCard);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 2));
+
       expect(find.text('Nenhuma visita neste dia'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('agenda-back')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(Key('agenda-day-${today.day}')), findsOneWidget);
     });
 
     testWidgets('agenda mostra so a visita do dia agendado', (tester) async {
@@ -36,13 +51,30 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));
 
-      // Hoje nao deve ter a visita agendada para amanha.
+      // Toca no card de hoje: nao deve ter a visita agendada para amanha.
+      final today = DateTime.now();
+      final todayCard = find.byKey(Key('agenda-day-${today.day}'));
+      await tester.drag(find.byType(GridView), const Offset(0, -200));
+      await tester.pumpAndSettle();
+      await tester.tap(todayCard);
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 2));
       expect(find.text('Visita de amanha'), findsNothing);
       expect(find.text('Nenhuma visita neste dia'), findsOneWidget);
 
-      // O chip do dia seguinte (offset 1) mostra a visita.
-      final tomorrow = DateTime.now().add(const Duration(days: 1));
-      await tester.tap(find.byKey(Key('agenda-day-${tomorrow.day}')));
+      // Volta para o mes e toca no card de amanha.
+      await tester.tap(find.byKey(const Key('agenda-back')));
+      await tester.pumpAndSettle();
+
+      final tomorrow = today.add(const Duration(days: 1));
+      if (tomorrow.month != today.month) {
+        await tester.tap(find.byKey(const Key('agenda-next-month')));
+        await tester.pumpAndSettle();
+      }
+      final tomorrowCard = find.byKey(Key('agenda-day-${tomorrow.day}'));
+      await tester.drag(find.byType(GridView), const Offset(0, -200));
+      await tester.pumpAndSettle();
+      await tester.tap(tomorrowCard);
       await tester.pump();
       await tester.pump(const Duration(seconds: 2));
 
