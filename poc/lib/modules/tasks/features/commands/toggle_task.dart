@@ -21,7 +21,9 @@ class ToggleTaskCommand {
   AppResult<Task> call(int id) {
     final task = _tasks.findById(id);
     if (task == null) {
-      return const Failure(AppFailure(TaskFailureCodes.notFound, 'Task inexistente.'));
+      return const Failure(
+        AppFailure(TaskFailureCodes.notFound, 'Task inexistente.'),
+      );
     }
     return Success(_tasks.save(task.toggle()));
   }

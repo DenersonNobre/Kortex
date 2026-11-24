@@ -40,9 +40,11 @@ enum EVisitStatus {
         return Success(status);
       }
     }
-    return const Failure(AppFailure(
-      VisitFailureCodes.statusInvalid,
-      'Status de visita desconhecido.',
-    ));
+    return const Failure(
+      AppFailure(
+        VisitFailureCodes.statusInvalid,
+        'Status de visita desconhecido.',
+      ),
+    );
   }
 }

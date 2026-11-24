@@ -42,14 +42,18 @@ final class Client {
   }) {
     final trimmedName = name.trim();
     if (trimmedName.isEmpty) {
-      return const Failure(AppFailure(ClientFailureCodes.nameEmpty, 'Cliente sem nome.'));
+      return const Failure(
+        AppFailure(ClientFailureCodes.nameEmpty, 'Cliente sem nome.'),
+      );
     }
     final digits = phone.replaceAll(RegExp(r'\D'), '');
     if (!_phonePattern.hasMatch(digits)) {
-      return const Failure(AppFailure(
-        ClientFailureCodes.phoneInvalid,
-        'Telefone do cliente invalido.',
-      ));
+      return const Failure(
+        AppFailure(
+          ClientFailureCodes.phoneInvalid,
+          'Telefone do cliente invalido.',
+        ),
+      );
     }
     return Success(
       Client._(

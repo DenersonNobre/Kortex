@@ -41,7 +41,9 @@ class ScheduleVisitCommand {
   }) async {
     final scheduled = ScheduledAt.create(scheduledAt, now: _now());
     if (scheduled is Failure<ScheduledAt, AppFailure>) {
-      return Failure<Visit, AppFailure>(AppFailure(scheduled.code, scheduled.message));
+      return Failure<Visit, AppFailure>(
+        AppFailure(scheduled.code, scheduled.message),
+      );
     }
     final draft = Visit.draft(
       title: title,
@@ -55,9 +57,13 @@ class ScheduleVisitCommand {
       return draft;
     }
     if (await _clients.findClientById(clientId) == null) {
-      return const Failure(AppFailure(ClientFailureCodes.notFound, 'Cliente nao encontrado.'));
+      return const Failure(
+        AppFailure(ClientFailureCodes.notFound, 'Cliente nao encontrado.'),
+      );
     }
-    return Success(await _visits.saveVisit((draft as Success<Visit, AppFailure>).value));
+    return Success(
+      await _visits.saveVisit((draft as Success<Visit, AppFailure>).value),
+    );
   }
 }
 
@@ -72,16 +78,20 @@ class StartVisitCommand {
   Future<AppResult<Visit>> call(int visitId) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.visitNotFound,
-        'Visita nao encontrada.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.visitNotFound,
+          'Visita nao encontrada.',
+        ),
+      );
     }
     if (!visit.status.canStart) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.visitAlreadyStarted,
-        'Visita ja iniciada.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.visitAlreadyStarted,
+          'Visita ja iniciada.',
+        ),
+      );
     }
     return Success(
       await _visits.saveVisit(visit.withStatus(EVisitStatus.inProgress)),
@@ -100,16 +110,20 @@ class CompleteVisitCommand {
   Future<AppResult<Visit>> call(int visitId) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.visitNotFound,
-        'Visita nao encontrada.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.visitNotFound,
+          'Visita nao encontrada.',
+        ),
+      );
     }
     if (!visit.status.canComplete) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.visitNotInProgress,
-        'Visita nao esta em andamento.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.visitNotInProgress,
+          'Visita nao esta em andamento.',
+        ),
+      );
     }
     final completed = visit.completeChecklist().withStatus(
       EVisitStatus.completed,
@@ -129,10 +143,12 @@ class ToggleChecklistItemCommand {
   Future<AppResult<Visit>> call(int visitId, int index) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.visitNotFound,
-        'Visita nao encontrada.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.visitNotFound,
+          'Visita nao encontrada.',
+        ),
+      );
     }
     return Success(await _visits.saveVisit(visit.toggleChecklist(index)));
   }

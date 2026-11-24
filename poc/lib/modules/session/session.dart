@@ -29,15 +29,21 @@ final class SessionUser {
     final trimmedName = name.trim();
     final trimmedSpecialty = specialty.trim();
     if (trimmedName.isEmpty) {
-      return const Failure(AppFailure(SessionFailureCodes.nameEmpty, 'Usuario sem nome.'));
+      return const Failure(
+        AppFailure(SessionFailureCodes.nameEmpty, 'Usuario sem nome.'),
+      );
     }
     if (trimmedSpecialty.isEmpty) {
-      return const Failure(AppFailure(
-        SessionFailureCodes.specialtyEmpty,
-        'Usuario sem especialidade.',
-      ));
+      return const Failure(
+        AppFailure(
+          SessionFailureCodes.specialtyEmpty,
+          'Usuario sem especialidade.',
+        ),
+      );
     }
-    return Success(SessionUser._(name: trimmedName, specialty: trimmedSpecialty));
+    return Success(
+      SessionUser._(name: trimmedName, specialty: trimmedSpecialty),
+    );
   }
 }
 

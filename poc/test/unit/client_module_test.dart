@@ -17,9 +17,10 @@ String _code<T>(AppResult<T> result) {
 }
 
 /// Fachada sobre store em memoria (sem latencia).
-IClientUseCases _useCases([InMemoryClientStore? store]) => DefaultClientUseCases(
-  clients: store ?? InMemoryClientStore(latency: Duration.zero),
-);
+IClientUseCases _useCases([InMemoryClientStore? store]) =>
+    DefaultClientUseCases(
+      clients: store ?? InMemoryClientStore(latency: Duration.zero),
+    );
 
 void main() {
   group('CreateClientCommand', () {
@@ -115,14 +116,20 @@ void main() {
       final client = Client.create(name: 'Cliente', phone: '123');
 
       expect(client, isA<Failure<Client, AppFailure>>());
-      expect((client as Failure<Client, AppFailure>).code, ClientFailureCodes.phoneInvalid);
+      expect(
+        (client as Failure<Client, AppFailure>).code,
+        ClientFailureCodes.phoneInvalid,
+      );
     });
 
     test('nome vazio reprova com CLIENT_NAME_EMPTY', () {
       final client = Client.create(name: '  ', phone: '11988887777');
 
       expect(client, isA<Failure<Client, AppFailure>>());
-      expect((client as Failure<Client, AppFailure>).code, ClientFailureCodes.nameEmpty);
+      expect(
+        (client as Failure<Client, AppFailure>).code,
+        ClientFailureCodes.nameEmpty,
+      );
     });
 
     test('valido normaliza telefone e nasce com id transiente', () {

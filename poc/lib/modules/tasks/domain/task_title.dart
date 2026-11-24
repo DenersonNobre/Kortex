@@ -24,16 +24,20 @@ final class TaskTitle {
   static AppResult<TaskTitle> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const Failure(AppFailure(
-        TaskFailureCodes.emptyTitle,
-        'Título não pode ser vazio.',
-      ));
+      return const Failure(
+        AppFailure(
+          TaskFailureCodes.emptyTitle,
+          'Título não pode ser vazio.',
+        ),
+      );
     }
     if (trimmed.length > maxLength) {
-      return const Failure(AppFailure(
-        TaskFailureCodes.titleTooLong,
-        'Título com mais de 120 caracteres.',
-      ));
+      return const Failure(
+        AppFailure(
+          TaskFailureCodes.titleTooLong,
+          'Título com mais de 120 caracteres.',
+        ),
+      );
     }
     return Success(TaskTitle._(trimmed));
   }

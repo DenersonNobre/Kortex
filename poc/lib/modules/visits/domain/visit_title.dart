@@ -24,16 +24,20 @@ final class VisitTitle {
   static AppResult<VisitTitle> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.titleEmpty,
-        'Titulo da visita nao pode ser vazio.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.titleEmpty,
+          'Titulo da visita nao pode ser vazio.',
+        ),
+      );
     }
     if (trimmed.length > maxLength) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.titleTooLong,
-        'Titulo com mais de 140 caracteres.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.titleTooLong,
+          'Titulo com mais de 140 caracteres.',
+        ),
+      );
     }
     return Success(VisitTitle._(trimmed));
   }

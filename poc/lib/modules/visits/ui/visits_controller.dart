@@ -119,9 +119,10 @@ class VisitsController extends IKortexController with KortexErrorMixin {
   /// Checklist padrao aplicado a toda visita nova (POC).
   List<ChecklistItem> _defaultChecklist() => [
     for (final label in _defaultChecklistLabels)
-      if (ChecklistItem.create(description: label) case Success<ChecklistItem, AppFailure>(
-        :final value,
-      ))
+      if (ChecklistItem.create(description: label)
+          case Success<ChecklistItem, AppFailure>(
+            :final value,
+          ))
         value,
   ];
 

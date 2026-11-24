@@ -33,7 +33,9 @@ final class Category {
     }
     final color = CategoryColor.create(rawColor);
     if (color is Failure<CategoryColor, AppFailure>) {
-      return Failure<Category, AppFailure>(AppFailure(color.code, color.message));
+      return Failure<Category, AppFailure>(
+        AppFailure(color.code, color.message),
+      );
     }
     return Success(
       Category(

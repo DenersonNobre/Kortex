@@ -26,7 +26,9 @@ class CreateClientCommand {
     if (created is Failure<Client, AppFailure>) {
       return created;
     }
-    return Success(await _clients.saveClient((created as Success<Client, AppFailure>).value));
+    return Success(
+      await _clients.saveClient((created as Success<Client, AppFailure>).value),
+    );
   }
 }
 
@@ -46,7 +48,9 @@ class UpdateClientCommand {
   }) async {
     final current = await _clients.findClientById(id);
     if (current == null) {
-      return const Failure(AppFailure(ClientFailureCodes.notFound, 'Cliente nao encontrado.'));
+      return const Failure(
+        AppFailure(ClientFailureCodes.notFound, 'Cliente nao encontrado.'),
+      );
     }
     final updated = Client.create(
       name: name ?? current.name,
@@ -56,7 +60,9 @@ class UpdateClientCommand {
     if (updated is Failure<Client, AppFailure>) {
       return updated;
     }
-    final stored = (updated as Success<Client, AppFailure>).value.copyWith(id: current.id);
+    final stored = (updated as Success<Client, AppFailure>).value.copyWith(
+      id: current.id,
+    );
     return Success(await _clients.saveClient(stored));
   }
 }

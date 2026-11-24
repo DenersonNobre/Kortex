@@ -21,14 +21,20 @@ void main() {
       final result = VisitTitle.create('   ');
 
       expect(result, isA<Failure<VisitTitle, AppFailure>>());
-      expect((result as Failure<dynamic, AppFailure>).code, VisitFailureCodes.titleEmpty);
+      expect(
+        (result as Failure<dynamic, AppFailure>).code,
+        VisitFailureCodes.titleEmpty,
+      );
     });
 
     test('acima de 140 caracteres reprova com VISIT_TITLE_TOO_LONG', () {
       final result = VisitTitle.create('x' * 141);
 
       expect(result, isA<Failure<VisitTitle, AppFailure>>());
-      expect((result as Failure<dynamic, AppFailure>).code, VisitFailureCodes.titleTooLong);
+      expect(
+        (result as Failure<dynamic, AppFailure>).code,
+        VisitFailureCodes.titleTooLong,
+      );
     });
 
     test('valido normaliza e aprova', () {
@@ -43,14 +49,20 @@ void main() {
       final status = EVisitStatus.parse('scheduled');
 
       expect(status, isA<Success<EVisitStatus, AppFailure>>());
-      expect((status as Success<EVisitStatus, AppFailure>).value, EVisitStatus.scheduled);
+      expect(
+        (status as Success<EVisitStatus, AppFailure>).value,
+        EVisitStatus.scheduled,
+      );
     });
 
     test('status invalido reprova com VISIT_STATUS_INVALID', () {
       final status = EVisitStatus.parse('concluida');
 
       expect(status, isA<Failure<EVisitStatus, AppFailure>>());
-      expect((status as Failure<dynamic, AppFailure>).code, VisitFailureCodes.statusInvalid);
+      expect(
+        (status as Failure<dynamic, AppFailure>).code,
+        VisitFailureCodes.statusInvalid,
+      );
     });
 
     test('transicoes de status sao validas', () {
@@ -68,7 +80,10 @@ void main() {
       final item = ChecklistItem.create(description: '  ');
 
       expect(item, isA<Failure<ChecklistItem, AppFailure>>());
-      expect((item as Failure<dynamic, AppFailure>).code, VisitFailureCodes.checklistDescriptionEmpty);
+      expect(
+        (item as Failure<dynamic, AppFailure>).code,
+        VisitFailureCodes.checklistDescriptionEmpty,
+      );
     });
 
     test('valido comeca nao concluido', () {
@@ -105,7 +120,10 @@ void main() {
       );
 
       expect(draft, isA<Failure<Visit, AppFailure>>());
-      expect((draft as Failure<dynamic, AppFailure>).code, VisitFailureCodes.titleEmpty);
+      expect(
+        (draft as Failure<dynamic, AppFailure>).code,
+        VisitFailureCodes.titleEmpty,
+      );
     });
 
     test('concluir checklist marca todos os itens', () {

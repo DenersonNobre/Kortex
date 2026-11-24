@@ -34,10 +34,12 @@ final class ChecklistItem {
   }) {
     final trimmed = description.trim();
     if (trimmed.isEmpty) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.checklistDescriptionEmpty,
-        'Item do checklist nao pode ter descricao vazia.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.checklistDescriptionEmpty,
+          'Item do checklist nao pode ter descricao vazia.',
+        ),
+      );
     }
     return Success(ChecklistItem._(id: id, description: trimmed));
   }

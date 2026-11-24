@@ -20,6 +20,8 @@ class CreateCategoryCommand {
     if (draft is Failure<Category, AppFailure>) {
       return draft;
     }
-    return Success(_categories.save((draft as Success<Category, AppFailure>).value));
+    return Success(
+      _categories.save((draft as Success<Category, AppFailure>).value),
+    );
   }
 }

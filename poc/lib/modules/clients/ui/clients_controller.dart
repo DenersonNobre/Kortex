@@ -30,7 +30,9 @@ class ClientsController extends IKortexController with KortexErrorMixin {
   /// Campo reativo de nome validado via `kortex_forms`.
   final KortexField<String> nameField = kortexField<String>(
     '',
-    validators: [kortexValidator<String>().required('Nome obrigatorio').build()],
+    validators: [
+      kortexValidator<String>().required('Nome obrigatorio').build(),
+    ],
   );
 
   /// Campo reativo de telefone validado via `kortex_lib` (`PhoneBrValidator`).

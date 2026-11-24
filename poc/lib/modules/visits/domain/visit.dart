@@ -70,7 +70,9 @@ final class Visit {
   }) {
     final parsed = VisitTitle.create(title);
     if (parsed is Failure<VisitTitle, AppFailure>) {
-      return Failure<Visit, AppFailure>(AppFailure(parsed.code, parsed.message));
+      return Failure<Visit, AppFailure>(
+        AppFailure(parsed.code, parsed.message),
+      );
     }
     return Success(
       Visit._(
@@ -87,17 +89,20 @@ final class Visit {
   }
 
   /// Copia com os campos sobrescritos (unico ponto de reconstrucao).
-  Visit _copy({int? id, EVisitStatus? status, List<ChecklistItem>? checklist}) =>
-      Visit._(
-        id: id ?? this.id,
-        title: title,
-        clientId: clientId,
-        technicianName: technicianName,
-        scheduledAt: scheduledAt,
-        status: status ?? this.status,
-        checklist: checklist ?? this.checklist,
-        notes: notes,
-      );
+  Visit _copy({
+    int? id,
+    EVisitStatus? status,
+    List<ChecklistItem>? checklist,
+  }) => Visit._(
+    id: id ?? this.id,
+    title: title,
+    clientId: clientId,
+    technicianName: technicianName,
+    scheduledAt: scheduledAt,
+    status: status ?? this.status,
+    checklist: checklist ?? this.checklist,
+    notes: notes,
+  );
 
   /// Devolve copia com o [id] aplicado (persistencia).
   Visit withId(int id) => _copy(id: id);

@@ -24,16 +24,20 @@ final class CategoryName {
   static AppResult<CategoryName> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const Failure(AppFailure(
-        CategoryFailureCodes.emptyName,
-        'Nome da categoria não pode ser vazio.',
-      ));
+      return const Failure(
+        AppFailure(
+          CategoryFailureCodes.emptyName,
+          'Nome da categoria não pode ser vazio.',
+        ),
+      );
     }
     if (trimmed.length > maxLength) {
-      return const Failure(AppFailure(
-        CategoryFailureCodes.nameTooLong,
-        'Nome com mais de 60 caracteres.',
-      ));
+      return const Failure(
+        AppFailure(
+          CategoryFailureCodes.nameTooLong,
+          'Nome com mais de 60 caracteres.',
+        ),
+      );
     }
     return Success(CategoryName._(trimmed));
   }

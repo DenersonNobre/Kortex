@@ -21,10 +21,12 @@ class CreateTaskCommand {
   /// Valida e persiste; `Fail` não persiste nada.
   AppResult<Task> call(String rawTitle, {int? categoryId}) {
     if (categoryId != null && _categories.findById(categoryId) == null) {
-      return const Failure(AppFailure(
-        CategoryFailureCodes.notFound,
-        'Categoria inexistente.',
-      ));
+      return const Failure(
+        AppFailure(
+          CategoryFailureCodes.notFound,
+          'Categoria inexistente.',
+        ),
+      );
     }
     final draft = Task.draft(rawTitle, categoryId: categoryId);
     if (draft is Failure<Task, AppFailure>) {

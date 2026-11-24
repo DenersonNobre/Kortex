@@ -23,10 +23,12 @@ final class CategoryColor {
   static AppResult<CategoryColor> create(String raw) {
     final trimmed = raw.trim();
     if (!_hex.hasMatch(trimmed)) {
-      return const Failure(AppFailure(
-        CategoryFailureCodes.invalidColor,
-        'Cor deve ser hexadecimal #RRGGBB.',
-      ));
+      return const Failure(
+        AppFailure(
+          CategoryFailureCodes.invalidColor,
+          'Cor deve ser hexadecimal #RRGGBB.',
+        ),
+      );
     }
     return Success(CategoryColor._(trimmed));
   }

@@ -22,13 +22,17 @@ class AssignTaskCategoryCommand {
   AppResult<Task> call(int taskId, int? categoryId) {
     final task = _tasks.findById(taskId);
     if (task == null) {
-      return const Failure(AppFailure(TaskFailureCodes.notFound, 'Task inexistente.'));
+      return const Failure(
+        AppFailure(TaskFailureCodes.notFound, 'Task inexistente.'),
+      );
     }
     if (categoryId != null && _categories.findById(categoryId) == null) {
-      return const Failure(AppFailure(
-        CategoryFailureCodes.notFound,
-        'Categoria inexistente.',
-      ));
+      return const Failure(
+        AppFailure(
+          CategoryFailureCodes.notFound,
+          'Categoria inexistente.',
+        ),
+      );
     }
     return Success(
       _tasks.save(

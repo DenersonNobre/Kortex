@@ -15,14 +15,20 @@ void main() {
       final result = TaskTitle.create('   ');
 
       expect(result, isA<Failure<TaskTitle, AppFailure>>());
-      expect((result as Failure<dynamic, AppFailure>).code, TaskFailureCodes.emptyTitle);
+      expect(
+        (result as Failure<dynamic, AppFailure>).code,
+        TaskFailureCodes.emptyTitle,
+      );
     });
 
     test('acima de 120 caracteres reprova com TASK_TITLE_TOO_LONG', () {
       final result = TaskTitle.create('x' * 121);
 
       expect(result, isA<Failure<TaskTitle, AppFailure>>());
-      expect((result as Failure<dynamic, AppFailure>).code, TaskFailureCodes.titleTooLong);
+      expect(
+        (result as Failure<dynamic, AppFailure>).code,
+        TaskFailureCodes.titleTooLong,
+      );
     });
 
     test('válido normaliza (trim) e aprova', () {
@@ -41,7 +47,10 @@ void main() {
 
       final invalid = Task.draft('  ');
       expect(invalid, isA<Failure<Task, AppFailure>>());
-      expect((invalid as Failure<dynamic, AppFailure>).code, TaskFailureCodes.emptyTitle);
+      expect(
+        (invalid as Failure<dynamic, AppFailure>).code,
+        TaskFailureCodes.emptyTitle,
+      );
     });
 
     test('toggle inverte done sem mutar o original', () {

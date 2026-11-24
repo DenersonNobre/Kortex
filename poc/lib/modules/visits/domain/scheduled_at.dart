@@ -36,10 +36,12 @@ final class ScheduledAt {
       now.minute,
     );
     if (!normalized.isAfter(reference)) {
-      return const Failure(AppFailure(
-        VisitFailureCodes.scheduledInPast,
-        'Agende a visita para uma data futura.',
-      ));
+      return const Failure(
+        AppFailure(
+          VisitFailureCodes.scheduledInPast,
+          'Agende a visita para uma data futura.',
+        ),
+      );
     }
     return Success(ScheduledAt._(normalized));
   }
