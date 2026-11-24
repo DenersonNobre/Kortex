@@ -19,17 +19,17 @@ class CreateTaskCommand {
   final ICategoryRepository _categories;
 
   /// Valida e persiste; `Fail` não persiste nada.
-  IResult<Task> call(String rawTitle, {int? categoryId}) {
+  AppResult<Task> call(String rawTitle, {int? categoryId}) {
     if (categoryId != null && _categories.findById(categoryId) == null) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.notFound,
         'Categoria inexistente.',
-      );
+      ));
     }
     final draft = Task.draft(rawTitle, categoryId: categoryId);
-    if (draft is Fail<Task>) {
+    if (draft is Failure<Task, AppFailure>) {
       return draft;
     }
-    return Ok(_tasks.save((draft as Ok<Task>).value));
+    return Success(_tasks.save((draft as Success<Task, AppFailure>).value));
   }
 }

@@ -26,20 +26,20 @@ final class Category {
   final CategoryColor color;
 
   /// Valida [rawName]/[rawColor] e devolve a transiente ou o `Fail`.
-  static IResult<Category> draft(String rawName, String rawColor) {
+  static AppResult<Category> draft(String rawName, String rawColor) {
     final name = CategoryName.create(rawName);
-    if (name is Fail<CategoryName>) {
-      return Fail<Category>(name.code, name.message);
+    if (name is Failure<CategoryName, AppFailure>) {
+      return Failure<Category, AppFailure>(AppFailure(name.code, name.message));
     }
     final color = CategoryColor.create(rawColor);
-    if (color is Fail<CategoryColor>) {
-      return Fail<Category>(color.code, color.message);
+    if (color is Failure<CategoryColor, AppFailure>) {
+      return Failure<Category, AppFailure>(AppFailure(color.code, color.message));
     }
-    return Ok(
+    return Success(
       Category(
         id: 0,
-        name: (name as Ok<CategoryName>).value,
-        color: (color as Ok<CategoryColor>).value,
+        name: (name as Success<CategoryName, AppFailure>).value,
+        color: (color as Success<CategoryColor, AppFailure>).value,
       ),
     );
   }

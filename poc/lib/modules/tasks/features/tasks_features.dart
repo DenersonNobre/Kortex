@@ -25,22 +25,22 @@ abstract interface class ITaskUseCases {
   List<Category> listCategories();
 
   /// Cria task (categoria opcional previamente existente).
-  IResult<Task> create(String rawTitle, {int? categoryId});
+  AppResult<Task> create(String rawTitle, {int? categoryId});
 
   /// Inverte `done` da task.
-  IResult<Task> toggle(int id);
+  AppResult<Task> toggle(int id);
 
   /// Remove e devolve a removida.
-  IResult<Task> remove(int id);
+  AppResult<Task> remove(int id);
 
   /// Vincula (`categoryId`) ou desvincula (`null`) a categoria.
-  IResult<Task> assignCategory(int taskId, int? categoryId);
+  AppResult<Task> assignCategory(int taskId, int? categoryId);
 
   /// Cria categoria com VOs validados.
-  IResult<Category> createCategory(String name, String color);
+  AppResult<Category> createCategory(String name, String color);
 
   /// Exclui categoria livre, devolvendo a excluída.
-  IResult<Category> deleteCategory(int id);
+  AppResult<Category> deleteCategory(int id);
 }
 
 /// Implementação padrão compondo commands e queries.
@@ -78,23 +78,23 @@ class DefaultTaskUseCases implements ITaskUseCases {
   List<Category> listCategories() => _listCategories();
 
   @override
-  IResult<Task> create(String rawTitle, {int? categoryId}) =>
+  AppResult<Task> create(String rawTitle, {int? categoryId}) =>
       _create(rawTitle, categoryId: categoryId);
 
   @override
-  IResult<Task> toggle(int id) => _toggle(id);
+  AppResult<Task> toggle(int id) => _toggle(id);
 
   @override
-  IResult<Task> remove(int id) => _remove(id);
+  AppResult<Task> remove(int id) => _remove(id);
 
   @override
-  IResult<Task> assignCategory(int taskId, int? categoryId) =>
+  AppResult<Task> assignCategory(int taskId, int? categoryId) =>
       _assign(taskId, categoryId);
 
   @override
-  IResult<Category> createCategory(String name, String color) =>
+  AppResult<Category> createCategory(String name, String color) =>
       _createCategory(name, color);
 
   @override
-  IResult<Category> deleteCategory(int id) => _deleteCategory(id);
+  AppResult<Category> deleteCategory(int id) => _deleteCategory(id);
 }

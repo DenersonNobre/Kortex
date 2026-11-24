@@ -21,7 +21,7 @@ class InMemorySessionProvider implements ISessionProvider {
   /// Sessao de demonstracao usada no primeiro run da POC.
   factory InMemorySessionProvider.demo() {
     final user = SessionUser.create(name: 'Tecnico Demo', specialty: 'Rede');
-    if (user is Ok<SessionUser>) {
+    if (user is Success<SessionUser, AppFailure>) {
       return InMemorySessionProvider(currentUser: user.value);
     }
     throw StateError('Usuario de demonstracao invalido.');

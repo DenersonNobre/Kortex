@@ -20,7 +20,7 @@ final class ScheduledAt {
   final DateTime value;
 
   /// Valida [raw] contra [now]; devolve `Ok` ou `Fail` com codigo estavel.
-  static IResult<ScheduledAt> create(DateTime raw, {required DateTime now}) {
+  static AppResult<ScheduledAt> create(DateTime raw, {required DateTime now}) {
     final normalized = DateTime(
       raw.year,
       raw.month,
@@ -36,11 +36,11 @@ final class ScheduledAt {
       now.minute,
     );
     if (!normalized.isAfter(reference)) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.scheduledInPast,
         'Agende a visita para uma data futura.',
-      );
+      ));
     }
-    return Ok(ScheduledAt._(normalized));
+    return Success(ScheduledAt._(normalized));
   }
 }

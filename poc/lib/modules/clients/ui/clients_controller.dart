@@ -54,7 +54,7 @@ class ClientsController extends IKortexController with KortexErrorMixin {
   /// Cadastra um cliente; devolve `true` em caso de sucesso.
   Future<bool> createClient(String name, String phone) async {
     final result = await _useCases.createClient(name: name, phone: phone);
-    if (result is Fail<Client>) {
+    if (result is Failure<Client, AppFailure>) {
       publishError(result.message);
       return false;
     }

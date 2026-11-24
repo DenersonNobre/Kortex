@@ -4,9 +4,9 @@ import 'package:poc/modules/tasks/domain/.index.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(IResult<T> result) {
-  expect(result, isA<Ok<T>>());
-  return (result as Ok<T>).value;
+T _ok<T>(AppResult<T> result) {
+  expect(result, isA<Success<T, AppFailure>>());
+  return (result as Success<T, AppFailure>).value;
 }
 
 void main() {
@@ -14,15 +14,15 @@ void main() {
     test('vazio reprova com TASK_EMPTY_TITLE', () {
       final result = TaskTitle.create('   ');
 
-      expect(result, isA<Fail<TaskTitle>>());
-      expect((result as Fail).code, TaskFailureCodes.emptyTitle);
+      expect(result, isA<Failure<TaskTitle, AppFailure>>());
+      expect((result as Failure<dynamic, AppFailure>).code, TaskFailureCodes.emptyTitle);
     });
 
     test('acima de 120 caracteres reprova com TASK_TITLE_TOO_LONG', () {
       final result = TaskTitle.create('x' * 121);
 
-      expect(result, isA<Fail<TaskTitle>>());
-      expect((result as Fail).code, TaskFailureCodes.titleTooLong);
+      expect(result, isA<Failure<TaskTitle, AppFailure>>());
+      expect((result as Failure<dynamic, AppFailure>).code, TaskFailureCodes.titleTooLong);
     });
 
     test('válido normaliza (trim) e aprova', () {
@@ -40,8 +40,8 @@ void main() {
       expect(created.done, isFalse);
 
       final invalid = Task.draft('  ');
-      expect(invalid, isA<Fail<Task>>());
-      expect((invalid as Fail).code, TaskFailureCodes.emptyTitle);
+      expect(invalid, isA<Failure<Task, AppFailure>>());
+      expect((invalid as Failure<dynamic, AppFailure>).code, TaskFailureCodes.emptyTitle);
     });
 
     test('toggle inverte done sem mutar o original', () {

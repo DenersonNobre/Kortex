@@ -10,7 +10,7 @@ ScheduledAt at(int day, {int hour = 10, int minute = 0}) {
     DateTime(2026, 11, day, hour, minute),
     now: testNow,
   );
-  if (result is Ok<ScheduledAt>) {
+  if (result is Success<ScheduledAt, AppFailure>) {
     return result.value;
   }
   throw StateError('fixture invalida: dia $day nao e futuro');

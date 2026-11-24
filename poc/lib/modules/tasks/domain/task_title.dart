@@ -21,20 +21,20 @@ final class TaskTitle {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
-  static IResult<TaskTitle> create(String raw) {
+  static AppResult<TaskTitle> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const Fail(
+      return const Failure(AppFailure(
         TaskFailureCodes.emptyTitle,
         'Título não pode ser vazio.',
-      );
+      ));
     }
     if (trimmed.length > maxLength) {
-      return const Fail(
+      return const Failure(AppFailure(
         TaskFailureCodes.titleTooLong,
         'Título com mais de 120 caracteres.',
-      );
+      ));
     }
-    return Ok(TaskTitle._(trimmed));
+    return Success(TaskTitle._(trimmed));
   }
 }

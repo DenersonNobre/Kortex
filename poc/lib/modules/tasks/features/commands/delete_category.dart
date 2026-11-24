@@ -19,22 +19,22 @@ class DeleteCategoryCommand {
   final ITaskRepository _tasks;
 
   /// Exclui, ou `Fail` (`CATEGORY_NOT_FOUND`, `CATEGORY_IN_USE`).
-  IResult<Category> call(int id) {
+  AppResult<Category> call(int id) {
     final category = _categories.findById(id);
     if (category == null) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.notFound,
         'Categoria inexistente.',
-      );
+      ));
     }
     if (_inUse(id)) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.inUse,
         'Categoria em uso por tasks.',
-      );
+      ));
     }
     _categories.deleteById(id);
-    return Ok(category);
+    return Success(category);
   }
 
   bool _inUse(int id) => _tasks.findAll().any((task) => task.categoryId == id);

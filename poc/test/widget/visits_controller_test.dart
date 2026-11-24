@@ -11,9 +11,9 @@ import 'package:poc/modules/visits/ui/visits_controller.dart';
 import '../support/controller_lifecycle.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(IResult<T> result) {
-  expect(result, isA<Ok<T>>());
-  return (result as Ok<T>).value;
+T _ok<T>(AppResult<T> result) {
+  expect(result, isA<Success<T, AppFailure>>());
+  return (result as Success<T, AppFailure>).value;
 }
 
 /// Fachada sobre stores em memoria (sem latencia, para teste).

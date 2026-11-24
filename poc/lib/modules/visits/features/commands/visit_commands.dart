@@ -32,7 +32,7 @@ class ScheduleVisitCommand {
   final DateTime Function() _now;
 
   /// Agenda a visita; falha se o cliente nao existir ou a data for passada.
-  Future<IResult<Visit>> call({
+  Future<AppResult<Visit>> call({
     required String title,
     required int clientId,
     required DateTime scheduledAt,
@@ -40,24 +40,24 @@ class ScheduleVisitCommand {
     String notes = '',
   }) async {
     final scheduled = ScheduledAt.create(scheduledAt, now: _now());
-    if (scheduled is Fail<ScheduledAt>) {
-      return Fail<Visit>(scheduled.code, scheduled.message);
+    if (scheduled is Failure<ScheduledAt, AppFailure>) {
+      return Failure<Visit, AppFailure>(AppFailure(scheduled.code, scheduled.message));
     }
     final draft = Visit.draft(
       title: title,
       clientId: clientId,
       technicianName: _session.currentUser.name,
-      scheduledAt: (scheduled as Ok<ScheduledAt>).value,
+      scheduledAt: (scheduled as Success<ScheduledAt, AppFailure>).value,
       checklist: checklist,
       notes: notes,
     );
-    if (draft is Fail<Visit>) {
+    if (draft is Failure<Visit, AppFailure>) {
       return draft;
     }
     if (await _clients.findClientById(clientId) == null) {
-      return const Fail(ClientFailureCodes.notFound, 'Cliente nao encontrado.');
+      return const Failure(AppFailure(ClientFailureCodes.notFound, 'Cliente nao encontrado.'));
     }
-    return Ok(await _visits.saveVisit((draft as Ok<Visit>).value));
+    return Success(await _visits.saveVisit((draft as Success<Visit, AppFailure>).value));
   }
 }
 
@@ -69,21 +69,21 @@ class StartVisitCommand {
   final IVisitRepository _visits;
 
   /// Marca a visita como em andamento.
-  Future<IResult<Visit>> call(int visitId) async {
+  Future<AppResult<Visit>> call(int visitId) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.visitNotFound,
         'Visita nao encontrada.',
-      );
+      ));
     }
     if (!visit.status.canStart) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.visitAlreadyStarted,
         'Visita ja iniciada.',
-      );
+      ));
     }
-    return Ok(
+    return Success(
       await _visits.saveVisit(visit.withStatus(EVisitStatus.inProgress)),
     );
   }
@@ -97,24 +97,24 @@ class CompleteVisitCommand {
   final IVisitRepository _visits;
 
   /// Conclui a visita e marca todos os itens do checklist.
-  Future<IResult<Visit>> call(int visitId) async {
+  Future<AppResult<Visit>> call(int visitId) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.visitNotFound,
         'Visita nao encontrada.',
-      );
+      ));
     }
     if (!visit.status.canComplete) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.visitNotInProgress,
         'Visita nao esta em andamento.',
-      );
+      ));
     }
     final completed = visit.completeChecklist().withStatus(
       EVisitStatus.completed,
     );
-    return Ok(await _visits.saveVisit(completed));
+    return Success(await _visits.saveVisit(completed));
   }
 }
 
@@ -126,14 +126,14 @@ class ToggleChecklistItemCommand {
   final IVisitRepository _visits;
 
   /// Inverte o item [index] do checklist da visita.
-  Future<IResult<Visit>> call(int visitId, int index) async {
+  Future<AppResult<Visit>> call(int visitId, int index) async {
     final visit = await _visits.findVisitById(visitId);
     if (visit == null) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.visitNotFound,
         'Visita nao encontrada.',
-      );
+      ));
     }
-    return Ok(await _visits.saveVisit(visit.toggleChecklist(index)));
+    return Success(await _visits.saveVisit(visit.toggleChecklist(index)));
   }
 }

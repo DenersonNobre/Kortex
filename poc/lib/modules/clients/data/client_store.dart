@@ -24,7 +24,7 @@ class InMemoryClientStore implements IClientRepository {
   }) {
     if (!seedDemo) return;
     final result = Client.create(name: 'Cliente Demo', phone: '11988887777');
-    if (result is Ok<Client>) {
+    if (result is Success<Client, AppFailure>) {
       final created = result.value.withId(++_sequence);
       _store[created.id] = created;
     }

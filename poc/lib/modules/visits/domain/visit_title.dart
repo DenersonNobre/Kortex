@@ -21,20 +21,20 @@ final class VisitTitle {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com codigo estavel.
-  static IResult<VisitTitle> create(String raw) {
+  static AppResult<VisitTitle> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.titleEmpty,
         'Titulo da visita nao pode ser vazio.',
-      );
+      ));
     }
     if (trimmed.length > maxLength) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.titleTooLong,
         'Titulo com mais de 140 caracteres.',
-      );
+      ));
     }
-    return Ok(VisitTitle._(trimmed));
+    return Success(VisitTitle._(trimmed));
   }
 }

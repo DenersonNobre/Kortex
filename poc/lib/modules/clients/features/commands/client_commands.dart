@@ -17,16 +17,16 @@ class CreateClientCommand {
   final IClientRepository _clients;
 
   /// Cria e persiste, ou devolve o `Fail` do VO (nada persiste).
-  Future<IResult<Client>> call({
+  Future<AppResult<Client>> call({
     required String name,
     required String phone,
     String address = '',
   }) async {
     final created = Client.create(name: name, phone: phone, address: address);
-    if (created is Fail<Client>) {
+    if (created is Failure<Client, AppFailure>) {
       return created;
     }
-    return Ok(await _clients.saveClient((created as Ok<Client>).value));
+    return Success(await _clients.saveClient((created as Success<Client, AppFailure>).value));
   }
 }
 
@@ -38,7 +38,7 @@ class UpdateClientCommand {
   final IClientRepository _clients;
 
   /// Atualiza os campos informados; campos nulos ficam como estao.
-  Future<IResult<Client>> call(
+  Future<AppResult<Client>> call(
     int id, {
     String? name,
     String? phone,
@@ -46,17 +46,17 @@ class UpdateClientCommand {
   }) async {
     final current = await _clients.findClientById(id);
     if (current == null) {
-      return const Fail(ClientFailureCodes.notFound, 'Cliente nao encontrado.');
+      return const Failure(AppFailure(ClientFailureCodes.notFound, 'Cliente nao encontrado.'));
     }
     final updated = Client.create(
       name: name ?? current.name,
       phone: phone ?? current.phone,
       address: address ?? current.address,
     );
-    if (updated is Fail<Client>) {
+    if (updated is Failure<Client, AppFailure>) {
       return updated;
     }
-    final stored = (updated as Ok<Client>).value.copyWith(id: current.id);
-    return Ok(await _clients.saveClient(stored));
+    final stored = (updated as Success<Client, AppFailure>).value.copyWith(id: current.id);
+    return Success(await _clients.saveClient(stored));
   }
 }

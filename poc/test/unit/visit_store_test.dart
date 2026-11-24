@@ -7,9 +7,9 @@ import 'package:poc/modules/visits/domain/.index.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(IResult<T> result) {
-  expect(result, isA<Ok<T>>());
-  return (result as Ok<T>).value;
+T _ok<T>(AppResult<T> result) {
+  expect(result, isA<Success<T, AppFailure>>());
+  return (result as Success<T, AppFailure>).value;
 }
 
 void main() {

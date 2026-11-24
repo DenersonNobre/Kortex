@@ -22,22 +22,22 @@ final class SessionUser {
   final String specialty;
 
   /// Valida os campos e devolve `Ok` ou `Fail` com codigo estavel.
-  static IResult<SessionUser> create({
+  static AppResult<SessionUser> create({
     required String name,
     required String specialty,
   }) {
     final trimmedName = name.trim();
     final trimmedSpecialty = specialty.trim();
     if (trimmedName.isEmpty) {
-      return const Fail(SessionFailureCodes.nameEmpty, 'Usuario sem nome.');
+      return const Failure(AppFailure(SessionFailureCodes.nameEmpty, 'Usuario sem nome.'));
     }
     if (trimmedSpecialty.isEmpty) {
-      return const Fail(
+      return const Failure(AppFailure(
         SessionFailureCodes.specialtyEmpty,
         'Usuario sem especialidade.',
-      );
+      ));
     }
-    return Ok(SessionUser._(name: trimmedName, specialty: trimmedSpecialty));
+    return Success(SessionUser._(name: trimmedName, specialty: trimmedSpecialty));
   }
 }
 

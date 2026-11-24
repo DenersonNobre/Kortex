@@ -19,18 +19,18 @@ class AssignTaskCategoryCommand {
   final ICategoryRepository _categories;
 
   /// Vincula [categoryId] (`null` desvincula) ou `Fail` com o código.
-  IResult<Task> call(int taskId, int? categoryId) {
+  AppResult<Task> call(int taskId, int? categoryId) {
     final task = _tasks.findById(taskId);
     if (task == null) {
-      return const Fail(TaskFailureCodes.notFound, 'Task inexistente.');
+      return const Failure(AppFailure(TaskFailureCodes.notFound, 'Task inexistente.'));
     }
     if (categoryId != null && _categories.findById(categoryId) == null) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.notFound,
         'Categoria inexistente.',
-      );
+      ));
     }
-    return Ok(
+    return Success(
       _tasks.save(
         Task(
           id: task.id,

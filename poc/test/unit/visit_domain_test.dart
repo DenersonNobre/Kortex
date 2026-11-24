@@ -10,9 +10,9 @@ import 'package:poc/modules/visits/domain/visit_title.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(IResult<T> result) {
-  expect(result, isA<Ok<T>>());
-  return (result as Ok<T>).value;
+T _ok<T>(AppResult<T> result) {
+  expect(result, isA<Success<T, AppFailure>>());
+  return (result as Success<T, AppFailure>).value;
 }
 
 void main() {
@@ -20,15 +20,15 @@ void main() {
     test('vazio reprova com VISIT_TITLE_EMPTY', () {
       final result = VisitTitle.create('   ');
 
-      expect(result, isA<Fail<VisitTitle>>());
-      expect((result as Fail).code, VisitFailureCodes.titleEmpty);
+      expect(result, isA<Failure<VisitTitle, AppFailure>>());
+      expect((result as Failure<dynamic, AppFailure>).code, VisitFailureCodes.titleEmpty);
     });
 
     test('acima de 140 caracteres reprova com VISIT_TITLE_TOO_LONG', () {
       final result = VisitTitle.create('x' * 141);
 
-      expect(result, isA<Fail<VisitTitle>>());
-      expect((result as Fail).code, VisitFailureCodes.titleTooLong);
+      expect(result, isA<Failure<VisitTitle, AppFailure>>());
+      expect((result as Failure<dynamic, AppFailure>).code, VisitFailureCodes.titleTooLong);
     });
 
     test('valido normaliza e aprova', () {
@@ -42,15 +42,15 @@ void main() {
     test('parse valido devolve o status', () {
       final status = EVisitStatus.parse('scheduled');
 
-      expect(status, isA<Ok<EVisitStatus>>());
-      expect((status as Ok<EVisitStatus>).value, EVisitStatus.scheduled);
+      expect(status, isA<Success<EVisitStatus, AppFailure>>());
+      expect((status as Success<EVisitStatus, AppFailure>).value, EVisitStatus.scheduled);
     });
 
     test('status invalido reprova com VISIT_STATUS_INVALID', () {
       final status = EVisitStatus.parse('concluida');
 
-      expect(status, isA<Fail<EVisitStatus>>());
-      expect((status as Fail).code, VisitFailureCodes.statusInvalid);
+      expect(status, isA<Failure<EVisitStatus, AppFailure>>());
+      expect((status as Failure<dynamic, AppFailure>).code, VisitFailureCodes.statusInvalid);
     });
 
     test('transicoes de status sao validas', () {
@@ -67,8 +67,8 @@ void main() {
     test('descricao vazia reprova com CHECKLIST_DESCRIPTION_EMPTY', () {
       final item = ChecklistItem.create(description: '  ');
 
-      expect(item, isA<Fail<ChecklistItem>>());
-      expect((item as Fail).code, VisitFailureCodes.checklistDescriptionEmpty);
+      expect(item, isA<Failure<ChecklistItem, AppFailure>>());
+      expect((item as Failure<dynamic, AppFailure>).code, VisitFailureCodes.checklistDescriptionEmpty);
     });
 
     test('valido comeca nao concluido', () {
@@ -89,8 +89,8 @@ void main() {
         checklist: [_ok(ChecklistItem.create(description: 'Testar sinal'))],
       );
 
-      expect(draft, isA<Ok<Visit>>());
-      final visit = (draft as Ok<Visit>).value;
+      expect(draft, isA<Success<Visit, AppFailure>>());
+      final visit = (draft as Success<Visit, AppFailure>).value;
       expect(visit.id, 0);
       expect(visit.status, EVisitStatus.scheduled);
       expect(visit.checklist, hasLength(1));
@@ -104,8 +104,8 @@ void main() {
         technicianName: 'Ana',
       );
 
-      expect(draft, isA<Fail<Visit>>());
-      expect((draft as Fail).code, VisitFailureCodes.titleEmpty);
+      expect(draft, isA<Failure<Visit, AppFailure>>());
+      expect((draft as Failure<dynamic, AppFailure>).code, VisitFailureCodes.titleEmpty);
     });
 
     test('concluir checklist marca todos os itens', () {

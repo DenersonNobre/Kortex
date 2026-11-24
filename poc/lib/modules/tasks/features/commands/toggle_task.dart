@@ -18,11 +18,11 @@ class ToggleTaskCommand {
   final ITaskRepository _tasks;
 
   /// Inverte `done` ou `Fail` (`TASK_NOT_FOUND`).
-  IResult<Task> call(int id) {
+  AppResult<Task> call(int id) {
     final task = _tasks.findById(id);
     if (task == null) {
-      return const Fail(TaskFailureCodes.notFound, 'Task inexistente.');
+      return const Failure(AppFailure(TaskFailureCodes.notFound, 'Task inexistente.'));
     }
-    return Ok(_tasks.save(task.toggle()));
+    return Success(_tasks.save(task.toggle()));
   }
 }

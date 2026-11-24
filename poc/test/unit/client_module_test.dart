@@ -5,15 +5,15 @@ import 'package:poc/modules/clients/domain/.index.dart';
 import 'package:poc/modules/clients/features/.index.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(IResult<T> result) {
-  expect(result, isA<Ok<T>>());
-  return (result as Ok<T>).value;
+T _ok<T>(AppResult<T> result) {
+  expect(result, isA<Success<T, AppFailure>>());
+  return (result as Success<T, AppFailure>).value;
 }
 
 /// Codigo de um `Fail` (falha o teste se for `Ok`).
-String _code<T>(IResult<T> result) {
-  expect(result, isA<Fail<T>>());
-  return (result as Fail<T>).code;
+String _code<T>(AppResult<T> result) {
+  expect(result, isA<Failure<T, AppFailure>>());
+  return (result as Failure<T, AppFailure>).code;
 }
 
 /// Fachada sobre store em memoria (sem latencia).
@@ -114,15 +114,15 @@ void main() {
     test('telefone invalido reprova com CLIENT_PHONE_INVALID', () {
       final client = Client.create(name: 'Cliente', phone: '123');
 
-      expect(client, isA<Fail<Client>>());
-      expect((client as Fail<Client>).code, ClientFailureCodes.phoneInvalid);
+      expect(client, isA<Failure<Client, AppFailure>>());
+      expect((client as Failure<Client, AppFailure>).code, ClientFailureCodes.phoneInvalid);
     });
 
     test('nome vazio reprova com CLIENT_NAME_EMPTY', () {
       final client = Client.create(name: '  ', phone: '11988887777');
 
-      expect(client, isA<Fail<Client>>());
-      expect((client as Fail<Client>).code, ClientFailureCodes.nameEmpty);
+      expect(client, isA<Failure<Client, AppFailure>>());
+      expect((client as Failure<Client, AppFailure>).code, ClientFailureCodes.nameEmpty);
     });
 
     test('valido normaliza telefone e nasce com id transiente', () {

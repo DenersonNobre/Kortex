@@ -33,16 +33,16 @@ enum EVisitStatus {
   bool get canComplete => this == EVisitStatus.inProgress;
 
   /// Interpreta [raw]; devolve `Fail` para valor desconhecido.
-  static IResult<EVisitStatus> parse(String raw) {
+  static AppResult<EVisitStatus> parse(String raw) {
     final normalized = raw.trim().toLowerCase();
     for (final status in EVisitStatus.values) {
       if (status.wire == normalized) {
-        return Ok(status);
+        return Success(status);
       }
     }
-    return const Fail(
+    return const Failure(AppFailure(
       VisitFailureCodes.statusInvalid,
       'Status de visita desconhecido.',
-    );
+    ));
   }
 }

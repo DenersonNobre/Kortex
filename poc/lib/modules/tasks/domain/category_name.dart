@@ -21,20 +21,20 @@ final class CategoryName {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
-  static IResult<CategoryName> create(String raw) {
+  static AppResult<CategoryName> create(String raw) {
     final trimmed = raw.trim();
     if (trimmed.isEmpty) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.emptyName,
         'Nome da categoria não pode ser vazio.',
-      );
+      ));
     }
     if (trimmed.length > maxLength) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.nameTooLong,
         'Nome com mais de 60 caracteres.',
-      );
+      ));
     }
-    return Ok(CategoryName._(trimmed));
+    return Success(CategoryName._(trimmed));
   }
 }

@@ -21,7 +21,7 @@ abstract interface class IVisitUseCases {
   SessionUser get currentUser;
 
   /// Agenda uma visita no nome do usuario da sessao.
-  Future<IResult<Visit>> scheduleVisit({
+  Future<AppResult<Visit>> scheduleVisit({
     required String title,
     required int clientId,
     required DateTime scheduledAt,
@@ -30,13 +30,13 @@ abstract interface class IVisitUseCases {
   });
 
   /// Inicia uma visita agendada.
-  Future<IResult<Visit>> startVisit(int visitId);
+  Future<AppResult<Visit>> startVisit(int visitId);
 
   /// Conclui uma visita em andamento.
-  Future<IResult<Visit>> completeVisit(int visitId);
+  Future<AppResult<Visit>> completeVisit(int visitId);
 
   /// Marca ou desmarca um item do checklist.
-  Future<IResult<Visit>> toggleChecklistItem(int visitId, int index);
+  Future<AppResult<Visit>> toggleChecklistItem(int visitId, int index);
 
   /// Lista as visitas com cliente, tecnico e progresso.
   Future<List<VisitRow>> listVisits({EVisitStatus? status, DateTime? day});
@@ -73,7 +73,7 @@ class DefaultVisitUseCases implements IVisitUseCases {
   SessionUser get currentUser => _session.currentUser;
 
   @override
-  Future<IResult<Visit>> scheduleVisit({
+  Future<AppResult<Visit>> scheduleVisit({
     required String title,
     required int clientId,
     required DateTime scheduledAt,
@@ -88,13 +88,13 @@ class DefaultVisitUseCases implements IVisitUseCases {
   );
 
   @override
-  Future<IResult<Visit>> startVisit(int visitId) => _start(visitId);
+  Future<AppResult<Visit>> startVisit(int visitId) => _start(visitId);
 
   @override
-  Future<IResult<Visit>> completeVisit(int visitId) => _complete(visitId);
+  Future<AppResult<Visit>> completeVisit(int visitId) => _complete(visitId);
 
   @override
-  Future<IResult<Visit>> toggleChecklistItem(int visitId, int index) =>
+  Future<AppResult<Visit>> toggleChecklistItem(int visitId, int index) =>
       _toggle(visitId, index);
 
   @override

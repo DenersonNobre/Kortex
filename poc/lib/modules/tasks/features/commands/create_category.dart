@@ -15,11 +15,11 @@ class CreateCategoryCommand {
   final ICategoryRepository _categories;
 
   /// Valida e persiste, ou `Fail` do VO (nada persiste).
-  IResult<Category> call(String name, String color) {
+  AppResult<Category> call(String name, String color) {
     final draft = Category.draft(name, color);
-    if (draft is Fail<Category>) {
+    if (draft is Failure<Category, AppFailure>) {
       return draft;
     }
-    return Ok(_categories.save((draft as Ok<Category>).value));
+    return Success(_categories.save((draft as Success<Category, AppFailure>).value));
   }
 }

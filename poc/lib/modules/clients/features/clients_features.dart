@@ -17,14 +17,14 @@ abstract interface class IClientUseCases {
   Future<List<Client>> listClients({String search});
 
   /// Cria um cliente.
-  Future<IResult<Client>> createClient({
+  Future<AppResult<Client>> createClient({
     required String name,
     required String phone,
     String address,
   });
 
   /// Edita um cliente existente.
-  Future<IResult<Client>> updateClient(
+  Future<AppResult<Client>> updateClient(
     int id, {
     String? name,
     String? phone,
@@ -56,14 +56,14 @@ class DefaultClientUseCases implements IClientUseCases {
   }
 
   @override
-  Future<IResult<Client>> createClient({
+  Future<AppResult<Client>> createClient({
     required String name,
     required String phone,
     String address = '',
   }) => _create(name: name, phone: phone, address: address);
 
   @override
-  Future<IResult<Client>> updateClient(
+  Future<AppResult<Client>> updateClient(
     int id, {
     String? name,
     String? phone,

@@ -60,7 +60,7 @@ final class Visit {
   }
 
   /// Valida os campos e devolve a visita transiente ou o `Fail`.
-  static IResult<Visit> draft({
+  static AppResult<Visit> draft({
     required String title,
     required int clientId,
     required String technicianName,
@@ -69,13 +69,13 @@ final class Visit {
     String notes = '',
   }) {
     final parsed = VisitTitle.create(title);
-    if (parsed is Fail<VisitTitle>) {
-      return Fail<Visit>(parsed.code, parsed.message);
+    if (parsed is Failure<VisitTitle, AppFailure>) {
+      return Failure<Visit, AppFailure>(AppFailure(parsed.code, parsed.message));
     }
-    return Ok(
+    return Success(
       Visit._(
         id: 0,
-        title: (parsed as Ok<VisitTitle>).value,
+        title: (parsed as Success<VisitTitle, AppFailure>).value,
         clientId: clientId,
         technicianName: technicianName,
         scheduledAt: scheduledAt,

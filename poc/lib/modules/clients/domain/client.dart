@@ -35,23 +35,23 @@ final class Client {
   final String address;
 
   /// Valida os campos e devolve `Ok` ou `Fail` com codigo estavel.
-  static IResult<Client> create({
+  static AppResult<Client> create({
     required String name,
     required String phone,
     String address = '',
   }) {
     final trimmedName = name.trim();
     if (trimmedName.isEmpty) {
-      return const Fail(ClientFailureCodes.nameEmpty, 'Cliente sem nome.');
+      return const Failure(AppFailure(ClientFailureCodes.nameEmpty, 'Cliente sem nome.'));
     }
     final digits = phone.replaceAll(RegExp(r'\D'), '');
     if (!_phonePattern.hasMatch(digits)) {
-      return const Fail(
+      return const Failure(AppFailure(
         ClientFailureCodes.phoneInvalid,
         'Telefone do cliente invalido.',
-      );
+      ));
     }
-    return Ok(
+    return Success(
       Client._(
         id: 0,
         name: trimmedName,

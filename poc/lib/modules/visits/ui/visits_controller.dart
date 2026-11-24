@@ -31,7 +31,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
       ),
     );
     startCommand = autoDispose(
-      kortexCommand<int, IResult<Visit>>(_useCases.startVisit),
+      kortexCommand<int, AppResult<Visit>>(_useCases.startVisit),
     );
     autoDispose(statusFilter);
     autoDispose(showNewVisitDialog);
@@ -43,7 +43,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
   late final KortexResource<List<VisitRow>> visits;
 
   /// Comando de inicio de visita (trava de duplo clique).
-  late final KortexCommand<int, IResult<Visit>> startCommand;
+  late final KortexCommand<int, AppResult<Visit>> startCommand;
 
   /// Status ativo do filtro (`''` = todos), hidratado via `kortex_persist`.
   final KortexPersistedSignal<String> statusFilter =
@@ -102,7 +102,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
       scheduledAt: scheduledAt ?? DateTime.now().add(const Duration(days: 1)),
       checklist: _defaultChecklist(),
     );
-    if (result is Fail<Visit>) {
+    if (result is Failure<Visit, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -119,7 +119,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
   /// Checklist padrao aplicado a toda visita nova (POC).
   List<ChecklistItem> _defaultChecklist() => [
     for (final label in _defaultChecklistLabels)
-      if (ChecklistItem.create(description: label) case Ok<ChecklistItem>(
+      if (ChecklistItem.create(description: label) case Success<ChecklistItem, AppFailure>(
         :final value,
       ))
         value,
@@ -138,7 +138,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
       publishError('Nao foi possivel iniciar a visita.');
       return false;
     }
-    if (result is Fail<Visit>) {
+    if (result is Failure<Visit, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -150,7 +150,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
   /// Conclui a visita [visitId].
   Future<bool> completeVisit(int visitId) async {
     final result = await _useCases.completeVisit(visitId);
-    if (result is Fail<Visit>) {
+    if (result is Failure<Visit, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -162,7 +162,7 @@ class VisitsController extends IKortexController with KortexErrorMixin {
   /// Marca/desmarca o item [index] do checklist da visita [visitId].
   Future<bool> toggleChecklistItem(int visitId, int index) async {
     final result = await _useCases.toggleChecklistItem(visitId, index);
-    if (result is Fail<Visit>) {
+    if (result is Failure<Visit, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -184,6 +184,6 @@ class VisitsController extends IKortexController with KortexErrorMixin {
   static EVisitStatus? _statusFromWire(String wire) {
     if (wire.isEmpty) return null;
     final parsed = EVisitStatus.parse(wire);
-    return parsed is Ok<EVisitStatus> ? parsed.value : null;
+    return parsed is Success<EVisitStatus, AppFailure> ? parsed.value : null;
   }
 }

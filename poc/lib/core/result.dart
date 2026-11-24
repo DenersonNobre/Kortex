@@ -1,41 +1,35 @@
-/// `IResult` selado do exemplo (falha esperada sem exceção).
+/// `AppResult` da POC baseado no `IResult` de `kortex_lib`.
 ///
-/// SRP: representar sucesso (`Ok`) ou falha de negócio (`Fail` com
-/// `code` + `message`). NÃO faz: exceções, stack traces nem logging.
-///
-/// Patterns: Sealed Class + Pattern Matching exaustivo no consumo.
-/// Dependências: apenas `dart:core` (puro).
+/// SRP: padronizar falhas de negocio como `AppFailure(code, message)` sem
+/// duplicar o pattern `Result` ja fornecido pela biblioteca.
 library;
 
-/// Resultado de operação: `Ok(value)` ou `Fail(code, message)`.
-sealed class IResult<T> {
-  /// Base selada (só `Ok` e `Fail` estendem).
-  const IResult();
+import 'package:kortex_lib/kortex_lib.dart';
 
-  /// Verdadeiro quando é `Ok`.
-  bool get isSuccess => this is Ok<T>;
+export 'package:kortex_lib/kortex_lib.dart' show Failure, IResult, Success;
 
-  /// Verdadeiro quando é `Fail`.
-  bool get isFailure => this is Fail<T>;
-}
-
-/// Sucesso com [value].
-final class Ok<T> extends IResult<T> {
-  /// Cria o sucesso com [value].
-  const Ok(this.value);
-
-  /// Valor produzido.
-  final T value;
-}
-
-/// Falha esperada de negócio com [code] e [message].
-final class Fail<T> extends IResult<T> {
+/// Falha esperada de negocio com [code] e [message].
+final class AppFailure {
   /// Cria a falha com [code] e [message].
-  const Fail(this.code, this.message);
+  const AppFailure(this.code, this.message);
 
-  /// Código estável para branching (nunca texto livre).
+  /// Codigo estavel para branching (nunca texto livre).
   final String code;
 
-  /// Mensagem legível para exibição/log.
+  /// Mensagem legivel para exibicao/log.
   final String message;
+}
+
+/// Resultado padronizado da POC: `Success<T, AppFailure>` ou
+/// `Failure<T, AppFailure>`.
+typedef AppResult<T> = IResult<T, AppFailure>;
+
+/// Atalhos ergonomicos para ler [AppFailure.code] e [AppFailure.message]
+/// diretamente de `Failure<T, AppFailure>`.
+extension AppFailureResultExt<T> on Failure<T, AppFailure> {
+  /// Codigo da falha.
+  String get code => value.code;
+
+  /// Mensagem da falha.
+  String get message => value.message;
 }

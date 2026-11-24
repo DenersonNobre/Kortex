@@ -36,15 +36,15 @@ final class Task {
   /// Valida [rawTitle] e devolve a transiente (`id: 0`) ou o `Fail` do VO.
   ///
   /// A existência de [categoryId] é validada pelo command (não pelo VO).
-  static IResult<Task> draft(String rawTitle, {int? categoryId}) {
+  static AppResult<Task> draft(String rawTitle, {int? categoryId}) {
     final title = TaskTitle.create(rawTitle);
-    if (title is Fail<TaskTitle>) {
-      return Fail<Task>(title.code, title.message);
+    if (title is Failure<TaskTitle, AppFailure>) {
+      return Failure<Task, AppFailure>(AppFailure(title.code, title.message));
     }
-    return Ok(
+    return Success(
       Task(
         id: 0,
-        title: (title as Ok<TaskTitle>).value,
+        title: (title as Success<TaskTitle, AppFailure>).value,
         categoryId: categoryId,
       ),
     );

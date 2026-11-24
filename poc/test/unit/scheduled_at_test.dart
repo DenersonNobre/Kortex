@@ -3,15 +3,15 @@ import 'package:poc/core/result.dart';
 import 'package:poc/modules/visits/domain/.index.dart';
 
 /// Desembrulha um `Ok` (falha o teste se for `Fail`).
-T _ok<T>(IResult<T> result) {
-  expect(result, isA<Ok<T>>());
-  return (result as Ok<T>).value;
+T _ok<T>(AppResult<T> result) {
+  expect(result, isA<Success<T, AppFailure>>());
+  return (result as Success<T, AppFailure>).value;
 }
 
 /// Codigo de um `Fail` (falha o teste se for `Ok`).
-String _code<T>(IResult<T> result) {
-  expect(result, isA<Fail<T>>());
-  return (result as Fail<T>).code;
+String _code<T>(AppResult<T> result) {
+  expect(result, isA<Failure<T, AppFailure>>());
+  return (result as Failure<T, AppFailure>).code;
 }
 
 void main() {

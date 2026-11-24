@@ -67,7 +67,7 @@ class TasksController extends IKortexController with KortexErrorMixin {
   /// Cria a task a partir do rascunho; devolve `true` em caso de sucesso.
   bool createTask() {
     final result = _useCases.create(draft.title, categoryId: draft.categoryId);
-    if (result is Fail<Task>) {
+    if (result is Failure<Task, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -80,7 +80,7 @@ class TasksController extends IKortexController with KortexErrorMixin {
   /// Alterna a conclusao da task [id]; devolve `true` em caso de sucesso.
   bool toggleTask(int id) {
     final result = _useCases.toggle(id);
-    if (result is Fail<Task>) {
+    if (result is Failure<Task, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -92,7 +92,7 @@ class TasksController extends IKortexController with KortexErrorMixin {
   /// Remove a task [id]; devolve `true` em caso de sucesso.
   bool removeTask(int id) {
     final result = _useCases.remove(id);
-    if (result is Fail<Task>) {
+    if (result is Failure<Task, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -104,7 +104,7 @@ class TasksController extends IKortexController with KortexErrorMixin {
   /// Cria a categoria; devolve `true` em caso de sucesso.
   bool createCategory(String name, String colorHex) {
     final result = _useCases.createCategory(name, colorHex);
-    if (result is Fail<Category>) {
+    if (result is Failure<Category, AppFailure>) {
       publishError(result.message);
       return false;
     }
@@ -116,7 +116,7 @@ class TasksController extends IKortexController with KortexErrorMixin {
   /// Exclui a categoria [id]; devolve `true` em caso de sucesso.
   bool removeCategory(int id) {
     final result = _useCases.deleteCategory(id);
-    if (result is Fail<Category>) {
+    if (result is Failure<Category, AppFailure>) {
       publishError(result.message);
       return false;
     }

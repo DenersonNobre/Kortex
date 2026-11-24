@@ -20,14 +20,14 @@ final class CategoryColor {
   final String value;
 
   /// Valida [raw] e devolve `Ok` ou `Fail` com código estável.
-  static IResult<CategoryColor> create(String raw) {
+  static AppResult<CategoryColor> create(String raw) {
     final trimmed = raw.trim();
     if (!_hex.hasMatch(trimmed)) {
-      return const Fail(
+      return const Failure(AppFailure(
         CategoryFailureCodes.invalidColor,
         'Cor deve ser hexadecimal #RRGGBB.',
-      );
+      ));
     }
-    return Ok(CategoryColor._(trimmed));
+    return Success(CategoryColor._(trimmed));
   }
 }

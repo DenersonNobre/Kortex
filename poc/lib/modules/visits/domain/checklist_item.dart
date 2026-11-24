@@ -28,18 +28,18 @@ final class ChecklistItem {
   final bool done;
 
   /// Valida [description] e devolve `Ok` ou `Fail` com codigo estavel.
-  static IResult<ChecklistItem> create({
+  static AppResult<ChecklistItem> create({
     required String description,
     int id = 0,
   }) {
     final trimmed = description.trim();
     if (trimmed.isEmpty) {
-      return const Fail(
+      return const Failure(AppFailure(
         VisitFailureCodes.checklistDescriptionEmpty,
         'Item do checklist nao pode ter descricao vazia.',
-      );
+      ));
     }
-    return Ok(ChecklistItem._(id: id, description: trimmed));
+    return Success(ChecklistItem._(id: id, description: trimmed));
   }
 
   /// Devolve copia com a conclusao invertida.
