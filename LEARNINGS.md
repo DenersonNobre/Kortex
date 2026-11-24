@@ -168,3 +168,9 @@
 3. Ao remover código com entradas aqui, **generalizar o contexto** em vez de deletar
    (ex.: nome de app específico → "app Delphi com res em fresh clone").
 4. Promoção: reutilizado em 2+ lugares → global; virou workflow → propor Skill.
+
+## 2026-11-24 — POC: `AppResult`, `seedPreview` e `dart format`
+
+- **Não duplicar patterns da `kortex_lib` no `core/` da POC**: nunca manter dois `Result` equivalentes nem enfraquecer a assinatura genérica `IResult<TSuccess, TFailure>` da biblioteca. Usar `typedef AppResult<T> = IResult<T, AppFailure>;` + `extension` em `poc/lib/core/result.dart`.
+- **Separar `seedPreview` de `seedDemo`**: manter `seedDemo` mínimo para testes determinísticos (`List.single`, listas vazias) e usar `seedPreview: true` apenas em `poc/lib/main.dart` para visualização prévia rica.
+- **`dart format` obrigatório antes do commit**: o CI executa `dart format --output=none --set-exit-if-changed`; rodar `dart format poc/lib poc/test` junto com `flutter analyze` e `flutter test` antes de commitar.
