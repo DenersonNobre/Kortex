@@ -13,13 +13,14 @@ import 'package:kortex/kortex.dart';
 import 'package:kortex_persist/kortex_persist.dart';
 
 import '../../../core/result.dart';
+import '../../../core/ui/error_feedback_mixin.dart';
 import '../../clients/domain/.index.dart';
 import '../domain/.index.dart';
 import '../features/list_visits/visit_row.dart';
 import '../features/visits_features.dart';
 
 /// Controller da lista e das acoes de visita.
-class VisitsController extends IKortexController {
+class VisitsController extends IKortexController with KortexErrorMixin {
   /// Registra resource, sinais e commands no `disposeBag`.
   VisitsController(this._useCases) {
     visits = autoDispose(
@@ -33,7 +34,6 @@ class VisitsController extends IKortexController {
       kortexCommand<int, IResult<Visit>>(_useCases.startVisit),
     );
     autoDispose(statusFilter);
-    autoDispose(error);
     autoDispose(showNewVisitDialog);
   }
 
@@ -54,9 +54,6 @@ class VisitsController extends IKortexController {
         encode: (v) => v,
         decode: (raw) => raw,
       );
-
-  /// Mensagem de erro da ultima acao.
-  final KortexSignal<String> error = KortexSignal('');
 
   /// Exibe o dialog de nova visita.
   final KortexSignal<bool> showNewVisitDialog = KortexSignal(false);
@@ -96,7 +93,7 @@ class VisitsController extends IKortexController {
   }) async {
     final targetClient = clientId ?? _firstClientId();
     if (targetClient == null) {
-      _publishError('Cadastre um cliente antes de agendar.');
+      publishError('Cadastre um cliente antes de agendar.');
       return false;
     }
     final result = await _useCases.scheduleVisit(
@@ -106,7 +103,7 @@ class VisitsController extends IKortexController {
       checklist: _defaultChecklist(),
     );
     if (result is Fail<Visit>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -138,11 +135,11 @@ class VisitsController extends IKortexController {
   Future<bool> startVisit(int visitId) async {
     final result = await startCommand.execute(visitId);
     if (result == null) {
-      _publishError('Nao foi possivel iniciar a visita.');
+      publishError('Nao foi possivel iniciar a visita.');
       return false;
     }
     if (result is Fail<Visit>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -154,7 +151,7 @@ class VisitsController extends IKortexController {
   Future<bool> completeVisit(int visitId) async {
     final result = await _useCases.completeVisit(visitId);
     if (result is Fail<Visit>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -166,7 +163,7 @@ class VisitsController extends IKortexController {
   Future<bool> toggleChecklistItem(int visitId, int index) async {
     final result = await _useCases.toggleChecklistItem(visitId, index);
     if (result is Fail<Visit>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -188,9 +185,5 @@ class VisitsController extends IKortexController {
     if (wire.isEmpty) return null;
     final parsed = EVisitStatus.parse(wire);
     return parsed is Ok<EVisitStatus> ? parsed.value : null;
-  }
-
-  void _publishError(String message) {
-    error.value = message;
   }
 }

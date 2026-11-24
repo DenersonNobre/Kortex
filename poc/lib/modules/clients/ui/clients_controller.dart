@@ -10,18 +10,18 @@ library;
 import 'package:kortex_lib/kortex_lib.dart';
 
 import '../../../../core/result.dart';
+import '../../../core/ui/error_feedback_mixin.dart';
 import '../../clients/domain/.index.dart';
 import '../../clients/features/.index.dart';
 
 /// Controller da tela de Clientes.
-class ClientsController extends IKortexController {
+class ClientsController extends IKortexController with KortexErrorMixin {
   /// Registra resource e sinais no `disposeBag`.
   ClientsController(this._useCases) {
     clients = autoDispose(
       kortexResource<List<Client>>(() => _load(), immediate: false),
     );
     autoDispose(search);
-    autoDispose(error);
     autoDispose(form);
   }
 
@@ -48,9 +48,6 @@ class ClientsController extends IKortexController {
   /// Termo de busca por nome (`''` = todos).
   final KortexSignal<String> search = KortexSignal('');
 
-  /// Mensagem de erro da ultima acao.
-  final KortexSignal<String> error = KortexSignal('');
-
   /// Recarrega a lista aplicando a busca ativa.
   Future<void> refresh() => clients.refresh();
 
@@ -58,7 +55,7 @@ class ClientsController extends IKortexController {
   Future<bool> createClient(String name, String phone) async {
     final result = await _useCases.createClient(name: name, phone: phone);
     if (result is Fail<Client>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -67,13 +64,5 @@ class ClientsController extends IKortexController {
   }
 
   /// Limpa a mensagem de erro (apos exibida em `SnackBar`).
-  void clearError() {
-    error.value = '';
-  }
-
   Future<List<Client>> _load() => _useCases.listClients(search: search.peek());
-
-  void _publishError(String message) {
-    error.value = message;
-  }
 }

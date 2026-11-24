@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
+import '../../../core/ui/error_snackbar_listener.dart';
 import '../features/.index.dart';
 import 'visits_controller.dart';
 import 'widgets/new_visit_dialog.dart';
@@ -40,14 +41,8 @@ class VisitsPage extends IKortexPage<VisitsController> {
         onPressed: () => showNewVisitDialog(context),
         child: const Icon(Icons.add),
       ),
-      body: KortexListener<String>(
-        watch: () => controller.error.value,
-        listener: (listenerContext, message) {
-          if (message.isEmpty) return;
-          ScaffoldMessenger.of(listenerContext)
-              .showSnackBar(SnackBar(content: Text(message)));
-          _clearLater(controller);
-        },
+      body: KortexErrorSnackBarListener(
+        error: controller.error,
         child: Column(
           // Stretch: os filhos ocupam a largura toda, independentemente do
           // estado do corpo (sem isso a linha de filtros centraliza enquanto
@@ -59,12 +54,6 @@ class VisitsPage extends IKortexPage<VisitsController> {
           ],
         ),
       ),
-    );
-  }
-
-  void _clearLater(VisitsController controller) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => controller.clearError(),
     );
   }
 }

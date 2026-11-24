@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
+import '../../../core/ui/error_snackbar_listener.dart';
 import 'tasks_controller.dart';
 import 'widgets/category_section.dart';
 import 'widgets/task_form.dart';
@@ -24,14 +25,8 @@ class TasksPage extends IKortexPage<TasksController> {
   Widget buildPage(BuildContext context, TasksController controller) {
     return Scaffold(
       appBar: AppBar(title: const Text('Kortex POC — Tasks')),
-      body: KortexListener<String>(
-        watch: () => controller.error.value,
-        listener: (listenerContext, message) {
-          if (message.isEmpty) return;
-          ScaffoldMessenger.of(listenerContext)
-              .showSnackBar(SnackBar(content: Text(message)));
-          _clearLater(controller);
-        },
+      body: KortexErrorSnackBarListener(
+        error: controller.error,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
@@ -43,12 +38,6 @@ class TasksPage extends IKortexPage<TasksController> {
           ],
         ),
       ),
-    );
-  }
-
-  void _clearLater(TasksController controller) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => controller.clearError(),
     );
   }
 }

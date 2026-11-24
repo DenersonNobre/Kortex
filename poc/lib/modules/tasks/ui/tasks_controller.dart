@@ -10,18 +10,18 @@ library;
 import 'package:kortex/kortex.dart';
 
 import '../../../core/result.dart';
+import '../../../core/ui/error_feedback_mixin.dart';
 import '../domain/.index.dart';
 import '../features/tasks_features.dart';
 import '../features/queries/task_row.dart';
 import 'task_draft.dart';
 
 /// Controller da `TasksPage`.
-class TasksController extends IKortexController {
+class TasksController extends IKortexController with KortexErrorMixin {
   /// Registra os sinais e a fachada no `disposeBag` (descarte automatico).
   TasksController(this._useCases) {
     autoDispose(tasks);
     autoDispose(categories);
-    autoDispose(error);
     autoDispose(filter);
     autoDispose(showCategoryForm);
   }
@@ -33,9 +33,6 @@ class TasksController extends IKortexController {
 
   /// Categorias cadastradas.
   final KortexSignal<List<Category>> categories = KortexSignal(const []);
-
-  /// Mensagem de erro da ultima acao (vazia quando nao ha erro).
-  final KortexSignal<String> error = KortexSignal('');
 
   /// Categoria ativa do filtro (`null` = todas).
   final KortexSignal<int?> filter = KortexSignal(null);
@@ -71,7 +68,7 @@ class TasksController extends IKortexController {
   bool createTask() {
     final result = _useCases.create(draft.title, categoryId: draft.categoryId);
     if (result is Fail<Task>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -84,7 +81,7 @@ class TasksController extends IKortexController {
   bool toggleTask(int id) {
     final result = _useCases.toggle(id);
     if (result is Fail<Task>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -96,7 +93,7 @@ class TasksController extends IKortexController {
   bool removeTask(int id) {
     final result = _useCases.remove(id);
     if (result is Fail<Task>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -108,7 +105,7 @@ class TasksController extends IKortexController {
   bool createCategory(String name, String colorHex) {
     final result = _useCases.createCategory(name, colorHex);
     if (result is Fail<Category>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -120,7 +117,7 @@ class TasksController extends IKortexController {
   bool removeCategory(int id) {
     final result = _useCases.deleteCategory(id);
     if (result is Fail<Category>) {
-      _publishError(result.message);
+      publishError(result.message);
       return false;
     }
     error.value = '';
@@ -135,11 +132,4 @@ class TasksController extends IKortexController {
   }
 
   /// Limpa a mensagem de erro (apos exibida em `SnackBar`).
-  void clearError() {
-    error.value = '';
-  }
-
-  void _publishError(String message) {
-    error.value = message;
-  }
 }

@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:kortex/kortex.dart';
 
+import '../../../core/ui/error_snackbar_listener.dart';
 import '../domain/.index.dart';
 import 'clients_controller.dart';
 import 'widgets/new_client_dialog.dart';
@@ -29,14 +30,8 @@ class ClientsPage extends IKortexPage<ClientsController> {
         onPressed: () => showNewClientDialog(context),
         child: const Icon(Icons.add),
       ),
-      body: KortexListener<String>(
-        watch: () => controller.error.value,
-        listener: (listenerContext, message) {
-          if (message.isEmpty) return;
-          ScaffoldMessenger.of(listenerContext)
-              .showSnackBar(SnackBar(content: Text(message)));
-          _clearLater(controller);
-        },
+      body: KortexErrorSnackBarListener(
+        error: controller.error,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -58,12 +53,6 @@ class ClientsPage extends IKortexPage<ClientsController> {
           ],
         ),
       ),
-    );
-  }
-
-  void _clearLater(ClientsController controller) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => controller.clearError(),
     );
   }
 }
