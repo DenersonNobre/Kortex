@@ -42,3 +42,12 @@ A `kortex_lib` atual declara `crypto` + `encrypt` + `http` + `sqflite` para todo
 4. **Peso auditável**: teste/gate que lista as dependências resolvidas de cada pacote novo (`flutter pub deps`) e falha se `kortex_core` puxar `http`/`sqflite` ou se `kortex_rest` puxar `sqflite`. É o enforcement da UC-10.05 que ficou só no texto.
 5. **Sem duplicação residual**: após a extração, grep por símbolos movidos na `kortex_lib` deve retornar zero (fora dos re-exports intencionais). Duplicação viva reprova.
 6. **Diff Budget e status**: 1 pacote extraído = 1 UC (código + testes + example + CHANGELOGs origem/destino). Seções do épico só `Concluído` com evidência; DoD marcada com comando + saída, nunca por afirmação.
+
+---
+
+## 5. Parecer Técnico (Revisão)
+
+1. **`kortex_core` vs `kortex_lib` durante a transição**: enquanto `kortex_core`, `kortex_rest` e `kortex_sqlite` não forem publicados no `pub.dev`, `example/`s que os referenciem não devem ter `pubspec.yaml` próprio fora do workspace (lição da `EPIC11`), para não falhar no `flutter pub get`.
+2. **`kortex_rest` (decisão da §2)**: preferir **helpers + cliente HTTP fino** sobre `http.Client` (retry, timeout, middleware) em vez de framework opinativo de API, mantendo o pacote leve e fácil de mockar com `MockClient`.
+3. **`kortex_sqlite`**: seguir o mesmo padrão de porta + adapter de `kortex_persist` (`IKortexDatabase` / migrations versionadas), permitindo testar repositórios em memória sem subir SQLite nativo em testes unitários.
+4. **Gate de peso (§4.4)**: automatizar em teste Dart (`Process.run('dart', ['pub', 'deps', '--json'])` ou leitura de `pubspec.lock` / `pubspec.yaml`) para falhar no CI se `kortex_core` puxar `http`/`sqflite`.

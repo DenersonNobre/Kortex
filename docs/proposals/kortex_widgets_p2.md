@@ -54,3 +54,12 @@ Completar o `kortex_widgets` (hoje: primitivos migrados da `kortex_lib` + campos
 4. **Diff Budget por UC**: 1 widget = `lib/src/<widget>.dart` + barrel + `test/<widget>_test.dart` + README/CHANGELOG do pacote. Arquivo fora do slice reprova.
 5. **Dispose e async**: widget que assina stream/future cancela no `dispose` (teste com widget descartado no meio do voo — sem exceção em zona); `TextEditingController`/focus criados no widget têm dono explícito.
 6. **Status do épico**: seção de UC só vira `Concluído` com os itens acima verificados; DoD marcada só com evidência (`flutter analyze` + `flutter test` do pacote + contagem antes/depois).
+
+---
+
+## 5. Parecer Técnico (Revisão)
+
+1. **Decisão `PresenterScope` vs `KortexScope` (bloqueante da §3.1)**: unificar em `KortexScope` + `IKortexController` (depreciando `PresenterView`/`PresenterScope` em ciclo menor), evitando manter dois grafos de escopo paralelos na mesma biblioteca.
+2. **`AsyncListView` e `AsyncPage`**: garantir suporte explícito a **paginação por cursor/offset** com proteção contra corrida entre `refresh()` e `loadMore()`, além de `SkeletonList` com altura fixa por item para evitar *layout shift* (reflow).
+3. **`SearchableSelect` e `DateField`/`DateRangeField`**: manter o estado de filtro/busca isolado em `KortexSignal` local descartado no `dispose`, e nunca acoplar `DateField` a `intl` pesado no núcleo — formatação `dd/MM/yyyy` pode ser pura em Dart.
+4. **`OfflineBanner`**: receber `Stream<bool>` (ou `IKortexReadonlySignal<bool>`) injetado pelo consumidor, sem acoplar o `kortex_widgets` a `connectivity_plus` no `pubspec.yaml`.
