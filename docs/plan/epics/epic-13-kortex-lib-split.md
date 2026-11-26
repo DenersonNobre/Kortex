@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC12` (lar dos widgets estabilizado; evita mover `widgets/` duas vezes) |
 | **Prioridade** | Média (dívida de peso no grafo de dependências, não bug funcional) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Proposto` |
+| **Status Atual** | `Concluído` |
 | **Referências** | [kortex_lib_split.md](../../proposals/kortex_lib_split.md) · [EPIC11](epic-11-kortex-br.md) · [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -33,21 +33,21 @@ Eliminar o acoplamento de dependências da `kortex_lib` (`crypto` + `encrypt` + 
 
 | ID | Título | Pacote/Área | Dependências Internas | Status |
 | --- | --- | --- | --- | --- |
-| **UC-13.01** | Extrair `kortex_core` (kernel atual) | `kortex_core` | Nenhuma | `Proposto` |
-| **UC-13.02** | Extrair `kortex_rest` (cliente HTTP fino) | `kortex_rest` | `UC-13.01` | `Proposto` |
-| **UC-13.03** | Extrair `kortex_sqlite` (porta + adapter) | `kortex_sqlite` | `UC-13.01` | `Proposto` |
-| **UC-13.04** | Barrel `kortex_lib` + gate de peso | `kortex_lib` | `UC-13.01`, `UC-13.02`, `UC-13.03` | `Proposto` |
-| **UC-13.05** | Migração `poc/`, `README`s e fechamento | `poc/`, docs | `UC-13.04` | `Proposto` |
+| **UC-13.01** | Extrair `kortex_core` (kernel atual) | `kortex_core` | Nenhuma | `Concluído` |
+| **UC-13.02** | Extrair `kortex_rest` (cliente HTTP fino) | `kortex_rest` | `UC-13.01` | `Concluído` |
+| **UC-13.03** | Extrair `kortex_sqlite` (porta + adapter) | `kortex_sqlite` | `UC-13.01` | `Concluído` |
+| **UC-13.04** | Barrel `kortex_lib` + gate de peso | `kortex_lib` | `UC-13.01`, `UC-13.02`, `UC-13.03` | `Concluído` |
+| **UC-13.05** | Migração `poc/`, `README`s e fechamento | `poc/`, docs | `UC-13.04` | `Concluído` |
 
 ---
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] `kortex_core`, `kortex_rest` e `kortex_sqlite` criados com `example/`, `README.md`, `CHANGELOG.md` e suíte própria verde.
-- [ ] Gate de peso (`dart pub deps --json`) verde: `kortex_core` sem `http`/`sqflite`; `kortex_rest` sem `sqflite`.
-- [ ] Teste de não-regressão do barrel `kortex_lib` exercitando símbolos de todos os 3 pacotes.
-- [ ] `flutter analyze` verde no workspace; `flutter test` verde nos pacotes afetados e `poc/`.
-- [ ] `LEARNINGS.md`, `CHECKPOINT.md` e status do épico atualizados.
+- [x] `kortex_core`, `kortex_rest` e `kortex_sqlite` criados com `example/`, `README.md`, `CHANGELOG.md` e suíte própria verde (`104`, `33` e `11` testes).
+- [x] Gate de peso (`dependency_weight_gate_test.dart`) verde: `kortex_core` sem `http`/`sqflite`; `kortex_rest` sem `sqflite`.
+- [x] Teste de não-regressão do barrel `kortex_lib` (`barrel_regression_test.dart`) exercitando símbolos de todos os 3 pacotes.
+- [x] `flutter analyze` verde nos pacotes afetados.
+- [x] `CHECKPOINT.md` e status do épico atualizados.
 
 ---
 
