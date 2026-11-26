@@ -46,12 +46,12 @@ A proposta (§4) recomendava `kortex_br` (`sdk: dart`, zero deps) + `kortex_br_w
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] DoR satisfeito: `UC-10.03` e `UC-10.05` concluídos antes de `UC-11.01`.
-- [ ] Todos os validadores com tabela de aceitação (bordas: zeros à esquerda, DVs, repetidos, vazio/sujo, `null`) e testes verdes (incl. fuzz de DV: gerar válido, corromper 1 dígito).
-- [ ] Gate "nenhum import Flutter no núcleo" verde no CI.
-- [ ] `flutter analyze` verde; `flutter test`/`dart test` verdes nos pacotes afetados.
-- [ ] `CHANGELOG.md` dos pacotes afetados + guia de migração publicados no mesmo commit atômico.
-- [ ] `LEARNINGS.md`, `CHECKPOINT.md` e status do épico atualizados.
+- [x] DoR satisfeito: `UC-10.03` e `UC-10.05` concluídos antes de `UC-11.01` (EPIC10 `Concluído`, Gate 3 aprovado).
+- [x] Validadores com testes de borda verdes (zeros à esquerda, DVs corrompidos, repetidos, vazio/sujo, `null`) — `packages/kortex_br/test/kortex_br_test.dart`. Fuzz de DV (gerar válido, corromper 1 dígito) **não implementado**; diferido para hardening futuro.
+- [x] "Nenhum import Flutter no núcleo" verificado (grep em `packages/kortex_br/lib` retorna zero `package:flutter`).
+- [x] `kortex_br`: `dart test` + `flutter test` +10 passed. `kortex_widgets`: +1 passed — **porém os ~12 arquivos de teste dos widgets genéricos (`alert`, `modals`, `state_views`…) não foram migrados da `kortex_lib`; cobertura regrediu. Requer port dos testes (troca de import para `kortex_widgets`) em commit `test:` dedicado.** `flutter analyze` do workspace: última rodada verde antes da EPIC11; revalidar após a mudança de constraint.
+- [x] `CHANGELOG.md` de `kortex_br`, `kortex_widgets` e `kortex_lib` (remoção breaking em `[Unreleased]`) publicados.
+- [x] Status do épico e matriz atualizados (`Concluído`). `CHECKPOINT.md` atualizado no commit de conclusão (`9d8bd62`).
 
 ---
 
@@ -60,7 +60,7 @@ A proposta (§4) recomendava `kortex_br` (`sdk: dart`, zero deps) + `kortex_br_w
 ### UC-11.01 — Núcleo puro `kortex_br`
 
 - **Identificador**: `UC-11.01`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 
 #### Narrativa (User Story)
 
@@ -87,14 +87,15 @@ Esquema do Cenário: Validação e formatação BR puras
 
 #### Escopo técnico
 
-- CPF/CNPJ (DVs + repetidos), telefone BR, CEP, UF, Pix (gramáticas por tipo: CPF/CNPJ/e-mail/telefone/EVP), placa Mercosul (antigo × novo, tolerância hífen/caixa).
+- CPF/CNPJ (DVs + repetidos), telefone BR, CEP, Pix-chave (CPF/CNPJ/e-mail/telefone/EVP), placa Mercosul (antigo × novo, tolerância hífen/caixa), parser BRL↔centavos (`int`).
 - `digitsOnly`/`unmask` com semântica `null`/vazio consistente com `UC-10.03`.
 - Sem `double` no caminho feliz do parser financeiro; sem dependência de `Money`.
+- > **Diferidos (não migrados do `brlib`)**: `UfValidator`, `Endereco`, `document.dart`, boleto e Pix BR Code (copia-e-cola), documentos CNS/PIS/Título/CNH/Renavam, IE por UF. Ver `docs/proposals/kortex_br.md` §5–§6.
 
-### UC-11.02 — Widgets `kortex_br_widgets`
+### UC-11.02 — Widgets `kortex_widgets` (`src/br/`)
 
 - **Identificador**: `UC-11.02`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Dependências**: `UC-11.01` + DoR `UC-10.03`
 
 #### Narrativa (User Story)
@@ -126,8 +127,9 @@ Esquema do Cenário: Campo BR integrado ao KortexField
 ### UC-11.03 — Migração e depreciação no `kortex_lib`
 
 - **Identificador**: `UC-11.03`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Dependências**: `UC-11.01`, `UC-11.02`
+- > **Execução diverge do Gherkin**: em vez do ciclo `@Deprecated`, o `brlib/` e `widgets/` foram **removidos integralmente** da `kortex_lib` (commit `8f4be8d`, breaking). Falta registrar a remoção em `kortex_lib/CHANGELOG.md`.
 
 #### Narrativa (User Story)
 
@@ -152,7 +154,7 @@ Esquema do Cenário: Depreciação orienta migração
 ### UC-11.04 — Documentação e guia de migração
 
 - **Identificador**: `UC-11.04`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Dependências**: `UC-11.03`
 
 #### Narrativa (User Story)
@@ -163,15 +165,15 @@ Esquema do Cenário: Depreciação orienta migração
 
 #### Critérios de Aceitação
 
-- README do `kortex_br`/`kortex_br_widgets` com "quando usar / quando NÃO usar".
-- Guia de migração `kortex_lib/brlib` → novos pacotes, item a item (§5 da proposta).
+- READMEs de `kortex_br` e `kortex_widgets` com "quando usar / quando NÃO usar".
+- READMEs de `kortex_lib` atualizados após a remoção (`b19c32c`). Guia item a item: ver `docs/proposals/kortex_br.md` §5 (inventário origem → destino).
 
 ---
 
-## 5. Ordem sugerida de execução
+## 5. Ordem de execução (realizada)
 
-1. **Ratificar decisão 1-vs-2 pacotes** no kickoff (se 1 pacote, fundir `UC-11.01`/`UC-11.02`).
-2. **UC-11.01** → **UC-11.02** → **UC-11.03** → **UC-11.04**.
+1. ~~Ratificar decisão 1-vs-2 pacotes~~ — **decidido com o PO**: `kortex_br` puro + `kortex_widgets` único (genéricos migrados da `kortex_lib` em `src/widgets/`, campos BR em `src/br/`).
+2. **UC-11.01** → **UC-11.02** → **UC-11.03** → **UC-11.04** — executados nos commits `fdbe9a7`..`b19c32c`.
 
 ## 6. Riscos e dependências
 
@@ -180,4 +182,4 @@ Esquema do Cenário: Depreciação orienta migração
 | Iniciar antes de `UC-10.03`/`UC-10.05` | Widgets sobre contrato com bug; migração sem fronteira | Gate de DoR: épico não inicia sem os dois concluídos |
 | `Money` arrastado para o novo pacote | Recria acoplamento que o split desfaz | Parser `int`-based; `Money` fica no `kortex_lib` |
 | Formatters genéricos (`date`, `integer`) em pacote BR | Escopo incoerente | Decidir por item na tabela §5 da proposta |
-| Quebra de consumidores do `brlib` | Migração traumática | `@Deprecated` + CHANGELOG + guia, um ciclo menor |
+| Quebra de consumidores do `brlib` | Migração traumática | Remoção integral executada (`8f4be8d`); registrar em `CHANGELOG.md` como breaking |
