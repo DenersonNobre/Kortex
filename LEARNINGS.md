@@ -177,11 +177,25 @@
 
 ## 2026-11-26 — Auditoria dos pacotes: descarte, persistência e APIs nullable
 
-- **Descarte composto precisa terminar todos os cleanups mesmo se um falhar**: `KortexDisposeBag.dispose()` marca o bag como descartado antes de percorrer callbacks; se um callback lança, os posteriores não executam e uma segunda chamada não retoma o trabalho. Testar falhas de callbacks e preservar o erro sem abandonar os demais recursos.
-- **Persistência assíncrona precisa ordenar operações e expor falhas**: `KortexPersistedSignal` dispara `write` sem aguardar; hidratação, mutação e `clear()` podem concorrer, e a API atual não oferece confirmação da escrita. Cobrir essas intercalações com armazenamento controlado por `Completer`.
-- **Parâmetro `T?` não distingue “omitido” de “valor null”**: `KortexField.reset(nextValue)` usa `nextValue ?? _initialValue`, portanto um campo nullable não pode ser explicitamente resetado para `null`; usar um contrato que represente presença separadamente.
-- **Não apresentar `SecretCipher` como proteção de segredos em produção sem cifra autenticada e derivação de chave apropriada**: a implementação atual usa AES-CFB64 e deriva a chave diretamente do segredo com SHA-256 seguido de MD5, sem salt nem autenticação.
-- **A verificação de formatação deve usar o SDK do CI**: com Flutter 3.47.6/Dart 3.13.5, o gate atual identifica `kortex_app.dart` e `kortex_app_test.dart` como não formatados.
-- **Fronteira estrita de API pública (`@internal` + barrels enxutos)**: garantir que detalhes de `src/` não vazem nos exports públicos, mantendo `SemVer` previsível para consumidores.
-- **Diagnóstico em `kDebugMode`**: hooks opcionais (sem custo em release) para inspecionar rebuilds de `KortexWatch`, resolução de `KortexScope` e falhas silenciosas em `KortexResource`/`KortexCommand`.
-- **Guia curto de "quando NÃO usar"**: documentar no `README` de cada pacote onde termina sua responsabilidade (ex.: `ValueNotifier` local de animação não precisa virar `KortexSignal`; regra de domínio não deve ir para `KortexForm`).
+> Parecer de auditoria + lacunas de evolução. Itens marcados como **[risco/bug]** exigem reprodução/teste antes de fix; itens **[evolução]** são capacidade/DX e devem entrar por épico/UC com DoR/DoD.
+
+### Achados originais (endossados)
+
+- **[risco/bug] Descarte composto precisa terminar todos os cleanups mesmo se um falhar**: `KortexDisposeBag.dispose()` marca o bag como descartado antes de percorrer callbacks; se um callback lança, os posteriores não executam e uma segunda chamada não retoma o trabalho. Testar falhas de callbacks e preservar o erro sem abandonar os demais recursos.
+- **[risco/bug] Persistência assíncrona precisa ordenar operações e expor falhas**: `KortexPersistedSignal` dispara `write` sem aguardar; hidratação, mutação e `clear()` podem concorrer, e a API atual não oferece confirmação da escrita. Cobrir essas intercalações com armazenamento controlado por `Completer`.
+- **[risco/bug] Parâmetro `T?` não distingue “omitido” de “valor null”**: `KortexField.reset(nextValue)` usa `nextValue ?? _initialValue`, portanto um campo nullable não pode ser explicitamente resetado para `null`; usar um contrato que represente presença separadamente (sentinela/sealed option).
+- **[risco/segurança] `SecretCipher` não deve ser apresentado como proteção de segredos em produção sem cifra autenticada e derivação de chave apropriada**: a implementação atual usa AES-CFB64 e deriva a chave diretamente do segredo com SHA-256 seguido de MD5, sem salt nem autenticação. Mínimo: rotular limite; ideal: AEAD + KDF com salt/custo adequado + nonce/IV correto.
+- **[esteira] A verificação de formatação deve usar o SDK do CI**: com Flutter 3.47.6/Dart 3.13.5, o gate atual identifica `kortex_app.dart` e `kortex_app_test.dart` como não formatados.
+- **[contrato] Fronteira estrita de API pública (`@internal` + barrels enxutos)**: garantir que detalhes de `src/` não vazem nos exports públicos, mantendo `SemVer` previsível para consumidores. Aplicar em todos os pacotes, com atenção especial ao `kortex_lib`.
+- **[evolução] Diagnóstico em `kDebugMode`**: hooks opcionais (sem custo em release) para inspecionar rebuilds de `KortexWatch`, resolução de `KortexScope` e falhas silenciosas em `KortexResource`/`KortexCommand`.
+- **[evolução] Guia curto de "quando NÃO usar"**: documentar no `README` de cada pacote onde termina sua responsabilidade (ex.: `ValueNotifier` local de animação não precisa virar `KortexSignal`; regra de domínio não deve ir para `KortexForm`).
+
+### Lacunas acrescentadas (parecer sênior)
+
+- **[evolução][kortex] Observabilidade concreta**: labels debug em primitivas, rastreio opt-in de grafo/ciclo de vida, caminho para `dart:developer`/DevTools, e helpers de teste (matchers de `IKortexAsyncState`, controle de tempo para debounce/throttle). Sem especificação, “diagnóstico em kDebugMode” fica amplo demais.
+- **[evolução][kortex] Ergonomia async segura**: `runIfActive`/guard em controller, `KortexCommand.canExecute`, cancelamento/“último vence” com semântica explícita, `KortexEffect.once` e `throttle` onde fizerem sentido.
+- **[evolução][kortex_persist] Contrato de durabilidade**: além de ordenar/expor falhas, definir `debounceWrite`/`flush()`, política em erro (`fallback initial` vs rethrow/estado de erro), confirmação de escrita e versionamento/migração de payload (`version`, `migrate`).
+- **[evolução][kortex_forms] Além do reset nullable**: validação async com cancelamento/estado `validating`, composição (`FormGroup`/arrays/campos aninhados), `submit`/`touchAll`/`reset` com semântica clara de `dirty/touched`, e bindings Flutter opcionais mantendo o núcleo testável sem `BuildContext`.
+- **[evolução][kortex_lint] Quick fixes e regras de alto sinal**: quick fix para `autoDispose`/criação em `build`; regras para side effect em `Computed`, leitura reativa fora de tracking, descarte manual ausente, `autoDispose` em tipo não-disposable; códigos estáveis e mensagens com “por quê + exemplo”.
+- **[evolução][kortex_lib] Governança de peso/deps**: política explícita de dependências e critério de split quando um eixo ganhar vida própria (`rest`, `sqlite`, `widgets`, `brlib`). Manter `Result`/erros/utilitários “sharp”, sem duplicar primitivas do `kortex` nem criar state management paralelo.
+- **[processo] Prova negativa por achado**: cada item `[risco/bug]` deve entrar com sintoma reproduzido, teste vermelho, fix mínimo, teste verde. Para `DisposeBag`, cobrir callback que lança preservando erro e executando demais callbacks; para `KortexPersistedSignal`, cobrir corrida com `Completer`.

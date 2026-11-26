@@ -10,14 +10,16 @@
 
 Monorepo Dart Pub Workspace (`pubspec.yaml` raiz) com 5 pacotes publicados no `pub.dev`: `kortex` (`0.2.3`), `kortex_lint` (`0.1.2`), `kortex_persist` (`0.1.0`), `kortex_lib` (`0.1.0`) e `kortex_forms` (`0.1.0`), além da `poc/`.
 
-## Estado real (verificado em 2026-11-23)
+## Estado real (verificado em 2026-11-26)
 
 - Todos os 5 pacotes publicados no `pub.dev` com `topics:` e `example/`.
 - `kortex_lib` podado (sem `synapx`/reativos duplicados); `kortex_forms` mantém validações genéricas e `kortex_lib/brlib/` mantém especializações `pt-BR`.
+- Auditoria 2026-11-26 expandida no `LEARNINGS.md`; `EPIC10` (evolução do ecossistema) proposto em `docs/plan/`.
 
 ## Próximo passo acionável
 
-1. Validar o ecossistema Kortex em app real (`service_track`) ou avançar no roadmap `v0.2.x` de `kortex`.
+1. Revisar/priorizar `EPIC10` (`docs/plan/epics/epic-10-evolucao-ecossistema.md`) e iniciar pelo hardening de riscos `[risco/bug]` (UC-10.01 a UC-10.04).
+2. Em paralelo, validar o ecossistema Kortex em app real (`service_track`).
 
 ## Travas vivas
 
