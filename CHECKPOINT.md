@@ -12,14 +12,12 @@ Monorepo Dart Pub Workspace (`pubspec.yaml` raiz) com 5 pacotes publicados no `p
 
 ## Estado real (verificado em 2026-11-26)
 
-- Todos os 5 pacotes publicados no `pub.dev` com `topics:` e `example/`.
-- `kortex_lib` podado (sem `synapx`/reativos duplicados); `kortex_forms` mantém validações genéricas e `kortex_lib/brlib/` mantém especializações `pt-BR`.
-- `EPIC10` (`UC-10.01`..`UC-10.08`) concluído: hardening de `KortexDisposeBag`, durabilidade em `KortexPersistedSignal`, `reset(null)` em `KortexField`, posicionamento de `SecretCipher`, fronteira de API, `KortexDebug`, `avoid_kortex_side_effect_in_computed` e guias "quando usar / não usar".
-- Proposta `kortex_br` salva em `docs/proposals/kortex_br.md`.
+- 5 pacotes publicados no `pub.dev` (`kortex`, `kortex_lint`, `kortex_persist`, `kortex_lib`, `kortex_forms`) + 5 novos pacotes no workspace (`kortex_br`, `kortex_widgets`, `kortex_core`, `kortex_rest`, `kortex_sqlite`).
+- `EPIC10`, `EPIC11`, `EPIC12` e `EPIC13` (`Concluído`): `kortex_lib` convertido em barrel opt-in (`kortex_core`, `kortex_rest`, `kortex_sqlite`), `kortex_br` puro e `kortex_widgets` com `src/br/` + `src/widgets/`.
 
 ## Próximo passo acionável
 
-1. Executar a `EPIC11` (`docs/plan/epics/epic-11-kortex-br.md`, DoR aberto) — ratificar 1-vs-2 pacotes e iniciar por `UC-11.01` — ou validar em app real `service_track`.
+1. Validar o ecossistema Kortex em app real (`service_track`) e publicar os novos pacotes (`kortex_br`, `kortex_widgets`, `kortex_core`, `kortex_rest`, `kortex_sqlite`) no `pub.dev` quando desejado.
 
 ## Travas vivas
 
