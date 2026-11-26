@@ -1,0 +1,10 @@
+name: kortex_br_example
+description: Example demonstrating kortex_br pure Dart validators, formatters, and normalizers.
+publish_to: none
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  kortex_br:
+    path: ../
