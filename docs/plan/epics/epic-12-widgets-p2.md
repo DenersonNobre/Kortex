@@ -34,7 +34,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 | ID | Título | Dependências Internas | Status |
 | --- | --- | --- | --- |
 | **UC-12.00** | Unificar escopo: aposentar `PresenterScope` | Nenhuma (DoR do épico) | `Concluído` |
-| **UC-12.01** | `AsyncListView` (lista paginada + estados) | `UC-12.00` | `Proposto` |
+| **UC-12.01** | `AsyncListView` (lista paginada + estados) | `UC-12.00` | `Concluído` |
 | **UC-12.02** | `AsyncPage` (scaffold de recurso) | `UC-12.00` | `Proposto` |
 | **UC-12.03** | `SearchableSelect` (single/multi, bottom sheet) | `UC-12.00` | `Proposto` |
 | **UC-12.04** | `FilterPanel` (chips/filtros reativos) | `UC-12.00` | `Proposto` |
@@ -95,7 +95,7 @@ Esquema do Cenário: Migração de escopo
 ### UC-12.01 — `AsyncListView`
 
 - **Identificador**: `UC-12.01`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 
 #### Narrativa
 

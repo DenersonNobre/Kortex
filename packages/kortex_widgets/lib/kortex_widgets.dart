@@ -10,6 +10,7 @@ export 'src/br/kortex_phone_br_field.dart';
 export 'src/widgets/action_bar.dart';
 export 'src/widgets/alert.dart';
 export 'src/widgets/async_image.dart';
+export 'src/widgets/async_list_view.dart';
 export 'src/widgets/busy_overlay.dart';
 export 'src/widgets/card_tile.dart';
 export 'src/widgets/details.dart';
