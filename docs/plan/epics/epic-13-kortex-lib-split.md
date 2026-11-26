@@ -56,7 +56,7 @@ Eliminar o acoplamento de dependências da `kortex_lib` (`crypto` + `encrypt` + 
 ### UC-13.01 — Extrair `kortex_core`
 
 - **Identificador**: `UC-13.01`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_core`
 
 ```gherkin
@@ -71,7 +71,7 @@ Cenário: kortex_core isola o kernel sem http nem sqflite
 ### UC-13.02 — Extrair `kortex_rest`
 
 - **Identificador**: `UC-13.02`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_rest`
 
 ```gherkin
@@ -86,7 +86,7 @@ Cenário: kortex_rest oferece cliente HTTP fino sobre http.Client
 ### UC-13.03 — Extrair `kortex_sqlite`
 
 - **Identificador**: `UC-13.03`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_sqlite`
 
 ```gherkin
@@ -101,7 +101,7 @@ Cenário: kortex_sqlite separa porta de persistência e adapter sqflite
 ### UC-13.04 — Barrel `kortex_lib` + gate de peso
 
 - **Identificador**: `UC-13.04`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_lib`
 
 ```gherkin
@@ -116,7 +116,7 @@ Cenário: kortex_lib re-exporta os três pacotes e gate valida peso
 ### UC-13.05 — Migração `poc/`, `README`s e fechamento
 
 - **Identificador**: `UC-13.05`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `poc/`, docs
 
 ```gherkin
