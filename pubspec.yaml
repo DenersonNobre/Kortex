@@ -11,4 +11,5 @@ workspace:
   - packages/kortex_persist
   - packages/kortex_forms
   - packages/kortex_br
+  - packages/kortex_widgets
   - poc
