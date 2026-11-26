@@ -32,6 +32,20 @@ void main() {
       email.dispose();
     });
 
+    test('reset(null) em campo nullable reseta explicitamente para null', () {
+      final notes = kortexField<String?>('inicial');
+      notes.value = 'editado';
+
+      notes.reset(null);
+      expect(notes.value, isNull);
+      expect(notes.dirty.value, isFalse);
+
+      notes.reset();
+      expect(notes.value, 'inicial');
+
+      notes.dispose();
+    });
+
     test('KortexForm validates, resets, and disposes all fields', () {
       final name = kortexField<String>('', validators: [_required]);
       final age = kortexField<int>(

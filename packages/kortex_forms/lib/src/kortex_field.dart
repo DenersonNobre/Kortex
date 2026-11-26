@@ -1,5 +1,7 @@
 import 'package:kortex/kortex.dart';
 
+const Object _absent = Object();
+
 /// Synchronous validator returning an error message or `null` when valid.
 typedef KortexValidator<T> = String? Function(T value);
 
@@ -68,10 +70,14 @@ class KortexField<T> implements IKortexDisposable {
     return nextError == null;
   }
 
-  /// Resets the field to [nextValue] (or `initialValue`) and clears flags/errors.
-  void reset([T? nextValue]) {
+  /// Resets the field to [nextValue] (or `initialValue` when omitted) and
+  /// clears flags/errors.
+  void reset([Object? nextValue = _absent]) {
+    final resolved = identical(nextValue, _absent)
+        ? _initialValue
+        : nextValue as T;
     kortexBatch(() {
-      _value.value = nextValue ?? _initialValue;
+      _value.value = resolved;
       _touched.value = false;
       _dirty.value = false;
       _error.value = null;
