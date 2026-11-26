@@ -14,36 +14,33 @@ void main() {
   group('KortexDebug', () {
     tearDown(() => KortexDebug.observer = null);
 
-    test('emite eventos para o observer em modo debug', () {
-      final observer = _RecordingDebugObserver();
-      KortexDebug.observer = observer;
+    test(
+      'emite eventos reais de criacao, atualizacao e descarte de KortexSignal',
+      () {
+        final observer = _RecordingDebugObserver();
+        KortexDebug.observer = observer;
 
-      KortexDebug.emit(
-        const KortexDebugCreated(type: 'KortexSignal', label: 'count'),
-      );
-      KortexDebug.emit(
-        const KortexDebugUpdated(
-          type: 'KortexSignal',
-          label: 'count',
-          value: 1,
-        ),
-      );
-      KortexDebug.emit(
-        const KortexDebugDisposed(type: 'KortexSignal', label: 'count'),
-      );
+        final count = KortexSignal<int>(0);
+        count.value = 1;
+        count.value = 1; // sem mudanca -> nao emite update
+        count.dispose();
 
-      expect(observer.events, hasLength(3));
-      expect(observer.events[0], isA<KortexDebugCreated>());
-      expect(observer.events[1], isA<KortexDebugUpdated>());
-      expect(observer.events[2], isA<KortexDebugDisposed>());
-    });
+        expect(observer.events, hasLength(3));
+        expect(observer.events[0], isA<KortexDebugCreated>());
+        expect(
+          observer.events[1],
+          isA<KortexDebugUpdated>().having((e) => e.value, 'value', 1),
+        );
+        expect(observer.events[2], isA<KortexDebugDisposed>());
+      },
+    );
 
     test('nao falha quando observer e null', () {
       KortexDebug.observer = null;
-      expect(
-        () => KortexDebug.emit(const KortexDebugCreated(type: 'KortexSignal')),
-        returnsNormally,
-      );
+      final signal = KortexSignal<int>(0);
+      signal.value = 42;
+      expect(signal.value, 42);
+      signal.dispose();
     });
   });
 }

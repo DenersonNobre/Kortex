@@ -9,6 +9,7 @@
 /// Dependencies: `dart:core` + `kortex_observer.dart` (pure).
 library;
 
+import 'kortex_debug.dart';
 import 'kortex_observer.dart';
 
 /// Equality between the previous and the next value (`true` = unchanged).
@@ -38,7 +39,9 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
   /// (defaults to `==`).
   KortexSignal(T initialValue, {KortexEquals<T>? equals})
     : _value = initialValue,
-      _equals = equals ?? _defaultEquals;
+      _equals = equals ?? _defaultEquals {
+    KortexDebug.emit(const KortexDebugCreated(type: 'KortexSignal'));
+  }
 
   static const _disposedMessage = 'KortexSignal used after dispose()';
 
@@ -68,6 +71,7 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
     _requireAlive();
     if (_equals(_value, next)) return;
     _value = next;
+    KortexDebug.emit(KortexDebugUpdated(type: 'KortexSignal', value: next));
     KortexTracker.notifyChange(this, _observers);
   }
 
@@ -92,6 +96,7 @@ class KortexSignal<T> implements IKortexReadonlySignal<T> {
     if (_isDisposed) return;
     _isDisposed = true;
     _observers.clear();
+    KortexDebug.emit(const KortexDebugDisposed(type: 'KortexSignal'));
   }
 
   void _requireAlive() {
