@@ -33,7 +33,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 
 | ID | Título | Dependências Internas | Status |
 | --- | --- | --- | --- |
-| **UC-12.00** | Unificar escopo: aposentar `PresenterScope` | Nenhuma (DoR do épico) | `Proposto` |
+| **UC-12.00** | Unificar escopo: aposentar `PresenterScope` | Nenhuma (DoR do épico) | `Concluído` |
 | **UC-12.01** | `AsyncListView` (lista paginada + estados) | `UC-12.00` | `Proposto` |
 | **UC-12.02** | `AsyncPage` (scaffold de recurso) | `UC-12.00` | `Proposto` |
 | **UC-12.03** | `SearchableSelect` (single/multi, bottom sheet) | `UC-12.00` | `Proposto` |
@@ -55,7 +55,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] `UC-12.00` concluído antes de qualquer widget novo (nenhum depende de `PresenterScope`).
+- [x] `UC-12.00` concluído antes de qualquer widget novo (nenhum depende de `PresenterScope`).
 - [ ] Cada UC com Gherkin executável, prova negativa e Diff Budget respeitado (§4 da proposta).
 - [ ] `flutter analyze` verde; `flutter test` verde em `kortex_widgets` com contagem ≥ baseline (port EPIC11 + novos).
 - [ ] Sem nova dependência de terceiros sem justificativa de peso registrada.
@@ -68,7 +68,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 ### UC-12.00 — Unificar escopo: aposentar `PresenterScope`
 
 - **Identificador**: `UC-12.00`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **DoR do épico**: sem este UC, nenhum outro inicia.
 
 #### Narrativa

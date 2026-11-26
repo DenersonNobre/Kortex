@@ -1,7 +1,12 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:flutter/widgets.dart';
 
 /// Escopo hierárquico na árvore de widgets que provê um presenter tipado [T]
 /// para todos os seus descendentes através do mecanismo canônico de [InheritedWidget].
+@Deprecated(
+  'Use KortexScope with IKortexController from package:kortex/kortex.dart instead.',
+)
 class PresenterScope<T extends Object> extends InheritedWidget {
   const PresenterScope({
     super.key,
@@ -32,6 +37,9 @@ class PresenterScope<T extends Object> extends InheritedWidget {
 }
 
 /// Extensão de conveniência em [BuildContext] para leitura fluente do presenter.
+@Deprecated(
+  'Use KortexScope with IKortexController from package:kortex/kortex.dart instead.',
+)
 extension PresenterContextExtension on BuildContext {
   /// Localiza o presenter [T] no [PresenterScope] ascendente mais próximo.
   T presenter<T extends Object>() => PresenterScope.of<T>(this);
@@ -44,6 +52,9 @@ extension PresenterContextExtension on BuildContext {
 /// herdada por componentes visuais concretos, nunca instanciada diretamente.
 /// Permite acessar [presenter] como getter direto em qualquer método da classe
 /// implementando [build], ou recebê-lo via [buildWithPresenter].
+@Deprecated(
+  'Use KortexScope with IKortexController from package:kortex/kortex.dart instead.',
+)
 abstract class PresenterView<T extends Object> extends StatelessWidget {
   const PresenterView({super.key});
 
