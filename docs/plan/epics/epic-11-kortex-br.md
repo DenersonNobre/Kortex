@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC10` (mínimo: `UC-10.03` + `UC-10.05` concluídos) |
 | **Prioridade** | Média (evolução do ecossistema; só após hardening de forms e fronteira de API) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Proposto` |
+| **Status Atual** | `Concluído` |
 | **Referências** | [kortex_br.md](../../proposals/kortex_br.md) · [EPIC10](epic-10-evolucao-ecossistema.md) · [SPEC.md](../../architecture/SPEC.md) |
 
 ---
@@ -39,8 +39,8 @@ A proposta (§4) recomendava `kortex_br` (`sdk: dart`, zero deps) + `kortex_br_w
 | --- | --- | --- | --- | --- |
 | **UC-11.01** | Núcleo puro `kortex_br` | `kortex_br` | Nenhuma (DoR: `UC-10.05`) | `Concluído` |
 | **UC-11.02** | Widgets `kortex_widgets` (`src/br/`) | `kortex_widgets` | `UC-11.01` (+ DoR: `UC-10.03`) | `Concluído` |
-| **UC-11.03** | Migração e depreciação no `kortex_lib` | `kortex_lib` | `UC-11.01`, `UC-11.02` | `Proposto` |
-| **UC-11.04** | Documentação e guia de migração | todos | `UC-11.03` | `Proposto` |
+| **UC-11.03** | Migração e depreciação no `kortex_lib` | `kortex_lib` | `UC-11.01`, `UC-11.02` | `Concluído` |
+| **UC-11.04** | Documentação e guia de migração | todos | `UC-11.03` | `Concluído` |
 
 ---
 
