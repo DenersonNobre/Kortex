@@ -35,3 +35,41 @@ Seguindo o mesmo princípio de separação do ecossistema (`INV-05`):
    - Testes unitários cobrindo casos de borda (zeros à esquerda, dígitos verificadores, strings vazias/sujas).
    - Testes de widget validando máscara + digitação + erro no `KortexField`.
    - Zero dependências de terceiros no núcleo puro.
+
+---
+
+## 4. Decisão Arquitetural Pendente (parecer 2026-11-26)
+
+**Problema**: "duas camadas, um pacote" é inexequível como escrito — dependência no pub não é opcional. Se `lib/widgets.dart` importar `flutter`/`kortex_forms`, o `pubspec` do pacote as declara e o "núcleo puro utilizável em backend Dart" deixa de existir.
+
+**Recomendação**: dois pacotes no workspace:
+
+- **`kortex_br`** (puro): `sdk: dart`, zero dependências. Só validadores, formatadores, normalização e parser BRL↔centavos (`int`, sem `double` no caminho feliz).
+- **`kortex_br_widgets`** (Flutter): depende de `flutter` + `kortex_forms` + `kortex_br`. Só os `KortexXxxField` (`TextInputFormatter` + `keyboardType` + `maxLength` + binding a `KortexField`).
+
+**Alternativa descartada**: um pacote só com dep Flutter e arquivos puros sem import (é o que o `brlib` já faz) — preserva o status quo, mas invalida a alegação de uso em backend Dart. Só aceitar se o requisito backend for abandonado explicitamente.
+
+## 5. Inventário de Migração (esqueleto — completar no fatiamento)
+
+| Origem em `kortex_lib/brlib` | Destino proposto | Veredito preliminar |
+| --- | --- | --- |
+| `validators/cpf_validator.dart`, `formatters/cpf_formatter.dart`, `cpf.dart` | `kortex_br` | Migra |
+| `validators/cnpj_validator.dart`, `formatters/cnpj_formatter.dart` | `kortex_br` | Migra |
+| `validators/phone_br_validator.dart`, `formatters/phone_br_formatter.dart` | `kortex_br` | Migra (caso canônico do split) |
+| `validators/cep_validator.dart`, `formatters/cep_formatter.dart` | `kortex_br` | Migra |
+| `validators/uf_validator.dart`, `endereco.dart`, `document.dart` | `kortex_br` | Migra (avaliar se `document.dart` é agregador a dissolver) |
+| `money_brl.dart` (extensão sobre `Money` do `core/`) | `kortex_br` como funções puras `String ↔ int` centavos | **Redesenhar**: não arrastar `Money`/`core/` junto; `Money` permanece no `kortex_lib` |
+| `input_formatters/currency_input_formatter.dart` vs `money_input_formatter.dart` | `kortex_br_widgets` (um só) | **Resolver duplicação**: um sobrevive, outro morre |
+| Demais `input_formatters/*` (`date`, `integer`, `number`, `digit_mask`, `cpf/cnpj/cep/phone`) | `kortex_br_widgets` | Migra (avaliar se genéricos como `date`/`integer`/`number` pertencem a um pacote BR) |
+| `src/validators/validator_utils.dart` (fora do barrel) | — | Auditar: expor, internalizar ou eliminar |
+
+Regra de migração: cada item migra com `@Deprecated` em `kortex_lib` por um ciclo menor + entrada em `CHANGELOG.md` + guia; item que morre tem justificativa registrada.
+
+## 6. Contratos a Especificar (DoR do épico de implementação)
+
+- **`PixKeyValidator`**: gramáticas por tipo (CPF/CNPJ/e-mail/telefone/EVP-UUID); tabela de aceitação com bordas (zeros à esquerda, repetidos, vazio/sujo, `null`).
+- **`MercosulPlateValidator`**: padrão antigo × Mercosul, tolerância a hífen/caixa; idem.
+- **`CepValidator`**: só formato `NNNNN-NNN` ou também faixa numérica válida.
+- **`digitsOnly`/`unmask`**: semântica para `null`/vazio consistente com o fix de `T?` da `UC-10.03`.
+- **`keyboardType`/`maxLength` por campo**: documentar por widget (ex.: CEP 8 dígitos crus vs 9 com máscara).
+- **Qualidade**: além dos exemplos fixos, teste de propriedade/fuzz nos DVs (gerar válido, corromper 1 dígito) + gate "nenhum import Flutter no núcleo" no CI.
