@@ -21,6 +21,7 @@ flowchart LR
     E4 --> E9["EPIC09: Colecoes Reativas (KortexList e KortexMap)"]
     E4 --> E10["EPIC10: Evolucao do Ecossistema"]
     E9 --> E10
+    E10 --> E11["EPIC11: Pacote Brasileiro Kortex"]
 ```
 
 ---
@@ -39,7 +40,8 @@ flowchart LR
 | `EPIC07` | Clientes & Agenda | `EPIC06` | Alta | `Concluído` | [epic-07-clientes-agenda.md](epics/epic-07-clientes-agenda.md) |
 | `EPIC08` | Módulos de Clientes & Sessão | `EPIC07` | Alta | `Concluído` | [epic-08-modulos-apoio.md](epics/epic-08-modulos-apoio.md) |
 | `EPIC09` | Coleções Reativas (`KortexList` & `KortexMap`) | `EPIC04` | Alta | `Concluído` | [epic-09-colecoes-reativas.md](epics/epic-09-colecoes-reativas.md) |
-| `EPIC10` | Evolução do Ecossistema Kortex | `EPIC04`, `EPIC09` | Alta | `Proposto` | [epic-10-evolucao-ecossistema.md](epics/epic-10-evolucao-ecossistema.md) |
+| `EPIC10` | Evolução do Ecossistema Kortex | `EPIC04`, `EPIC09` | Alta | `Concluído` | [epic-10-evolucao-ecossistema.md](epics/epic-10-evolucao-ecossistema.md) |
+| `EPIC11` | Pacote Brasileiro Kortex | `EPIC10` (mín. `UC-10.03` + `UC-10.05`) | Média | `Proposto` | [epic-11-kortex-br.md](epics/epic-11-kortex-br.md) |
 ---
 
 ## 3. Definition of Ready (DoR) & Definition of Done (DoD)

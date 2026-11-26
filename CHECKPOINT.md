@@ -19,7 +19,7 @@ Monorepo Dart Pub Workspace (`pubspec.yaml` raiz) com 5 pacotes publicados no `p
 
 ## Próximo passo acionável
 
-1. Executar a criação do pacote `kortex_br` conforme `docs/proposals/kortex_br.md` (ou validar em app real `service_track`).
+1. Executar a `EPIC11` (`docs/plan/epics/epic-11-kortex-br.md`, DoR aberto) — ratificar 1-vs-2 pacotes e iniciar por `UC-11.01` — ou validar em app real `service_track`.
 
 ## Travas vivas
 
