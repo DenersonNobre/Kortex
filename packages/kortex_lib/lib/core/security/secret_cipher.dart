@@ -1,12 +1,16 @@
-// Cifra de segredos em repouso: senha e token cifrados com AES-CFB64.
-// Implementação utilitária portável para persistência segura em clientes locais.
+// Ofuscação/cifra legada com AES-CFB64 (sem autenticação AEAD e sem KDF com salt).
+// NÃO utilizar para proteção de segredos críticos em produção.
 
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
 
-/// Utilitário de criptografia simétrica para segredos e dados confidenciais em repouso.
+/// Utilitário legado de cifra simétrica (AES-CFB64).
+///
+/// **Aviso de segurança**: esta implementação deriva a chave via SHA-256 + MD5
+/// sem salt e utiliza AES-CFB64 sem autenticação (AEAD). Não deve ser usada
+/// como proteção criptográfica de segredos em produção.
 class SecretCipher {
   final String secret;
 
