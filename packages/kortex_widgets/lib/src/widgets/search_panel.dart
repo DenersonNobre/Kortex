@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kortex_lib/core/core.dart' show Debouncer;
+import 'package:kortex_core/kortex_core.dart' show Debouncer;
 
 /// Campo de busca unificado com suporte opcional a [Debouncer], ícone e ação.
 class SearchPanel extends StatelessWidget {

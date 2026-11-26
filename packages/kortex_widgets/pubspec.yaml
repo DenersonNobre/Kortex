@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   kortex: ^0.2.3
+  kortex_core: ^0.1.0
   kortex_br: ^0.1.0
   kortex_forms: ^0.1.1
 

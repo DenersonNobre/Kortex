@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kortex_lib/core/core.dart' show Debouncer;
+import 'package:kortex_core/kortex_core.dart' show Debouncer;
 import 'package:kortex_widgets/kortex_widgets.dart';
 
 void main() {
