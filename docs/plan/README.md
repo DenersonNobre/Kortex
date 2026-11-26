@@ -22,6 +22,8 @@ flowchart LR
     E4 --> E10["EPIC10: Evolucao do Ecossistema"]
     E9 --> E10
     E10 --> E11["EPIC11: Pacote Brasileiro Kortex"]
+    E11 --> E12["EPIC12: Segunda Onda de Widgets"]
+    E12 --> E13["EPIC13: Split da kortex_lib"]
 ```
 
 ---
@@ -41,7 +43,9 @@ flowchart LR
 | `EPIC08` | Módulos de Clientes & Sessão | `EPIC07` | Alta | `Concluído` | [epic-08-modulos-apoio.md](epics/epic-08-modulos-apoio.md) |
 | `EPIC09` | Coleções Reativas (`KortexList` & `KortexMap`) | `EPIC04` | Alta | `Concluído` | [epic-09-colecoes-reativas.md](epics/epic-09-colecoes-reativas.md) |
 | `EPIC10` | Evolução do Ecossistema Kortex | `EPIC04`, `EPIC09` | Alta | `Concluído` | [epic-10-evolucao-ecossistema.md](epics/epic-10-evolucao-ecossistema.md) |
-| `EPIC11` | Pacote Brasileiro Kortex | `EPIC10` (mín. `UC-10.03` + `UC-10.05`) | Média | `Proposto` | [epic-11-kortex-br.md](epics/epic-11-kortex-br.md) |
+| `EPIC11` | Pacote Brasileiro Kortex | `EPIC10` (mín. `UC-10.03` + `UC-10.05`) | Média | `Concluído` | [epic-11-kortex-br.md](epics/epic-11-kortex-br.md) |
+| `EPIC12` | Segunda Onda de Widgets | `EPIC11` | Alta | `Proposto` | [epic-12-widgets-p2.md](epics/epic-12-widgets-p2.md) |
+| `EPIC13` | Split da `kortex_lib` | `EPIC12` | Média | `Proposto` | [epic-13-kortex-lib-split.md](epics/epic-13-kortex-lib-split.md) |
 ---
 
 ## 3. Definition of Ready (DoR) & Definition of Done (DoD)
