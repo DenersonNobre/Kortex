@@ -11,6 +11,7 @@ library;
 export 'kortex_command.dart';
 export 'kortex_computed.dart';
 export 'kortex_controller.dart';
+export 'kortex_debug.dart';
 export 'kortex_disposable.dart';
 export 'kortex_effect.dart';
 export 'kortex_list.dart';
