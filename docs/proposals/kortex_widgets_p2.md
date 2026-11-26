@@ -53,7 +53,8 @@ Completar o `kortex_widgets` (hoje: primitivos migrados da `kortex_lib` + campos
 3. **Sem teste duplicado**: dois blocos com mesmo nome/corpo no mesmo arquivo = reprovação mecânica. Conferir com grep por nome antes de commitar.
 4. **Diff Budget por UC**: 1 widget = `lib/src/<widget>.dart` + barrel + `test/<widget>_test.dart` + README/CHANGELOG do pacote. Arquivo fora do slice reprova.
 5. **Dispose e async**: widget que assina stream/future cancela no `dispose` (teste com widget descartado no meio do voo — sem exceção em zona); `TextEditingController`/focus criados no widget têm dono explícito.
-6. **Status do épico**: seção de UC só vira `Concluído` com os itens acima verificados; DoD marcada só com evidência (`flutter analyze` + `flutter test` do pacote + contagem antes/depois).
+6. **Todo teste prevê leak (critério de Gate 3, padrão UC-12.00)**: teardown com descarte explícito + assert de `isDisposed`/remoção por teste, cada um com prova negativa executada (remover o `dispose` tem de reprovar). Teste de widget/controller sem isso reprova, salvo justificativa.
+7. **Status do épico**: seção de UC só vira `Concluído` com os itens acima verificados; DoD marcada só com evidência (`flutter analyze` + `flutter test` do pacote + contagem antes/depois).
 
 ---
 

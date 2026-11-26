@@ -214,6 +214,13 @@
 - **Fix:** uniformizado para `">=3.47.6"`.
 - **Prevenção:** conferir `environment` no review de pacote novo; divergência de piso sem matrix que a prove é dívida, não flexibilidade.
 
+## 2026-11-26 — Todo teste de widget prevê leak, com prova negativa (padrão UC-12.00)
+
+- **Sintoma:** cobertura de descarte era "declarada" (teste monta widget, nunca verifica o pós-unmount) — o mesmo defeito do hook que só chamava o próprio hook (EPIC10, UC-10.06).
+- **Decisão do PO:** todo teste que monta widget/controller prevê memory leak.
+- **Padrão aplicado (evidência, `presenter_view_test.dart`, commit `aa04043`):** gate global no arquivo (`tearDown` descarta presenters rastreados e falha se restar vivo); assert de `isDisposed`/remoção por teste; **prova negativa executada** (troca `.value` → `create:` fez o teste falhar `+0 -1`; restaurado, verde). 7 testes, `flutter test` 75/75 no pacote no momento do commit.
+- **Prevenção:** promovido a critério de Gate 3 nas propostas (`kortex_widgets_p2.md` e `kortex_lib_split.md` §4): teste de widget/controller sem assert de descarte + prova negativa reprova, salvo justificativa. Vale dali em diante; EPICs 10/11 não reabertas.
+
 ## 2026-11-26 — EPIC11 & `kortex_lint`: extração `kortex_br`/`kortex_widgets`, `example/` e AST não resolvido
 
 - **Port 1:1 de testes na extração de módulos**: ao mover `widgets/` e `brlib/` de `kortex_lib` para `kortex_widgets` (`src/widgets/` + `src/br/` com 1 widget por arquivo) e `kortex_br` (`sdk: dart`, zero deps), portar os testes 1:1 no mesmo ciclo (`test/widgets/`).
