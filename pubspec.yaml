@@ -13,4 +13,5 @@ workspace:
   - packages/kortex_br
   - packages/kortex_widgets
   - packages/kortex_core
+  - packages/kortex_rest
   - poc

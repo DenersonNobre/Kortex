@@ -1,0 +1,18 @@
+name: kortex_rest
+description: Thin HTTP client helpers, retry, and middleware over http.Client for Kortex apps.
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.13.5
+  flutter: ">=3.47.6"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0
+  kortex_core: ^0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
