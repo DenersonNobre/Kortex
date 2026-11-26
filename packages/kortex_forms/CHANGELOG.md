@@ -1,5 +1,10 @@
 # Changelog — kortex_forms
 
+## [Unreleased]
+
+### Fixed
+- `KortexField.reset()` now distinguishes omitted argument from explicit `null` on nullable fields (`UC-10.03`).
+
 ## [0.1.1] - 2026-11-23
 
 ### Added

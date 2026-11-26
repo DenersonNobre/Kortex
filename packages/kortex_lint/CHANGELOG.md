@@ -1,5 +1,10 @@
 # Changelog — kortex_lint
 
+## [Unreleased]
+
+### Added
+- `avoid_kortex_side_effect_in_computed` rule (`UC-10.07`).
+
 ## [0.1.2] - 2026-11-23
 
 ### Changed

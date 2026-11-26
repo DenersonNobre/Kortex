@@ -46,11 +46,11 @@ Elevar o ecossistema Kortex de “núcleo funcional publicado” para “ecossis
 
 ## 3. Definição de Pronto (DoD) do Épico
 
-- [ ] Todos os UCs `[risco/bug]` têm teste vermelho reproduzido antes do fix e verde após.
-- [ ] `flutter analyze` verde no workspace; `flutter test` verde nos pacotes afetados.
-- [ ] Sem regressão de `INV-01`, `INV-02`, `INV-05`, `INV-06`.
-- [ ] Mudanças de API pública documentadas em `CHANGELOG.md` dos pacotes afetados.
-- [ ] `LEARNINGS.md`, `CHECKPOINT.md` e status do épico atualizados no mesmo commit atômico.
+- [x] Todos os UCs `[risco/bug]` têm teste vermelho reproduzido antes do fix e verde após (`UC-10.01`..`UC-10.03`, `UC-10.06`..`UC-10.07`).
+- [x] `flutter analyze` verde no workspace; `flutter test` verde nos pacotes afetados.
+- [x] Sem regressão de `INV-01`, `INV-02`, `INV-05`, `INV-06` (exceção justificada de `KortexDebug` debug-only registrada na `SPEC.md` §4.1).
+- [x] Mudanças de API pública documentadas em `CHANGELOG.md` dos pacotes afetados (`kortex_state`, `kortex_persist`, `kortex_forms`, `kortex_lint`).
+- [x] `LEARNINGS.md`, `CHECKPOINT.md` e status do épico atualizados no mesmo commit atômico.
 
 ---
 
@@ -116,8 +116,9 @@ Esquema do Cenário: Concorrência e falha de persistência
     | sequencia                                      | resultado |
     | mutate durante hydrate                         | ordem determinística; sem write perdido |
     | clear durante write pendente                   | estado final consistente com contrato documentado |
-    | write falha                                    | erro exposto por callback/estado; sem crash silencioso |
-    | rajada de mutações com debounceWrite           | escrita coalescida; flush() garante persistência |
+    | write falha                                    | erro exposto por `onError` e `lastError`; sem exceção não tratada |
+
+> **Diferimento formal (`UC-10.02`)**: `debounceWrite` e `version`/`migrate` foram adiados para épico futuro de evolução de `kortex_persist`.
 ```
 
 #### Escopo técnico

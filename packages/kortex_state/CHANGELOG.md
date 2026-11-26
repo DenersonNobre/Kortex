@@ -3,6 +3,14 @@
 Notable changes to this repository. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`.
 
+## [Unreleased]
+
+### Added
+- `KortexDebug` (`IKortexDebugObserver`, `IKortexDebugEvent`) for zero-cost-in-release debug observability (`UC-10.06`).
+
+### Fixed
+- `KortexDisposeBag.dispose()` now executes all cleanups in best-effort mode and preserves the first error (`UC-10.01`).
+
 ## How this file is maintained
 
 - **Who writes it**: whoever makes the change. An observable change is listed under `[Unpublished]` in the same commit as the change.

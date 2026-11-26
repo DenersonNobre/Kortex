@@ -122,7 +122,8 @@ Regra obrigatória de nomenclatura (`flutter.md`): **toda interface, classe abst
   - `bool get isDisposed`
   - `T add<T extends IKortexDisposable>(T item)`: registra `item` (ou executa `item.dispose()` imediatamente se o bag já estiver descartado).
   - `void addCallback(void Function() onDispose)`: registra callback arbitrário de limpeza.
-  - `void dispose()`: executa `dispose` em ordem reversa de registro (LIFO) e limpa a coleção (idempotente).
+  - `void dispose()`: executa `dispose` em ordem reversa de registro (LIFO) em modo **best-effort** (todos os callbacks executam mesmo se um lançar, preservando o primeiro erro via `Error.throwWithStackTrace`) e limpa a coleção (idempotente).
+  - `KortexDebug` (`kortex_debug.dart`): hook estático opt-in (`IKortexDebugObserver? observer`) protegido por `assert(...)` (custo zero em release, Dart puro `INV-05`) — **única exceção justificada a `INV-06`** por ser estritamente de diagnóstico em debug.
 
 #### `IKortexController` (`kortex_controller.dart`)
 
