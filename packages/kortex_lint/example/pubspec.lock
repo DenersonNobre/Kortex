@@ -116,7 +116,7 @@ packages:
       path: "../../kortex_state"
       relative: true
     source: path
-    version: "0.2.3"
+    version: "0.2.4"
   kortex_lint:
     dependency: "direct dev"
     description:

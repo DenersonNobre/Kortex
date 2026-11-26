@@ -101,6 +101,22 @@ void main() {
         expect(log, ['last', 'first']);
       },
     );
+
+    test('executa todos os callbacks mesmo quando um lança e preserva o erro', () {
+      final log = <String>[];
+      final bag = KortexDisposeBag()
+        ..addCallback(() => log.add('first'))
+        ..addCallback(() => throw StateError('boom'))
+        ..addCallback(() => log.add('last'));
+
+      expect(() => bag.dispose(), throwsStateError);
+      expect(log, ['last', 'first']);
+      expect(bag.isDisposed, isTrue);
+
+      // Segunda chamada é idempotente e não reexecuta callbacks.
+      bag.dispose();
+      expect(log, ['last', 'first']);
+    });
   });
 
   group('IKortexController', () {
