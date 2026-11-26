@@ -213,3 +213,9 @@
 - **Causa:** escafado por template/valor padrão, sem revisão no review do pacote novo.
 - **Fix:** uniformizado para `">=3.47.6"`.
 - **Prevenção:** conferir `environment` no review de pacote novo; divergência de piso sem matrix que a prove é dívida, não flexibilidade.
+
+## 2026-11-26 — EPIC11 & `kortex_lint`: extração `kortex_br`/`kortex_widgets`, `example/` e AST não resolvido
+
+- **Port 1:1 de testes na extração de módulos**: ao mover `widgets/` e `brlib/` de `kortex_lib` para `kortex_widgets` (`src/widgets/` + `src/br/` com 1 widget por arquivo) e `kortex_br` (`sdk: dart`, zero deps), portar os testes 1:1 no mesmo ciclo (`test/widgets/`).
+- **`example/` com `pubspec.yaml` próprio exige dependências publicadas**: enquanto `kortex_br` não estiver publicado no `pub.dev`, `kortex_widgets/example/` deve manter apenas `lib/main.dart` no workspace sem `pubspec.yaml` próprio.
+- **`parseString` (AST não resolvido) em `kortex_lint`**: chamadas como `KortexComputed(() { ... })` sem resolução de tipos são parseadas como `MethodInvocation` em vez de `InstanceCreationExpression`; regras AST devem visitar ambos.
