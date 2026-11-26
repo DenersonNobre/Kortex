@@ -43,7 +43,11 @@ class KortexPersistedSignal<T> extends KortexSignal<T> {
   final KortexDecoder<T> _decode;
 
   var _hasLocalMutation = false;
+  Object? _lastError;
   Future<void> _pendingOp = Future<void>.value();
+
+  /// Last storage error observed, or `null` if the last operation succeeded.
+  Object? get lastError => _lastError;
 
   /// Completes once the initial hydration from [storage] finishes.
   late final Future<void> hydrated;
@@ -54,9 +58,11 @@ class KortexPersistedSignal<T> extends KortexSignal<T> {
   Future<void> _hydrate() async {
     try {
       final raw = await _storage.read(key);
+      _lastError = null;
       if (isDisposed || _hasLocalMutation || raw == null) return;
       super.value = _decode(raw);
     } catch (error, stackTrace) {
+      _lastError = error;
       onError?.call(error, stackTrace);
     }
   }
@@ -65,15 +71,13 @@ class KortexPersistedSignal<T> extends KortexSignal<T> {
     final next = _pendingOp.then((_) async {
       try {
         await op();
+        _lastError = null;
       } catch (error, stackTrace) {
-        if (onError != null) {
-          onError!(error, stackTrace);
-        } else {
-          rethrow;
-        }
+        _lastError = error;
+        onError?.call(error, stackTrace);
       }
     });
-    _pendingOp = next.catchError((Object _) {});
+    _pendingOp = next;
     return next;
   }
 
