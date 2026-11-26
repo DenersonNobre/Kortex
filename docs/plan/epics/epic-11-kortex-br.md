@@ -22,7 +22,7 @@ Extrair o eixo brasileiro de `kortex_lib` (`brlib/`) para pacote(s) dedicado(s),
 
 ### Decisão arquitetural (ratificar no kickoff)
 
-A proposta (§4) recomenda **dois pacotes**: `kortex_br` (`sdk: dart`, zero deps) + `kortex_br_widgets` (Flutter + `kortex_forms` + `kortex_br`). Se o PO optar por pacote único, fundir `UC-11.01`/`UC-11.02` e abandonar explicitamente o requisito de uso em backend Dart.
+A proposta (§4) recomendava `kortex_br` (`sdk: dart`, zero deps) + `kortex_br_widgets`; na ratificação do kickoff com o PO, optou-se por **`kortex_br`** (`sdk: dart`, zero deps) + **`kortex_widgets`** (pacote único de UI com pasta `src/br/` para os campos brasileiros integrados ao `kortex_forms`).
 
 ### Guardrails
 
@@ -37,8 +37,8 @@ A proposta (§4) recomenda **dois pacotes**: `kortex_br` (`sdk: dart`, zero deps
 
 | ID | Título | Pacote/Área | Dependências Internas | Status |
 | --- | --- | --- | --- | --- |
-| **UC-11.01** | Núcleo puro `kortex_br` | `kortex_br` | Nenhuma (DoR: `UC-10.05`) | `Proposto` |
-| **UC-11.02** | Widgets `kortex_br_widgets` | `kortex_br_widgets` | `UC-11.01` (+ DoR: `UC-10.03`) | `Proposto` |
+| **UC-11.01** | Núcleo puro `kortex_br` | `kortex_br` | Nenhuma (DoR: `UC-10.05`) | `Concluído` |
+| **UC-11.02** | Widgets `kortex_widgets` (`src/br/`) | `kortex_widgets` | `UC-11.01` (+ DoR: `UC-10.03`) | `Concluído` |
 | **UC-11.03** | Migração e depreciação no `kortex_lib` | `kortex_lib` | `UC-11.01`, `UC-11.02` | `Proposto` |
 | **UC-11.04** | Documentação e guia de migração | todos | `UC-11.03` | `Proposto` |
 
