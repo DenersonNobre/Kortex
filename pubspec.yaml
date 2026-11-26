@@ -12,4 +12,5 @@ workspace:
   - packages/kortex_forms
   - packages/kortex_br
   - packages/kortex_widgets
+  - packages/kortex_core
   - poc

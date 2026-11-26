@@ -1,0 +1,20 @@
+name: kortex_core
+description: Core patterns, Result, Money, logging, security, and helpers for Kortex apps.
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.13.5
+  flutter: ">=3.47.6"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kortex: ^0.2.3
+  kortex_forms: ^0.1.1
+  crypto: ^3.0.3
+  encrypt: ^5.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
