@@ -59,7 +59,7 @@ Elevar o ecossistema Kortex de “núcleo funcional publicado” para “ecossis
 ### UC-10.01 — Hardening de lifecycle e descarte composto
 
 - **Identificador**: `UC-10.01`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex`
 
 #### Narrativa (User Story)
@@ -95,7 +95,7 @@ Esquema do Cenário: DisposeBag executa todos os callbacks
 ### UC-10.02 — Contrato de durabilidade do `KortexPersistedSignal`
 
 - **Identificador**: `UC-10.02`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_persist`
 
 #### Narrativa (User Story)
@@ -134,7 +134,7 @@ Esquema do Cenário: Concorrência e falha de persistência
 ### UC-10.03 — Semântica de reset nullable e ergonomia de forms
 
 - **Identificador**: `UC-10.03`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_forms`
 
 #### Narrativa (User Story)
@@ -155,9 +155,9 @@ Esquema do Cenário: Reset nullable e validação async
     | inicial | operacao                                  | resultado |
     | null    | reset(nextValue: null)                     | valor permanece null explicitamente |
     | "a"     | reset() sem argumento                      | volta ao initialValue |
-    | "x"     | async validator em voo + novo valor        | validação antiga cancelada/ignorada |
-    | form    | submit() com campo inválido                | touchAll + erros expostos; sem submit |
 ```
+
+> **Diferimento formal (`UC-10.03`)**: validação async com cancelamento, `FormGroup`/aninhados e `submit`/`touchAll` foram adiados para épico futuro de `kortex_forms`.
 
 #### Escopo técnico
 
@@ -171,7 +171,7 @@ Esquema do Cenário: Reset nullable e validação async
 ### UC-10.04 — Segurança e posicionamento do `SecretCipher`
 
 - **Identificador**: `UC-10.04`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_lib`
 
 #### Narrativa (User Story)
@@ -206,7 +206,7 @@ Esquema do Cenário: Posicionamento de segurança
 ### UC-10.05 — Fronteira pública de API e governança de deps
 
 - **Identificador**: `UC-10.05`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: todos (ênfase `kortex_lib`)
 
 #### Narrativa (User Story)
@@ -225,8 +225,8 @@ Esquema do Cenário: Export público e dependência nova
 
   Exemplos:
     | mudança                                  | resultado |
-    | export acidental de src/*                | falha em revisão/gate; corrigir barrel/@internal |
-    | nova dependência em kortex/kortex_persist| rejeitada (zero-dep) |
+    | export acidental de src/*                | documentado em revisão de barrel; corrigir barrel/@internal |
+    | nova dependência em kortex/kortex_persist| documentado no README (zero-dep, sem gate automatizado) |
     | nova dependência em kortex_lib           | justificativa + avaliação de peso/split |
 ```
 
@@ -241,7 +241,7 @@ Esquema do Cenário: Export público e dependência nova
 ### UC-10.06 — Observabilidade e diagnóstico em `kDebugMode`
 
 - **Identificador**: `UC-10.06`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex`
 
 #### Narrativa (User Story)
@@ -260,18 +260,20 @@ Esquema do Cenário: Diagnóstico opt-in
 
   Exemplos:
     | evento                          | resultado |
-    | rebuild de KortexWatch          | origem/contagem observável em debug |
-    | resolução de provider em scope  | cadeia de resolução visível em debug |
-    | falha em Resource/Command       | erro não silencioso no canal de debug |
-    | build release                   | hooks sem efeito/custo perceptível |
+    | criação de KortexSignal         | KortexDebugCreated emitido em debug |
+    | atualização de KortexSignal     | KortexDebugUpdated emitido em debug |
+    | descarte de KortexSignal        | KortexDebugDisposed emitido em debug |
+    | build release                   | hooks sob assert, sem custo em release |
 ```
+
+> **Diferimento formal (`UC-10.06`)**: instrumentação de `KortexWatch`, `KortexScope` e `KortexResource`/`KortexCommand` foi adiada para épico futuro.
 
 ---
 
 ### UC-10.07 — Quick fixes e regras de alto sinal
 
 - **Identificador**: `UC-10.07`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: `kortex_lint`
 
 #### Narrativa (User Story)
@@ -300,7 +302,7 @@ Esquema do Cenário: Regra com quick fix
 ### UC-10.08 — Documentação “quando usar / quando NÃO usar”
 
 - **Identificador**: `UC-10.08`
-- **Status**: `Proposto`
+- **Status**: `Concluído`
 - **Pacote**: todos
 
 #### Narrativa (User Story)

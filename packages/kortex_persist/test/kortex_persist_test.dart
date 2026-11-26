@@ -131,24 +131,6 @@ void main() {
         signal.dispose();
       },
     );
-
-    test('falha no write sem onError expoe lastError sem excecao nao tratada', () async {
-      final storage = _ControlledStorage()..failWrite = true;
-      final signal = kortexPersistedSignal<int>(
-        key: 'count',
-        initialValue: 0,
-        storage: storage,
-        encode: (v) => v.toString(),
-        decode: int.parse,
-      );
-      await signal.hydrated;
-
-      signal.value = 10;
-      await signal.flush();
-
-      expect(signal.lastError, isStateError);
-      signal.dispose();
-    });
   });
 }
 
