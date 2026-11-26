@@ -199,3 +199,17 @@
 - **[evolução][kortex_lint] Quick fixes e regras de alto sinal**: quick fix para `autoDispose`/criação em `build`; regras para side effect em `Computed`, leitura reativa fora de tracking, descarte manual ausente, `autoDispose` em tipo não-disposable; códigos estáveis e mensagens com “por quê + exemplo”.
 - **[evolução][kortex_lib] Governança de peso/deps**: política explícita de dependências e critério de split quando um eixo ganhar vida própria (`rest`, `sqlite`, `widgets`, `brlib`). Manter `Result`/erros/utilitários “sharp”, sem duplicar primitivas do `kortex` nem criar state management paralelo.
 - **[processo] Prova negativa por achado**: cada item `[risco/bug]` deve entrar com sintoma reproduzido, teste vermelho, fix mínimo, teste verde. Para `DisposeBag`, cobrir callback que lança preservando erro e executando demais callbacks; para `KortexPersistedSignal`, cobrir corrida com `Completer`.
+
+## 2026-11-26 — Mover código entre pacotes sem os testes perde cobertura em silêncio
+
+- **Sintoma:** após extrair os widgets da `kortex_lib` para o `kortex_widgets`, o pacote novo tinha 1 arquivo de teste; os ~12 arquivos de teste dos widgets genéricos ficaram para trás na remoção, e a suíte "verde" (1/1) escondia a regressão.
+- **Causa:** o commit de move levou só `lib/`; remoção na origem e port no destino em commits separados, sem checagem de contagem.
+- **Fix:** port dedicado (13 arquivos, +69 testes, todos verdes de primeira — o que também validou a fidelidade da migração do código).
+- **Prevenção:** commit que remove da origem deve conter o port no destino; contagem de testes do pacote novo ≥ origem, nunca menor sem justificativa (regra registrada nas propostas `kortex_widgets_p2.md` e `kortex_lib_split.md` §4).
+
+## 2026-11-26 — Constraint de SDK divergente entre pacotes do workspace
+
+- **Sintoma:** `kortex_widgets` com `flutter: ">=3.24.0"` enquanto os demais exigem `">=3.47.6"` — promete compatibilidade nunca exercida na matrix do CI (pin 3.47.6).
+- **Causa:** escafado por template/valor padrão, sem revisão no review do pacote novo.
+- **Fix:** uniformizado para `">=3.47.6"`.
+- **Prevenção:** conferir `environment` no review de pacote novo; divergência de piso sem matrix que a prove é dívida, não flexibilidade.
