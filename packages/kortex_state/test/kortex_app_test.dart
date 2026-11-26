@@ -25,9 +25,7 @@ void main() {
               home: Builder(
                 builder: (context) {
                   final repo = context.readKortex<_Repository>();
-                  return Scaffold(
-                    body: Text('Value: ${repo.value}'),
-                  );
+                  return Scaffold(body: Text('Value: ${repo.value}'));
                 },
               ),
             ),
@@ -35,7 +33,9 @@ void main() {
         );
 
         expect(find.text('Value: material_repo'), findsOneWidget);
-        final materialApp = tester.widget<MaterialApp>(find.byType(MaterialApp));
+        final materialApp = tester.widget<MaterialApp>(
+          find.byType(MaterialApp),
+        );
         expect(materialApp.title, equals('Material Root Test'));
       },
     );
@@ -61,9 +61,7 @@ void main() {
                     navigationBar: const CupertinoNavigationBar(
                       middle: Text('Header'),
                     ),
-                    child: Center(
-                      child: Text('Value: ${repo.value}'),
-                    ),
+                    child: Center(child: Text('Value: ${repo.value}')),
                   );
                 },
               ),
@@ -73,8 +71,9 @@ void main() {
 
         expect(find.text('Value: cupertino_repo'), findsOneWidget);
         expect(find.text('Header'), findsOneWidget);
-        final cupertinoApp =
-            tester.widget<CupertinoApp>(find.byType(CupertinoApp));
+        final cupertinoApp = tester.widget<CupertinoApp>(
+          find.byType(CupertinoApp),
+        );
         expect(cupertinoApp.title, equals('Cupertino Root Test'));
       },
     );

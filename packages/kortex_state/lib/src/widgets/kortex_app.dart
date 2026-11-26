@@ -25,10 +25,7 @@ final class KortexMaterialApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return KortexScope(
-      providers: providers,
-      child: app,
-    );
+    return KortexScope(providers: providers, child: app);
   }
 }
 
@@ -53,9 +50,6 @@ final class KortexCupertinoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return KortexScope(
-      providers: providers,
-      child: app,
-    );
+    return KortexScope(providers: providers, child: app);
   }
 }
