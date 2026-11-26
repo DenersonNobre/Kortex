@@ -174,3 +174,14 @@
 - **Não duplicar patterns da `kortex_lib` no `core/` da POC**: nunca manter dois `Result` equivalentes nem enfraquecer a assinatura genérica `IResult<TSuccess, TFailure>` da biblioteca. Usar `typedef AppResult<T> = IResult<T, AppFailure>;` + `extension` em `poc/lib/core/result.dart`.
 - **Separar `seedPreview` de `seedDemo`**: manter `seedDemo` mínimo para testes determinísticos (`List.single`, listas vazias) e usar `seedPreview: true` apenas em `poc/lib/main.dart` para visualização prévia rica.
 - **`dart format` obrigatório antes do commit**: o CI executa `dart format --output=none --set-exit-if-changed`; rodar `dart format poc/lib poc/test` junto com `flutter analyze` e `flutter test` antes de commitar.
+
+## 2026-11-26 — Auditoria dos pacotes: descarte, persistência e APIs nullable
+
+- **Descarte composto precisa terminar todos os cleanups mesmo se um falhar**: `KortexDisposeBag.dispose()` marca o bag como descartado antes de percorrer callbacks; se um callback lança, os posteriores não executam e uma segunda chamada não retoma o trabalho. Testar falhas de callbacks e preservar o erro sem abandonar os demais recursos.
+- **Persistência assíncrona precisa ordenar operações e expor falhas**: `KortexPersistedSignal` dispara `write` sem aguardar; hidratação, mutação e `clear()` podem concorrer, e a API atual não oferece confirmação da escrita. Cobrir essas intercalações com armazenamento controlado por `Completer`.
+- **Parâmetro `T?` não distingue “omitido” de “valor null”**: `KortexField.reset(nextValue)` usa `nextValue ?? _initialValue`, portanto um campo nullable não pode ser explicitamente resetado para `null`; usar um contrato que represente presença separadamente.
+- **Não apresentar `SecretCipher` como proteção de segredos em produção sem cifra autenticada e derivação de chave apropriada**: a implementação atual usa AES-CFB64 e deriva a chave diretamente do segredo com SHA-256 seguido de MD5, sem salt nem autenticação.
+- **A verificação de formatação deve usar o SDK do CI**: com Flutter 3.47.6/Dart 3.13.5, o gate atual identifica `kortex_app.dart` e `kortex_app_test.dart` como não formatados.
+- **Fronteira estrita de API pública (`@internal` + barrels enxutos)**: garantir que detalhes de `src/` não vazem nos exports públicos, mantendo `SemVer` previsível para consumidores.
+- **Diagnóstico em `kDebugMode`**: hooks opcionais (sem custo em release) para inspecionar rebuilds de `KortexWatch`, resolução de `KortexScope` e falhas silenciosas em `KortexResource`/`KortexCommand`.
+- **Guia curto de "quando NÃO usar"**: documentar no `README` de cada pacote onde termina sua responsabilidade (ex.: `ValueNotifier` local de animação não precisa virar `KortexSignal`; regra de domínio não deve ir para `KortexForm`).
