@@ -60,9 +60,21 @@ class KortexDisposeBag implements IKortexDisposable {
   void dispose() {
     if (_isDisposed) return;
     _isDisposed = true;
+    Object? firstError;
+    StackTrace? firstStackTrace;
     for (var i = _cleanups.length - 1; i >= 0; i--) {
-      _cleanups[i]();
+      try {
+        _cleanups[i]();
+      } catch (error, stackTrace) {
+        if (firstError == null) {
+          firstError = error;
+          firstStackTrace = stackTrace;
+        }
+      }
     }
     _cleanups.clear();
+    if (firstError != null) {
+      Error.throwWithStackTrace(firstError, firstStackTrace!);
+    }
   }
 }
