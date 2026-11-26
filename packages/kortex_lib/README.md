@@ -13,3 +13,9 @@ Utility suite for [`kortex`](https://pub.dev/packages/kortex) applications, re-e
 ```dart
 import 'package:kortex_lib/kortex_lib.dart';
 ```
+
+## Política de Dependências & Fronteira de API
+
+- **Fronteira estrita de exports**: apenas `lib/kortex_lib.dart` e os barrels de eixo (`core`, `brlib`, `rest`, `sqlite`, `widgets`) compõem a API pública; detalhes internos devem permanecer fora dos exports públicos.
+- **Sem duplicação de núcleo**: `kortex_lib` não duplica primitivas reativas nem de ciclo de vida de `kortex` (apenas re-exporta `package:kortex/kortex.dart` e `package:kortex_forms/kortex_forms.dart`).
+- **Critério de split**: quando um eixo específico (ex.: `brlib`, `rest`, `sqlite`, `widgets`) ganhar massa crítica, dependências pesadas ou ciclo de release próprio, deve ser extraído para pacote dedicado (`kortex_br`, etc.).
