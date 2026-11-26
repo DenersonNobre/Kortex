@@ -19,3 +19,8 @@ if (form.validate()) {
   // submit email.value
 }
 ```
+
+## Quando usar / Quando NÃO usar
+
+- **Quando usar**: formulários reativos com validação síncrona, rastreamento de `dirty`/`touched` e `reset()` seguro (incluindo campos nullable).
+- **Quando NÃO usar**: regras de negócio de domínio/invariantes de agregado (devem ficar na camada de domínio, não em validadores de UI).

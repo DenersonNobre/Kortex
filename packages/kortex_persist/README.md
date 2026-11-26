@@ -33,3 +33,8 @@ await darkMode.hydrated; // loads persisted value if present
 darkMode.value = true;   // automatically persisted
 await darkMode.clear();  // removes from storage and resets to initialValue
 ```
+
+## Quando usar / Quando NÃO usar
+
+- **Quando usar**: preferências simples, filtros de UI ou rascunhos leves que precisam sobreviver à reabertura do app com `KortexPersistedSignal` + `IKortexStorage`.
+- **Quando NÃO usar**: bancos relacionais, consultas complexas ou segredos críticos sem armazenamento seguro dedicado.

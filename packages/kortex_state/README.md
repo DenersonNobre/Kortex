@@ -93,3 +93,8 @@ Planned improvements that preserve Kortex's core constraints (zero third-party d
 - **Product Requirements**: [docs/product/PRD.md](docs/product/PRD.md)
 - **Domain Technical Specification**: [docs/architecture/SPEC.md](docs/architecture/SPEC.md)
 - **Changelog**: [CHANGELOG.md](CHANGELOG.md)
+
+## Quando usar / Quando NÃO usar
+
+- **Quando usar**: estado reativo compartilhado por tela/módulo (`IKortexController`), injeção explícita em árvore (`KortexScope`), cargas assíncronas com proteção contra corrida (`KortexResource`) e ações com trava de duplo clique (`KortexCommand`).
+- **Quando NÃO usar**: estado efêmero puramente local de animação/scroll (prefira `AnimationController`/`ScrollController` ou `StatefulWidget` simples) ou estado global implícito sem escopo (`INV-06`).

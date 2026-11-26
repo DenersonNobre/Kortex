@@ -8,7 +8,7 @@
 | **Dependências Diretas** | `EPIC04`, `EPIC09` |
 | **Prioridade** | Alta (qualidade de produção, DX e governança do ecossistema) |
 | **Responsável (Arquiteto)** | Denerson Nobre |
-| **Status Atual** | `Proposto` |
+| **Status Atual** | `Concluído` |
 | **Referências** | [SPEC.md](../../architecture/SPEC.md) · [LEARNINGS.md](../../../LEARNINGS.md) (2026-11-26) · [README do plano](../README.md) |
 
 ---
@@ -33,14 +33,14 @@ Elevar o ecossistema Kortex de “núcleo funcional publicado” para “ecossis
 
 | ID | Título | Pacote/Área | Dependências Internas | Status |
 | --- | --- | --- | --- | --- |
-| **UC-10.01** | Hardening de lifecycle e descarte composto | `kortex` | Nenhuma | `Proposto` |
-| **UC-10.02** | Contrato de durabilidade do `KortexPersistedSignal` | `kortex_persist` | Nenhuma | `Proposto` |
-| **UC-10.03** | Semântica de reset nullable e ergonomia de forms | `kortex_forms` | Nenhuma | `Proposto` |
-| **UC-10.04** | Segurança e posicionamento do `SecretCipher` | `kortex_lib` | Nenhuma | `Proposto` |
-| **UC-10.05** | Fronteira pública de API e governança de deps | todos | `UC-10.01` | `Proposto` |
-| **UC-10.06** | Observabilidade e diagnóstico em `kDebugMode` | `kortex` | `UC-10.01` | `Proposto` |
-| **UC-10.07** | Quick fixes e regras de alto sinal | `kortex_lint` | `UC-10.01` | `Proposto` |
-| **UC-10.08** | Documentação “quando usar / quando NÃO usar” | todos | `UC-10.05` | `Proposto` |
+| **UC-10.01** | Hardening de lifecycle e descarte composto | `kortex` | Nenhuma | `Concluído` |
+| **UC-10.02** | Contrato de durabilidade do `KortexPersistedSignal` | `kortex_persist` | Nenhuma | `Concluído` |
+| **UC-10.03** | Semântica de reset nullable e ergonomia de forms | `kortex_forms` | Nenhuma | `Concluído` |
+| **UC-10.04** | Segurança e posicionamento do `SecretCipher` | `kortex_lib` | Nenhuma | `Concluído` |
+| **UC-10.05** | Fronteira pública de API e governança de deps | todos | `UC-10.01` | `Concluído` |
+| **UC-10.06** | Observabilidade e diagnóstico em `kDebugMode` | `kortex` | `UC-10.01` | `Concluído` |
+| **UC-10.07** | Quick fixes e regras de alto sinal | `kortex_lint` | `UC-10.01` | `Concluído` |
+| **UC-10.08** | Documentação “quando usar / quando NÃO usar” | todos | `UC-10.05` | `Concluído` |
 
 ---
 
