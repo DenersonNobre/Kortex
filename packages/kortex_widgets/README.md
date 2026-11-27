@@ -4,7 +4,7 @@ Reusable Flutter UI widgets (`src/widgets/`) and Brazilian input fields (`src/br
 
 ## Included
 - **BR Input Fields (`src/br/`)**: `KortexCpfField`, `KortexCnpjField`, `KortexCepField`, `KortexPhoneBrField`, `KortexBrlCurrencyField`, `KortexMaskedBrField` (integrated with `kortex_br` and `kortex_forms`).
-- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
+- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `FilterPanel`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
 
 ## `AsyncListView` (UC-12.01)
 
@@ -60,6 +60,27 @@ drop silently).
   `optionsLoader`) and disposes it; the sheet never disposes it (unmount
   keeps it alive, in-flight dispose drops the late result silently, proven
   in `test/widgets/searchable_select_test.dart`).
+
+## `FilterPanel` (UC-12.04)
+
+Single/multi chip row driven by a caller-owned `FilterPanelController`
+(single replaces, multi accumulates) with `onSelectionChanged` delivering
+the checked set (ready to feed filter signals). Chips keep a stable width
+across selection flips: the check slot is always reserved
+(`showCheckmark: false` + fixed-size avatar), so selecting never reflows
+the row (proven by the `getRect`-identical geometric test with explicit
+tolerance in `test/widgets/filter_panel_test.dart`).
+
+- **Use when** a screen shows static filter chips synced with signals
+  (single or multi) and layout stability matters.
+- **Do NOT use when** options load asynchronously with search (use
+  `SearchableSelect`), when picking involves business rules (those live in
+  the domain/commands layer, never in the panel), or when chips need
+  per-option custom rendering beyond label + check.
+- **Ownership**: the caller creates `FilterPanelController` and disposes
+  it; the panel never disposes it (unmount keeps it alive, use after
+  dispose throws `StateError`, proven in
+  `test/widgets/filter_panel_test.dart`).
 
 ## When NOT to use `PresenterScope`
 
