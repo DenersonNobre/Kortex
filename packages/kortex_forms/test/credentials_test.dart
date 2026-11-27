@@ -1,5 +1,5 @@
-import 'package:kortex_core/kortex_core.dart';
-import 'package:test/test.dart';
+import 'package:kortex_forms/kortex_forms.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Email VO', () {

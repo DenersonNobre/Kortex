@@ -15,7 +15,6 @@ export 'logging/log_entry.dart';
 export 'logging/log_formatter.dart';
 export 'logging/log_sink.dart';
 export 'logging/logger.dart';
-export 'models/credentials.dart';
 export 'models/mappable.dart';
 export 'models/money.dart';
 export 'patterns/async_cache.dart';
