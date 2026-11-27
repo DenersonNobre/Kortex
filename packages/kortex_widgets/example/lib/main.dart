@@ -18,11 +18,13 @@ class _ExamplePageState extends State<_ExamplePage> {
     '',
     validators: [PhoneBrValidator.validate],
   );
+  final _birthDate = kortexField<DateTime?>(null);
 
   @override
   void dispose() {
     _cpf.dispose();
     _phone.dispose();
+    _birthDate.dispose();
     super.dispose();
   }
 
@@ -37,6 +39,8 @@ class _ExamplePageState extends State<_ExamplePage> {
             KortexCpfField(field: _cpf),
             const SizedBox(height: 12),
             KortexPhoneBrField(field: _phone),
+            const SizedBox(height: 12),
+            KortexDateField(field: _birthDate, label: 'Data de nascimento'),
           ],
         ),
       ),

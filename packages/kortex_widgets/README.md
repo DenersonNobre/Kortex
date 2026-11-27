@@ -4,7 +4,7 @@ Reusable Flutter UI widgets (`src/widgets/`) and Brazilian input fields (`src/br
 
 ## Included
 - **BR Input Fields (`src/br/`)**: `KortexCpfField`, `KortexCnpjField`, `KortexCepField`, `KortexPhoneBrField`, `KortexBrlCurrencyField`, `KortexMaskedBrField` (integrated with `kortex_br` and `kortex_forms`).
-- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `FilterPanel`, `FormErrorSummary`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
+- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `FilterPanel`, `FormErrorSummary`, `KortexDateField`, `KortexDateRangeField`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
 
 ## `AsyncListView` (UC-12.01)
 
@@ -149,6 +149,20 @@ zero mandatory native dependencies for this use case).
 - **Ownership**: the caller creates and disposes `controller`,
   `focusNode` and `code`; neither `pinput` nor this package takes
   ownership of them.
+
+## `KortexDateField` & `KortexDateRangeField` (UC-12.06)
+
+Pure-Dart `dd/MM/yyyy` date input (`KortexDateField`) and date-range picker
+(`KortexDateRangeField`) bound to caller-owned `KortexField<DateTime?>` /
+`KortexField<DateTimeRange?>` (zero `intl` dependency, strict calendar
+validation via `KortexDateBr`).
+
+- **Use when** a form needs Brazilian `dd/MM/yyyy` date entry (with mask +
+  calendar picker) or a date range validated against `end < start`.
+- **Do NOT use when** you need time-of-day selection or custom locale
+  formats beyond `dd/MM/yyyy`.
+- **Ownership**: the caller creates and disposes the `KortexField`; the
+  widget never disposes it (proven in `test/widgets/date_field_test.dart`).
 
 ## When NOT to use `PresenterScope`
 
