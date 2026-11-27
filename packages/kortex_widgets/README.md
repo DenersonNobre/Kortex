@@ -4,7 +4,7 @@ Reusable Flutter UI widgets (`src/widgets/`) and Brazilian input fields (`src/br
 
 ## Included
 - **BR Input Fields (`src/br/`)**: `KortexCpfField`, `KortexCnpjField`, `KortexCepField`, `KortexPhoneBrField`, `KortexBrlCurrencyField`, `KortexMaskedBrField` (integrated with `kortex_br` and `kortex_forms`).
-- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `BusyOverlay`, `CardTile`, `Details`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
+- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
 
 ## `AsyncListView` (UC-12.01)
 
@@ -21,6 +21,25 @@ tail with race protection and duplicate suppression).
 - **Ownership**: the caller creates `AsyncListController` (injecting
   `loadPage`) and disposes it; the widget never disposes it (unmount keeps
   it alive, proven in `test/widgets/async_list_view_test.dart`).
+
+## `AsyncPage` (UC-12.02)
+
+Single-resource scaffold driven by a caller-owned `KortexResource<T>`:
+loading shows `Loading` (or `loadingBuilder`), error shows `ErrorRetryView`
+with a retry that calls `resource.refresh()` (or `errorBuilder`), and data
+goes straight to `contentBuilder` — no empty flash on the loading→data
+path.
+
+- **Use when** a screen shows one async value (detail, profile, settings)
+  with loading/error/retry handled in one piece.
+- **Do NOT use when** the source is paged (use `AsyncListView`), pushes
+  realtime updates (use a stream snapshot), or needs an empty branch (a
+  `KortexAsyncData` holding an empty collection is still data — branch on
+  the value inside `contentBuilder` if needed).
+- **Ownership**: the caller creates `KortexResource` and disposes it; the
+  widget never disposes it (unmount keeps it alive, in-flight dispose drops
+  the late result silently, proven in
+  `test/widgets/async_page_test.dart`).
 
 ## When NOT to use `PresenterScope`
 
