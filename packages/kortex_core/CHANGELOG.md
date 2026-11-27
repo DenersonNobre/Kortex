@@ -1,12 +1,12 @@
 # Changelog — kortex_core
 
-## [Unreleased]
+## [0.1.1] - 2026-11-27
 
 ### Added
 - `LogCorrelation`, `FileLogSink` (with rotation), `BufferedLogSink`, and `AnsiTextLogFormatter`.
 
 ### Changed
-- Removed `kortex_forms` dependency by moving `credentials` to `kortex_forms`.
+- Removed `kortex` and `kortex_forms` dependencies by moving `credentials` to `kortex_forms`.
 
 ## [0.1.0] - 2026-11-26
 
