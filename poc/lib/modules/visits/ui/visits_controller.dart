@@ -10,6 +10,7 @@
 library;
 
 import 'package:kortex/kortex.dart';
+import 'package:kortex_lib/kortex_lib.dart' show LogManager;
 import 'package:kortex_persist/kortex_persist.dart';
 
 import '../../../core/result.dart';
@@ -23,6 +24,7 @@ import '../features/visits_features.dart';
 class VisitsController extends IKortexController with KortexErrorMixin {
   /// Registra resource, sinais e commands no `disposeBag`.
   VisitsController(this._useCases) {
+    LogManager.scope('Lifecycle').debug('$runtimeType criado');
     visits = autoDispose(
       kortexResource<List<VisitRow>>(
         () =>

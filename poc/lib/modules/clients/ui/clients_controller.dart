@@ -19,6 +19,7 @@ import '../../clients/features/.index.dart';
 class ClientsController extends IKortexController with KortexErrorMixin {
   /// Registra resource e sinais no `disposeBag`.
   ClientsController(this._useCases) {
+    LogManager.scope('Lifecycle').debug('$runtimeType criado');
     clients = autoDispose(
       kortexResource<List<Client>>(() => _load(), immediate: false),
     );

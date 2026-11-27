@@ -9,6 +9,7 @@
 library;
 
 import 'package:kortex/kortex.dart';
+import 'package:kortex_lib/kortex_lib.dart' show LogManager;
 
 import '../features/.index.dart';
 
@@ -24,6 +25,7 @@ class AgendaController extends IKortexController {
           (today ?? DateTime.now()).month,
         ),
       ) {
+    LogManager.scope('Lifecycle').debug('$runtimeType criado');
     agenda = autoDispose(
       kortexResource<List<VisitRow>>(
         () => _useCases.listVisits(day: selectedDay.peek()),
