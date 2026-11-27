@@ -98,3 +98,9 @@ Planned improvements that preserve Kortex's core constraints (zero third-party d
 
 - **Quando usar**: estado reativo compartilhado por tela/módulo (`IKortexController`), injeção explícita em árvore (`KortexScope`), cargas assíncronas com proteção contra corrida (`KortexResource`) e ações com trava de duplo clique (`KortexCommand`).
 - **Quando NÃO usar**: estado efêmero puramente local de animação/scroll (prefira `AnimationController`/`ScrollController` ou `StatefulWidget` simples) ou estado global implícito sem escopo (`INV-06`).
+
+## CLI (`kortex_cli`)
+
+Para acelerar a criação de projetos e módulos seguindo a arquitetura Kortex (`StatelessWidget`-first + `KortexScope` + `AppRoutes`/`AppPages`), consulte as instruções no repositório oficial:
+
+- https://github.com/DenersonNobre/Kortex

@@ -26,3 +26,9 @@ flutter test
 ```
 
 Consulte o `README.md` e o `example/lib/main.dart` dentro de cada pacote em `packages/` para exemplos de uso.
+
+## CLI (`kortex_cli`)
+
+Para gerar a estrutura padrão de apps e módulos Kortex (`StatelessWidget`-first, `KortexScope`, `AppRoutes`/`AppPages` e testes), consulte o repositório oficial no GitHub:
+
+- https://github.com/DenersonNobre/Kortex
