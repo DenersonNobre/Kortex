@@ -1,6 +1,13 @@
 name: kortex_rest
 description: Thin HTTP client helpers, retry, and middleware over http.Client for Kortex apps.
 version: 0.1.0
+repository: https://github.com/DenersonNobre/Kortex
+topics:
+  - http
+  - rest
+  - retry
+  - circuit-breaker
+  - middleware
 resolution: workspace
 
 environment:

@@ -2,6 +2,12 @@ name: kortex_cli
 description: Pure-Dart CLI to scaffold Kortex apps and vertical feature modules.
 version: 0.1.0
 repository: https://github.com/DenersonNobre/Kortex
+topics:
+  - cli
+  - scaffolding
+  - flutter
+  - state-management
+  - kortex
 resolution: workspace
 
 environment:

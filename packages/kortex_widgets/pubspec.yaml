@@ -1,6 +1,13 @@
 name: kortex_widgets
 description: Reusable Flutter UI widgets and Brazilian input fields for Kortex.
 version: 0.1.0
+repository: https://github.com/DenersonNobre/Kortex
+topics:
+  - flutter
+  - widgets
+  - forms
+  - ui
+  - state-management
 resolution: workspace
 
 environment:
