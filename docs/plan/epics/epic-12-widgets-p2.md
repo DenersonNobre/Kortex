@@ -49,7 +49,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 | **UC-12.13** | `ResponsiveDataView` | `UC-12.01` | `Proposto` |
 | **UC-12.14** | `PermissionGate` | `UC-12.00` | `Proposto` |
 | **UC-12.15** | `UploadTile` (progresso + retry + cancel) | `UC-12.00` | `Proposto` |
-| **UC-12.16** | `OtpPinField` (se `pinput` não bastar) | `UC-12.00` | `Proposto` |
+| **UC-12.16** | `OtpPinField` (se `pinput` não bastar) | `UC-12.00` | `Concluído` (doc-only: guia `pinput`+`KortexField`, ver spike) |
 
 ---
 
@@ -293,6 +293,9 @@ Esquema do Cenário: Esqueleto estável
 - **Escopo**: arquivo/imagem com progresso, retry e cancelamento sobre o client `rest/`; teste com fonte controlada (completer) cobrindo cancel no meio do voo sem exceção em zona.
 
 ### UC-12.16 — `OtpPinField`
+
+- **Identificador**: `UC-12.16`
+- **Status**: `Concluído` (doc-only, `2659291`; veredito do spike `USAR_PINPUT`, sem widget próprio)
 
 - **Status**: `Proposto`
 - **Escopo**: **primeiro avaliar `pinput`** (consolidado): só implementar se a integração `KortexField` + requisitos (paste, autofill SMS, acessibilidade) justificarem. Se `pinput` bastar, este UC vira doc de integração em vez de código.
