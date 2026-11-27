@@ -1,6 +1,6 @@
 name: kortex_forms
 description: Reactive, testable form and field state management for Kortex without GlobalKey<FormState>.
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/DenersonNobre/Kortex
 issue_tracker: https://github.com/DenersonNobre/Kortex/issues
 topics:

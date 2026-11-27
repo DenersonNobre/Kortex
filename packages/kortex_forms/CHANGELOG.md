@@ -1,6 +1,6 @@
 # Changelog — kortex_forms
 
-## [Unreleased]
+## [0.1.2] - 2026-11-27
 
 ### Added
 - `kortex_credentials.dart` (`Email`, `Senha` VOs) moved from `kortex_core`.
