@@ -7,6 +7,7 @@
 /// Dependencias: `kortex` + camada `features` do modulo de clientes.
 library;
 
+import 'package:kortex_br/kortex_br.dart';
 import 'package:kortex_lib/kortex_lib.dart';
 
 import '../../../../core/result.dart';
