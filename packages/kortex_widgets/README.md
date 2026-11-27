@@ -82,6 +82,54 @@ tolerance in `test/widgets/filter_panel_test.dart`).
   dispose throws `StateError`, proven in
   `test/widgets/filter_panel_test.dart`).
 
+## `OtpPinField` (UC-12.16) — integration guide (no widget shipped)
+
+There is no `OtpPinField` in this package by design (spike verdict
+`USAR_PINPUT` in `docs/notes/pinput-spike.md`): use the `pinput`
+package (`>= 5.0.0` / `^8.0.0-beta.4`) directly and bind it to a
+`KortexField<String>`. `pinput` already covers paste (long-press /
+contextual menu distributing the digits and firing `onChanged` /
+`onCompleted`), screen readers (TalkBack/VoiceOver) with `FocusNode`
+and error/validation announcement, and SMS autofill through the
+`SmsRetriever` interface (`smsRetriever:`), decoupled from `smart_auth`
+(`^4.0.0`) since `pinput` 5.0.0 — so `smart_auth` stays an opt-in of
+the consuming app, never a dependency of this package (which keeps
+zero mandatory native dependencies for this use case).
+
+- **Use when** a screen needs an OTP/PIN code entry with paste, SMS
+  autofill and accessible validation.
+- **Do NOT use when** the design needs behavior `pinput` does not
+  offer: do not fork/silently reimplement it here — open a new UC
+  instead (per `UC-12.16` scope, a custom field only exists if the
+  `KortexField` integration plus paste, SMS autofill and accessibility
+  requirements justify it).
+- **Minimal binding** (caller-owned `TextEditingController` +
+  `KortexField<String>`, no fork):
+
+  ```dart
+  final code = kortexField('', validators: [
+    (v) => v.length == 6 ? null : 'Enter the 6-digit code',
+  ]);
+  final controller = TextEditingController();
+  final focusNode = FocusNode();
+
+  Pinput(
+    controller: controller,
+    focusNode: focusNode,
+    // smsRetriever: <your SmsRetriever> // opt-in in the app, when needed
+    onChanged: (v) => code.value = v,
+    onCompleted: (v) {
+      code.value = v;
+      code.validate();
+    },
+    validator: (v) => v != null && v.length == 6 ? null : 'Enter the 6-digit code',
+  );
+  ```
+
+- **Ownership**: the caller creates and disposes `controller`,
+  `focusNode` and `code`; neither `pinput` nor this package takes
+  ownership of them.
+
 ## When NOT to use `PresenterScope`
 
 `PresenterScope`, `PresenterView` and `BuildContext.presenter` are deprecated
