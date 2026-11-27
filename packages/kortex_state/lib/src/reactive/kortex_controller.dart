@@ -15,7 +15,35 @@ import 'kortex_disposable.dart';
 /// Initialization happens exclusively in the constructor (no magic `onInit`),
 /// keeping it directly testable outside a `KortexScope`. Subclasses that
 /// override [dispose] must call `super.dispose()`.
+/// Debug lifecycle logger for `IKortexController` (active only in `assert` mode).
+abstract final class KortexDebugLog {
+  /// Optional custom sink (e.g. forwarding to `LogManager`).
+  static void Function(String message)? onLog;
+
+  /// Enables or disables automatic lifecycle logs in debug mode.
+  static bool enabled = true;
+
+  /// Emits [message] when [enabled] is true.
+  static void emit(String message) {
+    if (!enabled) return;
+    if (onLog != null) {
+      onLog!(message);
+      return;
+    }
+    // ignore: avoid_print
+    print(message);
+  }
+}
+
 abstract class IKortexController implements IKortexDisposable {
+  /// Creates the controller and logs its instantiation in debug mode.
+  IKortexController() {
+    assert(() {
+      KortexDebugLog.emit('[Kortex] $runtimeType created');
+      return true;
+    }());
+  }
+
   /// Integrated bag; every resource registered here is released on [dispose].
   final KortexDisposeBag disposeBag = KortexDisposeBag();
 
@@ -36,5 +64,9 @@ abstract class IKortexController implements IKortexDisposable {
     if (isDisposed) return;
     onDispose();
     disposeBag.dispose();
+    assert(() {
+      KortexDebugLog.emit('[Kortex] $runtimeType disposed');
+      return true;
+    }());
   }
 }
