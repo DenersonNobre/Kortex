@@ -19,48 +19,56 @@ import '../modules/visits/ui/agenda_page.dart';
 import '../modules/visits/ui/visits_page.dart';
 
 /// Shell com as tres areas do app.
-class AppShell extends StatefulWidget {
+class AppShell extends StatelessWidget {
   /// Cria o shell.
   const AppShell({super.key});
 
   @override
-  State<AppShell> createState() => _AppShellState();
-}
-
-class _AppShellState extends State<AppShell> {
-  var _index = 0;
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: IndexedStack(
-        index: _index,
-        children: [
-          const VisitsPage(),
-          AgendaScope(child: const AgendaPage()),
-          ClientsScope(child: const ClientsPage()),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _index,
-        onDestinationSelected: (index) => setState(() => _index = index),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.assignment_outlined),
-            selectedIcon: Icon(Icons.assignment),
-            label: 'Visitas',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.calendar_month_outlined),
-            selectedIcon: Icon(Icons.calendar_month),
-            label: 'Agenda',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.business_outlined),
-            selectedIcon: Icon(Icons.business),
-            label: 'Clientes',
-          ),
-        ],
+    return KortexScope(
+      providers: [
+        KortexProvider<KortexSignal<int>>(create: (_) => kortexSignal<int>(0)),
+      ],
+      child: Builder(
+        builder: (context) {
+          final indexSignal = context.readKortex<KortexSignal<int>>();
+          return KortexWatch(
+            builder: (context, _) {
+              final index = indexSignal.value;
+              return Scaffold(
+                body: IndexedStack(
+                  index: index,
+                  children: [
+                    const VisitsPage(),
+                    AgendaScope(child: const AgendaPage()),
+                    ClientsScope(child: const ClientsPage()),
+                  ],
+                ),
+                bottomNavigationBar: NavigationBar(
+                  selectedIndex: index,
+                  onDestinationSelected: (value) => indexSignal.value = value,
+                  destinations: const [
+                    NavigationDestination(
+                      icon: Icon(Icons.assignment_outlined),
+                      selectedIcon: Icon(Icons.assignment),
+                      label: 'Visitas',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.calendar_month_outlined),
+                      selectedIcon: Icon(Icons.calendar_month),
+                      label: 'Agenda',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.business_outlined),
+                      selectedIcon: Icon(Icons.business),
+                      label: 'Clientes',
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

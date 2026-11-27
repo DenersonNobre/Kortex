@@ -17,6 +17,7 @@ dependencies:
   kortex_persist:
   kortex_lib:
   kortex_br:
+  kortex_widgets:
 
 dev_dependencies:
   flutter_test:
