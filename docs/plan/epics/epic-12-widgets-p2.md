@@ -35,7 +35,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 | --- | --- | --- | --- |
 | **UC-12.00** | Unificar escopo: aposentar `PresenterScope` | Nenhuma (DoR do épico) | `Concluído` |
 | **UC-12.01** | `AsyncListView` (lista paginada + estados) | `UC-12.00` | `Concluído` |
-| **UC-12.02** | `AsyncPage` (scaffold de recurso) | `UC-12.00` | `Proposto` |
+| **UC-12.02** | `AsyncPage` (scaffold de recurso) | `UC-12.00` | `Concluído` |
 | **UC-12.03** | `SearchableSelect` (single/multi, bottom sheet) | `UC-12.00` | `Proposto` |
 | **UC-12.04** | `FilterPanel` (chips/filtros reativos) | `UC-12.00` | `Proposto` |
 | **UC-12.05** | `FormErrorSummary` + scroll-to-first-error | `UC-12.00` | `Proposto` |
@@ -120,6 +120,9 @@ Esquema do Cenário: Lista assíncrona
 ```
 
 ### UC-12.02 — `AsyncPage`
+
+- **Identificador**: `UC-12.02`
+- **Status**: `Concluído` (`997e02c`; `flutter analyze` limpo, `flutter test` +88 verdes no pacote)
 
 #### Narrativa
 
