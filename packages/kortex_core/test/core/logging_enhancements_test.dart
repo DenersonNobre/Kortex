@@ -50,4 +50,16 @@ void main() {
       expect(batches.last.single.message, 'm3');
     });
   });
+
+  group('AnsiTextLogFormatter', () {
+    test('aplica cor ANSI e negrito no nivel', () {
+      const formatter = AnsiTextLogFormatter();
+      final out = formatter.format(
+        LogEntry(level: LogLevel.error, scope: 'API', message: 'falha'),
+      );
+      expect(out, contains('\x1B[31m'));
+      expect(out, contains('\x1B[1m[ERROR]\x1B[22m'));
+      expect(out, endsWith('\x1B[0m'));
+    });
+  });
 }

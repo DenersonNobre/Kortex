@@ -85,3 +85,24 @@ class FormattedLogSink implements ILogSink {
     _target(formatter.format(entry));
   }
 }
+
+
+/// Formatter com cores ANSI e destaque em negrito por [LogLevel] para console.
+class AnsiTextLogFormatter implements ILogFormatter {
+  const AnsiTextLogFormatter({this.inner = const TextLogFormatter()});
+
+  final ILogFormatter inner;
+
+  @override
+  String format(LogEntry entry) {
+    final code = switch (entry.level) {
+      LogLevel.trace => '\x1B[90m',
+      LogLevel.debug => '\x1B[36m',
+      LogLevel.info => '\x1B[32m',
+      LogLevel.warn => '\x1B[33m',
+      LogLevel.error => '\x1B[31m',
+      LogLevel.fatal => '\x1B[1;31m',
+    };
+    return '$code\x1B[1m[${entry.level.name.toUpperCase()}]\x1B[22m ${inner.format(entry)}\x1B[0m';
+  }
+}
