@@ -10,6 +10,7 @@ export 'helpers/loading_state.dart';
 export 'helpers/page_result.dart';
 export 'helpers/paginate.dart';
 export 'helpers/query.dart';
+export 'logging/log_correlation.dart';
 export 'logging/log_entry.dart';
 export 'logging/log_formatter.dart';
 export 'logging/log_sink.dart';
