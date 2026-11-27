@@ -1,0 +1,14 @@
+name: kortex_cli
+description: Pure-Dart CLI to scaffold Kortex apps and vertical feature modules.
+version: 0.1.0
+resolution: workspace
+
+environment:
+  sdk: ^3.13.5
+
+executables:
+  kortex:
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

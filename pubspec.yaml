@@ -15,4 +15,5 @@ workspace:
   - packages/kortex_core
   - packages/kortex_rest
   - packages/kortex_sqlite
+  - packages/kortex_cli
   - poc
