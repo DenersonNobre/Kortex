@@ -11,6 +11,8 @@ library;
 
 import 'dart:async';
 
+import 'kortex_controller.dart';
+
 import 'kortex_disposable.dart';
 import 'kortex_signal.dart';
 
@@ -121,6 +123,10 @@ class KortexResource<T> implements IKortexDisposable {
       final value = await _loader();
       _publishIfCurrent(id, KortexAsyncData<T>(value));
     } catch (error, stackTrace) {
+      assert(() {
+        KortexDebugLog.emit('[KortexResource<$T>] error: $error');
+        return true;
+      }());
       _publishIfCurrent(id, KortexAsyncError<T>(error, stackTrace));
     }
   }

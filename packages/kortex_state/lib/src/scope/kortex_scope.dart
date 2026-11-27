@@ -10,6 +10,8 @@
 /// Dependencies: `package:flutter/widgets.dart` + internal layers.
 library;
 
+import '../reactive/kortex_controller.dart';
+
 import 'package:flutter/widgets.dart';
 
 import 'kortex_provider.dart';
@@ -158,6 +160,10 @@ class _KortexScopeState extends State<KortexScope> {
 
   @override
   void dispose() {
+    assert(() {
+      KortexDebugLog.emit('[KortexScope] disposed');
+      return true;
+    }());
     _disposeAll();
     super.dispose();
   }
