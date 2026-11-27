@@ -16,6 +16,7 @@ export 'src/widgets/busy_overlay.dart';
 export 'src/widgets/card_tile.dart';
 export 'src/widgets/details.dart';
 export 'src/widgets/filter_panel.dart';
+export 'src/widgets/form_error_summary.dart';
 export 'src/widgets/labels.dart';
 export 'src/widgets/modals.dart';
 export 'src/widgets/pill_field.dart';

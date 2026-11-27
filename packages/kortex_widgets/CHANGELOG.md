@@ -7,6 +7,7 @@
 - `AsyncPage` (single-resource scaffold over a caller-owned `KortexResource`: loading/error-with-retry/data, no empty flash, caller-owned dispose; `UC-12.02`).
 - `SearchableSelectController` + `SearchableSelectSheet` + `showSearchableSelect` (single/multi pick with debounced async search, generation-based cancellation, confirm delivering the checked list; `UC-12.03`).
 - `FilterOption` + `FilterPanelController` + `FilterPanel` (single/multi reactive chips with stable width across selection flips via a always-reserved check slot, `onSelectionChanged` for filter signals, caller-owned dispose; `UC-12.04`).
+- `FormErrorTarget` + `FormErrorSummary` (reactive error list over a caller-owned `KortexForm`: one tappable row per failing mapped field, tap scrolls the caller-owned `GlobalKey` anchor into view, valid form renders nothing; `UC-12.05`).
 - Integration guide `OtpPinField` + `KortexField<String>` via `pinput` (spike verdict `USAR_PINPUT` in `docs/notes/pinput-spike.md`): README-only, no widget shipped, `smart_auth` stays opt-in of the consuming app (`UC-12.16`).
 
 ### Changed

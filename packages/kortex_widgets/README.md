@@ -4,7 +4,7 @@ Reusable Flutter UI widgets (`src/widgets/`) and Brazilian input fields (`src/br
 
 ## Included
 - **BR Input Fields (`src/br/`)**: `KortexCpfField`, `KortexCnpjField`, `KortexCepField`, `KortexPhoneBrField`, `KortexBrlCurrencyField`, `KortexMaskedBrField` (integrated with `kortex_br` and `kortex_forms`).
-- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `FilterPanel`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
+- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `FilterPanel`, `FormErrorSummary`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
 
 ## `AsyncListView` (UC-12.01)
 
@@ -81,6 +81,26 @@ tolerance in `test/widgets/filter_panel_test.dart`).
   it; the panel never disposes it (unmount keeps it alive, use after
   dispose throws `StateError`, proven in
   `test/widgets/filter_panel_test.dart`).
+
+## `FormErrorSummary` (UC-12.05)
+
+Reactive error list with tap-to-scroll over a caller-owned `KortexForm`:
+every mapped field whose `error` signal is set renders one row
+(label + message); tapping it scrolls the mapped `GlobalKey` anchor into
+view with `Scrollable.ensureVisible`. A valid form renders nothing
+(`SizedBox.shrink`, no flash, no reserved space); unmapped fields never
+render, even when failing.
+
+- **Use when** a long form can fail below the fold and the user needs a
+  tap-to-navigate error list after `submit()`/`validate()` fails.
+- **Do NOT use when** the form fits one screen (inline field errors are
+  enough), when errors need business rules (those live in the
+  domain/commands layer, never in the summary), or when the summary
+  should own the form (it never does — ownership stays with the caller).
+- **Ownership**: the caller creates `KortexForm`, every `KortexField` and
+  every anchor `GlobalKey`, and disposes the form; the widget never
+  disposes it (unmount keeps it alive, proven in
+  `test/widgets/form_error_summary_test.dart`).
 
 ## `OtpPinField` (UC-12.16) — integration guide (no widget shipped)
 
