@@ -5,7 +5,7 @@ import '../cli_file_writer.dart';
 import '../templates/controller_template.dart';
 import '../templates/controller_test_template.dart';
 import '../templates/module_routes_template.dart';
-import '../templates/naming.dart';
+import '../utils/naming.dart';
 import '../templates/page_template.dart';
 
 class CreateModuleCommand implements IKortexCliCommand {

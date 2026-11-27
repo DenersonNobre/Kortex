@@ -3,7 +3,7 @@ import 'dart:io';
 import '../cli_command.dart';
 import '../cli_file_writer.dart';
 import '../templates/controller_template.dart';
-import '../templates/naming.dart';
+import '../utils/naming.dart';
 import '../templates/page_template.dart';
 
 class CreatePageCommand implements IKortexCliCommand {
