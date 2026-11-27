@@ -3,7 +3,7 @@
 Notable changes to this repository. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`.
 
-## [0.2.4] - 2026-11-27
+## [0.2.5] - 2026-11-27
 
 ### Added
 - `KortexDebugLog` and automatic debug-mode (`assert`) lifecycle logs in `IKortexController`, `KortexResource`, and `KortexScope`.
