@@ -6,6 +6,7 @@ Versioning: [SemVer](https://semver.org/lang/en/). Categories: `Added`, `Changed
 ## [Unreleased]
 
 ### Added
+- `KortexDebugLog` and automatic debug-mode (`assert`) lifecycle logs in `IKortexController`, `KortexResource`, and `KortexScope`.
 - `KortexDebug` (`IKortexDebugObserver`, `IKortexDebugEvent`) for zero-cost-in-release debug observability (`UC-10.06`).
 
 ### Fixed

@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Added
+- `kortex_credentials.dart` (`Email`, `Senha` VOs) moved from `kortex_core`.
+
 ### Fixed
 - `KortexField.reset()` now distinguishes omitted argument from explicit `null` on nullable fields (`UC-10.03`).
 
