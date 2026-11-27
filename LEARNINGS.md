@@ -226,3 +226,9 @@
 - **Port 1:1 de testes na extração de módulos**: ao mover `widgets/` e `brlib/` de `kortex_lib` para `kortex_widgets` (`src/widgets/` + `src/br/` com 1 widget por arquivo) e `kortex_br` (`sdk: dart`, zero deps), portar os testes 1:1 no mesmo ciclo (`test/widgets/`).
 - **`example/` com `pubspec.yaml` próprio exige dependências publicadas**: enquanto `kortex_br` não estiver publicado no `pub.dev`, `kortex_widgets/example/` deve manter apenas `lib/main.dart` no workspace sem `pubspec.yaml` próprio.
 - **`parseString` (AST não resolvido) em `kortex_lint`**: chamadas como `KortexComputed(() { ... })` sem resolução de tipos são parseadas como `MethodInvocation` em vez de `InstanceCreationExpression`; regras AST devem visitar ambos.
+
+## 2026-11-26 — EPIC13: `LeakTesting`, `sqflite_common_ffi` e fechamento de épico
+
+- **Todo pacote novo nasce com `test/flutter_test_config.dart`**: habilitar `LeakTesting.enable()` desde o primeiro commit em pacotes Flutter do monorepo.
+- **Pacote `sqflite` precisa de `sqflite_common_ffi` em `dev_dependencies`**: sem `sqflite_common_ffi`, `flutter test` em desktop/Windows falha com `Couldn't resolve native function 'sqlite3_initialize'`.
+- **Fechamento de épico exige paridade completa**: antes de commitar o fechamento, conferir `docs/plan/README.md`, a matriz do épico, todas as seções individuais `- **Status**:` de UC e `CHECKPOINT.md`.
