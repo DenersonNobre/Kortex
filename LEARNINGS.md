@@ -239,3 +239,8 @@
 - **Split de pacote deixa consumidor para trás — conferir `poc/` após mover símbolo**: EPIC11/13 moveu `PhoneBrValidator` para `kortex_br` e o CI quebrou na `poc` (`undefined_identifier`, step `POC (analyze + test)`), não no pacote. Prevenção: após qualquer split/remoção, `grep` pelo símbolo em `poc/` + `flutter analyze` no `poc` antes de declarar verde.
 - **CI vermelho em cascata se resolve na ordem do log**: nesta sessão o mesmo `verify` falhou em 3 pontos diferentes em sequência (`Format check` → 2 arquivos whitespace → `POC analyze` → import faltante). Cada fix mínimo, commitado e pushado isoladamente, com acompanhamento do run até o veredito antes do próximo passo.
 - **Gate 3 paralelo como oráculo read-only**: revisão de UC finalizada (`3a10013`, `927c5db`) roda sem claim/escrita/commit — prompt com diff + SPEC + proposta, veredito APROVADO/REPROVADO + confiança. Não consome fatia e deixa a UC empurrável já auditada; as duas revisões desta sessão voltaram APROVADO/Alta.
+
+## 2026-11-27 — `DateTimeRange` assert e `LOG_FILE` via `toolArgs`
+
+- **`DateTimeRange` em debug**: o construtor de `DateTimeRange` no Flutter dispara `assert(!start.isAfter(end))`; testes de range inválido (`end < start`) devem usar fake `implements DateTimeRange`.
+- **Log de sessão via F5 (`launch.json`)**: `dart.flutterRunLogFile` no `settings.json` não é reconhecido em todas as versões da extensão Dart; usar `"toolArgs": ["--dart-define=LOG_FILE=..."]` no `launch.json` + `FileLogSink` no `main.dart`.
