@@ -2,7 +2,7 @@ import 'dart:io';
 
 import '../cli_command.dart';
 import '../cli_file_writer.dart';
-import '../templates/kortex_templates.dart';
+import '../templates/module_templates.dart';
 
 class CreateModuleCommand implements IKortexCliCommand {
   const CreateModuleCommand(this._writer);
@@ -19,12 +19,12 @@ class CreateModuleCommand implements IKortexCliCommand {
   int execute(List<String> args, Directory workingDirectory) {
     if (args.isEmpty) return 64;
     final moduleName = args.first;
-    final pascal = KortexTemplates.toPascalCase(moduleName);
+    final pascal = ModuleTemplates.toPascalCase(moduleName);
     final base = 'lib/modules/$moduleName';
-    _writer.writeFile(workingDirectory, '$base/ui/${moduleName}_controller.dart', KortexTemplates.controller(pascal));
-    _writer.writeFile(workingDirectory, '$base/ui/${moduleName}_page.dart', KortexTemplates.page(pascal, moduleName));
-    _writer.writeFile(workingDirectory, '$base/ui/${moduleName}_routes.dart', KortexTemplates.moduleRoutes(pascal, moduleName));
-    _writer.writeFile(workingDirectory, 'test/modules/$moduleName/${moduleName}_controller_test.dart', KortexTemplates.controllerTest(pascal, moduleName));
+    _writer.writeFile(workingDirectory, '$base/ui/${moduleName}_controller.dart', ModuleTemplates.controller(pascal));
+    _writer.writeFile(workingDirectory, '$base/ui/${moduleName}_page.dart', ModuleTemplates.page(pascal, moduleName));
+    _writer.writeFile(workingDirectory, '$base/ui/${moduleName}_routes.dart', ModuleTemplates.moduleRoutes(pascal, moduleName));
+    _writer.writeFile(workingDirectory, 'test/modules/$moduleName/${moduleName}_controller_test.dart', ModuleTemplates.controllerTest(pascal, moduleName));
     for (final sub in ['domain', 'data', 'features']) {
       _writer.ensureDir(workingDirectory, '$base/$sub');
     }
