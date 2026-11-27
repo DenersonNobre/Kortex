@@ -3,8 +3,8 @@ library;
 
 import 'dart:io';
 
-import 'src/cli_command.dart';
-import 'src/cli_file_writer.dart';
+import 'src/utils/cli_command.dart';
+import 'src/utils/cli_file_writer.dart';
 import 'src/commands/create_app_command.dart';
 import 'src/commands/create_module_command.dart';
 import 'src/commands/create_page_command.dart';

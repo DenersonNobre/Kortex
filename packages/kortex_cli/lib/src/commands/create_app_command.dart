@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import '../cli_command.dart';
-import '../cli_file_writer.dart';
+import '../utils/cli_command.dart';
+import '../utils/cli_file_writer.dart';
 import '../templates/app_pages_template.dart';
 import '../templates/app_routes_template.dart';
 import '../templates/app_template.dart';
