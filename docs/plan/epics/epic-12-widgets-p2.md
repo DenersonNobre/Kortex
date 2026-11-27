@@ -37,7 +37,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 | **UC-12.01** | `AsyncListView` (lista paginada + estados) | `UC-12.00` | `Concluído` |
 | **UC-12.02** | `AsyncPage` (scaffold de recurso) | `UC-12.00` | `Concluído` |
 | **UC-12.03** | `SearchableSelect` (single/multi, bottom sheet) | `UC-12.00` | `Concluído` |
-| **UC-12.04** | `FilterPanel` (chips/filtros reativos) | `UC-12.00` | `Proposto` |
+| **UC-12.04** | `FilterPanel` (chips/filtros reativos) | `UC-12.00` | `Concluído` |
 | **UC-12.05** | `FormErrorSummary` + scroll-to-first-error | `UC-12.00` | `Proposto` |
 | **UC-12.06** | `DateField` / `DateRangeField` | `UC-12.00` | `Proposto` |
 | **UC-12.07** | `OfflineBanner` (faixa de conectividade) | `UC-12.00` | `Proposto` |
@@ -167,6 +167,9 @@ Esquema do Cenário: Seleção com busca
 ```
 
 ### UC-12.04 — `FilterPanel`
+
+- **Identificador**: `UC-12.04`
+- **Status**: `Concluído` (`3a10013`; `flutter analyze` limpo, `flutter test` +98 verdes no pacote)
 
 #### Narrativa
 
