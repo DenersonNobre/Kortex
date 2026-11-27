@@ -21,6 +21,7 @@ export 'src/widgets/pill_field.dart';
 export 'src/widgets/presenter_view.dart';
 export 'src/widgets/reactive.dart';
 export 'src/widgets/search_panel.dart';
+export 'src/widgets/searchable_select.dart';
 export 'src/widgets/snapshots.dart';
 export 'src/widgets/stat_tile.dart';
 export 'src/widgets/state_views.dart';

@@ -4,7 +4,7 @@ Reusable Flutter UI widgets (`src/widgets/`) and Brazilian input fields (`src/br
 
 ## Included
 - **BR Input Fields (`src/br/`)**: `KortexCpfField`, `KortexCnpjField`, `KortexCepField`, `KortexPhoneBrField`, `KortexBrlCurrencyField`, `KortexMaskedBrField` (integrated with `kortex_br` and `kortex_forms`).
-- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
+- **UI Widgets (`src/widgets/`)**: `ActionBar`, `Alert`, `AsyncImage`, `AsyncListView`, `AsyncPage`, `BusyOverlay`, `CardTile`, `Details`, `Labels`, `Modals`, `PillField`, `PresenterView`, `Reactive`, `SearchPanel`, `SearchableSelect`, `Snapshots`, `StatTile`, `StateViews`, `StatusChip`, `Titles`.
 
 ## `AsyncListView` (UC-12.01)
 
@@ -40,6 +40,26 @@ path.
   widget never disposes it (unmount keeps it alive, in-flight dispose drops
   the late result silently, proven in
   `test/widgets/async_page_test.dart`).
+
+## `SearchableSelect` (UC-12.03)
+
+Single/multi selection with async search in a bottom-sheet body, driven by
+a caller-owned `SearchableSelectController` (debounced `optionsLoader`,
+generation-based cancellation: only the latest result renders, stale loads
+drop silently).
+
+- **Use when** a form needs single/multi pick from an async source
+  (search-as-you-type) without a heavy third-party picker; confirm delivers
+  the checked list to `onConfirm` (ready to feed a `KortexField`, no forms
+  coupling in this package).
+- **Do NOT use when** options are static and few (a `DropdownButton`/
+  `ChoiceChip` row is enough), when the source pushes realtime updates, or
+  when picking involves business rules (those live in the domain/commands
+  layer, never in the sheet).
+- **Ownership**: the caller creates `SearchableSelectController` (injecting
+  `optionsLoader`) and disposes it; the sheet never disposes it (unmount
+  keeps it alive, in-flight dispose drops the late result silently, proven
+  in `test/widgets/searchable_select_test.dart`).
 
 ## When NOT to use `PresenterScope`
 
