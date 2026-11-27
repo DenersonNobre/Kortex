@@ -1,6 +1,6 @@
 name: kortex_lib
 description: "Opt-in umbrella barrel re-exporting kortex_core, kortex_rest, and kortex_sqlite."
-version: 0.1.1
+version: 0.1.2
 repository: https://github.com/DenersonNobre/Kortex
 issue_tracker: https://github.com/DenersonNobre/Kortex/issues
 topics:
