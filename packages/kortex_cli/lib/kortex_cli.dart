@@ -17,6 +17,9 @@ int runKortexCli(List<String> args, Directory workingDirectory) {
   if (command == 'module' && args.length >= 2) {
     return _createModule(args[1], workingDirectory);
   }
+  if (command == 'page' && args.length >= 3) {
+    return _createPage(args[1], args[2], workingDirectory);
+  }
 
   stderr.writeln('Comando invalido: ${args.join(' ')}');
   _printUsage();
@@ -27,17 +30,20 @@ void _printUsage() {
   stdout.writeln('kortex_cli — Scaffolding para apps Kortex');
   stdout.writeln('');
   stdout.writeln('Uso:');
-  stdout.writeln('  kortex create <app_name>     Cria estrutura base em <app_name>/');
-  stdout.writeln('  kortex module <module_name>  Cria fatia vertical em lib/modules/<module_name>/');
-  stdout.writeln('  kortex help                  Exibe esta ajuda');
+  stdout.writeln('  kortex create <app_name>             Cria estrutura base em <app_name>/');
+  stdout.writeln('  kortex module <module_name>          Cria fatia vertical em lib/modules/<module_name>/');
+  stdout.writeln('  kortex page <module_name> <page>     Cria page + controller em lib/modules/<module_name>/ui/');
+  stdout.writeln('  kortex help                          Exibe esta ajuda');
 }
 
 int _createApp(String appName, Directory workingDirectory) {
   final root = Directory('${workingDirectory.path}${Platform.pathSeparator}$appName');
+  _write(root, 'pubspec.yaml', _pubspecTemplate(appName));
   _write(root, 'lib/main.dart', _mainTemplate());
   _write(root, 'lib/app/app.dart', _appTemplate(appName));
   _write(root, 'lib/app/routes/app_routes.dart', _appRoutesTemplate());
   _write(root, 'lib/app/routes/app_pages.dart', _appPagesTemplate());
+  _write(root, 'test/widget_test.dart', _appTestTemplate());
   Directory('${root.path}${Platform.pathSeparator}lib${Platform.pathSeparator}core')
       .createSync(recursive: true);
   Directory('${root.path}${Platform.pathSeparator}lib${Platform.pathSeparator}modules')
@@ -64,12 +70,34 @@ int _createModule(String moduleName, Directory workingDirectory) {
     '$base/ui/${moduleName}_routes.dart',
     _moduleRoutesTemplate(pascal, moduleName),
   );
+  _write(
+    workingDirectory,
+    'test/modules/$moduleName/${moduleName}_controller_test.dart',
+    _controllerTestTemplate(pascal, moduleName),
+  );
   for (final sub in ['domain', 'data', 'features']) {
     Directory(
       '${workingDirectory.path}${Platform.pathSeparator}$base${Platform.pathSeparator}$sub',
     ).createSync(recursive: true);
   }
   stdout.writeln('Modulo "$moduleName" criado em $base');
+  return 0;
+}
+
+int _createPage(String moduleName, String pageName, Directory workingDirectory) {
+  final pascal = _toPascalCase(pageName);
+  final base = 'lib/modules/$moduleName/ui';
+  _write(
+    workingDirectory,
+    '$base/${pageName}_controller.dart',
+    _controllerTemplate(pascal),
+  );
+  _write(
+    workingDirectory,
+    '$base/${pageName}_page.dart',
+    _pageTemplate(pascal, pageName),
+  );
+  stdout.writeln('Page "$pageName" criada em $base');
   return 0;
 }
 
@@ -199,5 +227,45 @@ Route<dynamic> build${pascal}Route() {
       child: const ${pascal}Page(),
     ),
   );
+}
+''';
+
+String _pubspecTemplate(String appName) => '''
+name: $appName
+publish_to: none
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kortex: ^0.2.3
+  kortex_core: ^0.1.0
+  kortex_widgets: ^0.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+''';
+
+String _appTestTemplate() => '''
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('smoke test', () {
+    expect(1 + 1, 2);
+  });
+}
+''';
+
+String _controllerTestTemplate(String pascal, String moduleName) => '''
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  test('${pascal}Controller lifecycle', () {
+    expect('$moduleName', isNotEmpty);
+  });
 }
 ''';

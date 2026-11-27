@@ -39,4 +39,19 @@ void main() {
       isTrue,
     );
   });
+
+  test('kortex page gera page + controller dentro do modulo', () {
+    final dir = Directory.systemTemp.createTempSync('kortex_cli_page_');
+    addTearDown(() => dir.deleteSync(recursive: true));
+
+    expect(runKortexCli(['page', 'work_orders', 'detail'], dir), 0);
+    expect(
+      File('${dir.path}/lib/modules/work_orders/ui/detail_page.dart').existsSync(),
+      isTrue,
+    );
+    expect(
+      File('${dir.path}/lib/modules/work_orders/ui/detail_controller.dart').existsSync(),
+      isTrue,
+    );
+  });
 }
