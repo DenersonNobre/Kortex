@@ -1,6 +1,6 @@
 # UC-CURRENT — Estado da Fatia Corrente
 
-- **Épico ativo**: `EPIC12` (Segunda Onda de Widgets; `UC-12.00`…`UC-12.04` concluídos)
-- **Status**: `UC-12.04 FilterPanel` concluído e verificado (`3a10013`; `flutter analyze` limpo, `flutter test` +98 verdes em `kortex_widgets`)
-- **Último passo concluído**: `FilterPanel` com chips de largura estável (`showCheckmark: false` + avatar reservado, teste geométrico getRect idêntico), 5 testes com prova negativa + leak gate, Diff Budget de 5 arquivos
-- **Próximo passo**: `UC-12.05 FormErrorSummary` (lista de erros + toque-para-navegar até o campo)
+- **Épico ativo**: `EPIC12` (Segunda Onda de Widgets; `UC-12.00`…`UC-12.05` concluídos + `UC-12.16` doc-only)
+- **Status**: `UC-12.05 FormErrorSummary` concluído e verificado (`c2d54cf`; `flutter analyze` limpo, `flutter test` +103 verdes em `kortex_widgets`)
+- **Último passo concluído**: `FormErrorSummary` (lista os erros do `KortexForm`, toque→`ensureVisible` no campo, 5 testes com prova negativa + mutações revertidas), Diff Budget de 5 arquivos
+- **Próximo passo**: `UC-12.06 DateField` / `DateRangeField` (picker + máscara + validação `dd/MM/yyyy` puro Dart, sem `intl`)

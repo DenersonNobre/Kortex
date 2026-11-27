@@ -38,7 +38,7 @@ Completar o `kortex_widgets` com padrões de tela inteira (listas, páginas, sel
 | **UC-12.02** | `AsyncPage` (scaffold de recurso) | `UC-12.00` | `Concluído` |
 | **UC-12.03** | `SearchableSelect` (single/multi, bottom sheet) | `UC-12.00` | `Concluído` |
 | **UC-12.04** | `FilterPanel` (chips/filtros reativos) | `UC-12.00` | `Concluído` |
-| **UC-12.05** | `FormErrorSummary` + scroll-to-first-error | `UC-12.00` | `Proposto` |
+| **UC-12.05** | `FormErrorSummary` + scroll-to-first-error | `UC-12.00` | `Concluído` |
 | **UC-12.06** | `DateField` / `DateRangeField` | `UC-12.00` | `Proposto` |
 | **UC-12.07** | `OfflineBanner` (faixa de conectividade) | `UC-12.00` | `Proposto` |
 | **UC-12.08** | `SkeletonList` (esqueleto estável) | `UC-12.00` | `Proposto` |
@@ -187,6 +187,11 @@ Esquema do Cenário: Filtro reativo estável
 ```
 
 ### UC-12.05 — `FormErrorSummary`
+
+- **Identificador**: `UC-12.05`
+- **Status**: `Concluído` (`c2d54cf`; `flutter analyze` limpo, `flutter test` +103 verdes no pacote)
+
+#### Narrativa
 
 #### Narrativa
 
