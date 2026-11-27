@@ -2,7 +2,9 @@ import 'dart:io';
 
 import '../cli_command.dart';
 import '../cli_file_writer.dart';
-import '../templates/module_templates.dart';
+import '../templates/controller_template.dart';
+import '../templates/naming.dart';
+import '../templates/page_template.dart';
 
 class CreatePageCommand implements IKortexCliCommand {
   const CreatePageCommand(this._writer);
@@ -20,10 +22,10 @@ class CreatePageCommand implements IKortexCliCommand {
     if (args.length < 2) return 64;
     final moduleName = args[0];
     final pageName = args[1];
-    final pascal = ModuleTemplates.toPascalCase(pageName);
+    final pascal = toPascalCase(pageName);
     final base = 'lib/modules/$moduleName/ui';
-    _writer.writeFile(workingDirectory, '$base/${pageName}_controller.dart', ModuleTemplates.controller(pascal));
-    _writer.writeFile(workingDirectory, '$base/${pageName}_page.dart', ModuleTemplates.page(pascal, pageName));
+    _writer.writeFile(workingDirectory, '$base/${pageName}_controller.dart', controllerTemplate(pascal));
+    _writer.writeFile(workingDirectory, '$base/${pageName}_page.dart', pageTemplate(pascal, pageName));
     stdout.writeln('Page "$pageName" criada em $base');
     return 0;
   }
