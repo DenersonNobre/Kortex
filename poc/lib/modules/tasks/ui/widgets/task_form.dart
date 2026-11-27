@@ -13,7 +13,7 @@ import 'package:kortex/kortex.dart';
 import '../tasks_controller.dart';
 
 /// Formulario de criacao de task.
-class TaskForm extends StatefulWidget {
+class TaskForm extends StatelessWidget {
   /// Cria o formulario ligado ao [controller].
   const TaskForm({super.key, required this.controller});
 
@@ -21,18 +21,10 @@ class TaskForm extends StatefulWidget {
   final TasksController controller;
 
   @override
-  State<TaskForm> createState() => _TaskFormState();
-}
-
-class _TaskFormState extends State<TaskForm> {
-  final _formKey = GlobalKey<FormState>();
-
-  @override
   Widget build(BuildContext context) {
-    final controller = widget.controller;
     return Form(
-      key: _formKey,
-      child: Column(
+      child: Builder(
+        builder: (formContext) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextFormField(
@@ -67,18 +59,19 @@ class _TaskFormState extends State<TaskForm> {
           const SizedBox(height: 8),
           ElevatedButton(
             key: const Key('task-save'),
-            onPressed: () => _save(controller),
+            onPressed: () => _save(formContext, controller),
             child: const Text('Salvar'),
           ),
         ],
       ),
+      ),
     );
   }
 
-  void _save(TasksController controller) {
+  void _save(BuildContext formContext, TasksController controller) {
     final created = controller.createTask();
     if (!created) return;
-    _formKey.currentState?.reset();
+    Form.of(formContext).reset();
     controller.draft.clear();
   }
 }

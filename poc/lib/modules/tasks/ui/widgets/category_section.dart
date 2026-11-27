@@ -13,7 +13,7 @@ import 'package:kortex/kortex.dart';
 import '../tasks_controller.dart';
 
 /// Filtro de categoria, cadastro e remocao.
-class CategorySection extends StatefulWidget {
+class CategorySection extends StatelessWidget {
   /// Cria a secao ligada ao [controller].
   const CategorySection({super.key, required this.controller});
 
@@ -21,24 +21,7 @@ class CategorySection extends StatefulWidget {
   final TasksController controller;
 
   @override
-  State<CategorySection> createState() => _CategorySectionState();
-}
-
-class _CategorySectionState extends State<CategorySection> {
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _colorController = TextEditingController();
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _colorController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final controller = widget.controller;
     return KortexWatch(
       builder: (context, child) {
         final categories = controller.categories.value;
@@ -85,42 +68,38 @@ class _CategorySectionState extends State<CategorySection> {
   }
 
   Widget _buildForm(TasksController controller) {
+    var name = '';
+    var color = '';
     return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          TextFormField(
-            key: const Key('category-name'),
-            controller: _nameController,
-            decoration: const InputDecoration(labelText: 'Nome'),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            key: const Key('category-color'),
-            controller: _colorController,
-            decoration: const InputDecoration(labelText: 'Cor (#RRGGBB)'),
-          ),
-          const SizedBox(height: 8),
-          ElevatedButton(
-            key: const Key('category-save'),
-            onPressed: () => _save(controller),
-            child: const Text('Salvar categoria'),
-          ),
-        ],
+      child: Builder(
+        builder: (formContext) => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              key: const Key('category-name'),
+              decoration: const InputDecoration(labelText: 'Nome'),
+              onChanged: (value) => name = value,
+            ),
+            const SizedBox(height: 8),
+            TextFormField(
+              key: const Key('category-color'),
+              decoration: const InputDecoration(labelText: 'Cor (#RRGGBB)'),
+              onChanged: (value) => color = value,
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              key: const Key('category-save'),
+              onPressed: () {
+                final created = controller.createCategory(name, color);
+                if (!created) return;
+                Form.of(formContext).reset();
+                controller.toggleCategoryForm();
+              },
+              child: const Text('Salvar categoria'),
+            ),
+          ],
+        ),
       ),
     );
-  }
-
-  void _save(TasksController controller) {
-    final created = controller.createCategory(
-      _nameController.text,
-      _colorController.text,
-    );
-    if (!created) return;
-    _formKey.currentState?.reset();
-    _nameController.clear();
-    _colorController.clear();
-    controller.toggleCategoryForm();
   }
 }
